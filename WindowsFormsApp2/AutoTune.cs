@@ -168,6 +168,7 @@ namespace AutoTune
     private void tab2Loader(bool status)
     {
       textBox_MAF1.Visible = status;
+      buffDVmaf1.Visible = status;
       if (dualTB)
       {
         textBox_MAF2.Visible = status;
@@ -177,9 +178,23 @@ namespace AutoTune
 
     private void closeFileToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      buffDV1.Dispose();
-      buffDVmaf1.Dispose();
-      buffDVmaf2.Dispose();
+      if( MessageBox.Show("Are you sure you want to close this log?",
+          "Close Log",
+          MessageBoxButtons.YesNo) == DialogResult.No)
+      {
+        return;
+      }
+      
+      buffDV1.DataSource = null;
+      buffDV1.Refresh();
+
+      buffDVmaf1.DataSource = null;
+      buffDVmaf1.Refresh();
+
+      buffDVmaf2.DataSource = null;
+      buffDVmaf2.Refresh();
+
+      tab2Loader(false);
     }
   }
 }

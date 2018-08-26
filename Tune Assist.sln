@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApp2", "WindowsFormsApp2\WindowsFormsApp2.csproj", "{8012F6C1-A0E8-407F-A1F9-54BEB80C12A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tune Assist", "WindowsFormsApp2\Tune Assist.csproj", "{8012F6C1-A0E8-407F-A1F9-54BEB80C12A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
