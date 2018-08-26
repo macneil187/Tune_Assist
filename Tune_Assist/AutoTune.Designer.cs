@@ -30,12 +30,13 @@ namespace AutoTune
     /// </summary>
     private void InitializeComponent()
     {
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.openFileToolStripMenuItem_Open = new System.Windows.Forms.ToolStripMenuItem();
       this.closeFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
       this.fileToolStripMenuItem_Exit = new System.Windows.Forms.ToolStripMenuItem();
       this.statusStrip1 = new System.Windows.Forms.StatusStrip();
       this.ProgressBar = new System.Windows.Forms.ToolStripProgressBar();
@@ -56,7 +57,6 @@ namespace AutoTune
       this.textBox_MAF1 = new System.Windows.Forms.TextBox();
       this.textBox_MAF2 = new System.Windows.Forms.TextBox();
       this.button1 = new System.Windows.Forms.Button();
-      this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
       this.menuStrip1.SuspendLayout();
       this.statusStrip1.SuspendLayout();
       this.tabControl1.SuspendLayout();
@@ -103,9 +103,14 @@ namespace AutoTune
       // closeFileToolStripMenuItem
       // 
       this.closeFileToolStripMenuItem.Name = "closeFileToolStripMenuItem";
-      this.closeFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.closeFileToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
       this.closeFileToolStripMenuItem.Text = "Close File";
       this.closeFileToolStripMenuItem.Click += new System.EventHandler(this.closeFileToolStripMenuItem_Click);
+      // 
+      // toolStripMenuItem2
+      // 
+      this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+      this.toolStripMenuItem2.Size = new System.Drawing.Size(121, 6);
       // 
       // fileToolStripMenuItem_Exit
       // 
@@ -162,23 +167,23 @@ namespace AutoTune
       this.buffDV1.AllowUserToDeleteRows = false;
       this.buffDV1.AllowUserToResizeRows = false;
       this.buffDV1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-      dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-      dataGridViewCellStyle7.BackColor = System.Drawing.Color.Navy;
-      dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
-      dataGridViewCellStyle7.ForeColor = System.Drawing.Color.White;
-      dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-      dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-      this.buffDV1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+      dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+      dataGridViewCellStyle1.BackColor = System.Drawing.Color.Navy;
+      dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
+      dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
+      dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+      this.buffDV1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
       this.buffDV1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-      dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-      dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-      dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-      dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-      dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-      this.buffDV1.DefaultCellStyle = dataGridViewCellStyle8;
+      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+      dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+      dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+      dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+      this.buffDV1.DefaultCellStyle = dataGridViewCellStyle2;
       this.buffDV1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.buffDV1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
       this.buffDV1.GridColor = System.Drawing.Color.Black;
@@ -202,7 +207,7 @@ namespace AutoTune
       this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
       this.tabPage2.Size = new System.Drawing.Size(792, 378);
       this.tabPage2.TabIndex = 1;
-      this.tabPage2.Text = "tabPage2";
+      this.tabPage2.Text = "Fuel";
       this.tabPage2.UseVisualStyleBackColor = true;
       this.tabPage2.Enter += new System.EventHandler(this.tabPage2_Enter);
       this.tabPage2.Leave += new System.EventHandler(this.tabPage2_Leave);
@@ -377,11 +382,6 @@ namespace AutoTune
       this.button1.UseVisualStyleBackColor = true;
       this.button1.Visible = false;
       this.button1.Click += new System.EventHandler(this.btnCancel_Click);
-      // 
-      // toolStripMenuItem2
-      // 
-      this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-      this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
       // 
       // AutoTune
       // 
