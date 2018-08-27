@@ -196,5 +196,11 @@ namespace AutoTune
 
       tab2Loader(false);
     }
+
+    private void fileToolStripMenuItem_Exit_Click(object sender, EventArgs e)
+    {
+      Application.ExitThread();
+      Application.Exit();
+    }
   }
 }
