@@ -14,7 +14,8 @@ namespace AutoTune
 {
   public class Parser
   {
-    private List<string> cleanedHeaders = new List<string>();
+    DataGridView AT = AutoTune.autotune.buffDV1;
+    List<string> cleanedHeaders = new List<string>();
     private List<string> matchedHeaders = new List<string>();
 
     public void parser(object sender, DoWorkEventArgs e)
@@ -112,7 +113,15 @@ namespace AutoTune
       }
     }
 
-    //
+    public DataTable PopulateMAFgrid()
+    {
+      using (DataTable DT = new DataTable())
+      {
+        Console.WriteLine("Column Count for the MAF Read : " + AT.ColumnCount);
+        Console.WriteLine("Rows Count for the MAF Read : " + AT.RowCount);
+        return DT;
+      }
+    }
     private void CleanHeaders()
     {
       if (matchedHeaders == null)

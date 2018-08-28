@@ -6,7 +6,6 @@ namespace Buffer
   {
     public BuffDV()
     {
-      //InitializeComponent();
       DoubleBuffered = true;
     }
   }
