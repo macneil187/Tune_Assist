@@ -18,6 +18,8 @@ namespace AutoTune
     private BackgroundWorker worker;
     private string fileName;
     private bool dualTB;
+    private DataTable MAF1_DT = new DataTable();
+    private DataTable MAF2_DT = new DataTable();
 
     public List<double> maf_volts = new List<double>
     {
@@ -43,6 +45,7 @@ namespace AutoTune
     public AutoTune()
     {
       InitializeComponent();
+      buildMAF_DT();
       SetAppState(AppStates.Idle, null);
       autotune = this;
     }
@@ -64,8 +67,8 @@ namespace AutoTune
           try
           {
             worker = new BackgroundWorker();
-            worker.DoWork += Worker_DoWork;
-            worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+            worker.DoWork += worker_ParseLog;
+            worker.RunWorkerCompleted += worker_ParseLogCompleted;
             worker.WorkerReportsProgress = true;
             worker.WorkerSupportsCancellation = true;
             worker.ProgressChanged += worker_ProgressChanged;
@@ -98,7 +101,7 @@ namespace AutoTune
       }
     }
 
-    void Worker_DoWork(object sender, DoWorkEventArgs e)
+    void worker_ParseLog(object sender, DoWorkEventArgs e)
     {
       Parser parser = new Parser();
       BackgroundWorker bw = sender as BackgroundWorker;
@@ -108,7 +111,7 @@ namespace AutoTune
         e.Cancel = true;
     }
 
-    void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+    void worker_ParseLogCompleted(object sender, RunWorkerCompletedEventArgs e)
     {
       try
       {
@@ -132,14 +135,13 @@ namespace AutoTune
             {
               if (buffDV1.Columns.Contains("MAS A/F -B2 (V)"))
               {
-                tabPage2.Visible = true;
-                Console.WriteLine("User log is dual TB.");
-                dualTB = true;
+                buffDVmaf2.Visible = true;
+                this.dualTB = true;
+                buffDVmaf2.Refresh();
               }
             }
             catch
             { }
-            setupMAFgrids();
           }
         }
       }
@@ -150,62 +152,55 @@ namespace AutoTune
       }
     }
 
-    private void setupMAFgrids()
+    private void buildMAF_DT()
     {
-      DataTable dt = new DataTable();
-      dt.Columns.Add("Volts", typeof(double));
-      dt.Columns.Add("Values", typeof(int));
-      dt.Columns.Add("Adjustments", typeof(int));
+      // MAF 1 DataTable
+      MAF1_DT.Columns.Add("Volts", typeof(double));
+      MAF1_DT.Columns.Add("Values", typeof(int));
+      MAF1_DT.Columns.Add("Adjustments", typeof(int));
 
       foreach (double d in maf_volts)
-        dt.Rows.Add(d);
-
+        MAF1_DT.Rows.Add(d);
+      
       buffDVmaf1.Rows.Clear();
       buffDVmaf1.Columns.Clear();
       buffDVmaf1.DataSource = null;
-      buffDVmaf1.DataSource = dt;
-      buffDVmaf1.Columns[0].Width = 40;
-      buffDVmaf1.Columns[0].ReadOnly = true;
-      buffDVmaf1.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
-      buffDVmaf1.Columns[0].Resizable = System.Windows.Forms.DataGridViewTriState.False;
-      buffDVmaf1.Columns[1].Width = 50;
-      buffDVmaf1.Columns[1].ReadOnly = false;
-      buffDVmaf1.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
-      buffDVmaf1.Columns[2].Resizable = System.Windows.Forms.DataGridViewTriState.False;
-      buffDVmaf1.Columns[2].Width = 80;
-      buffDVmaf1.Columns[2].ReadOnly = true;
-      buffDVmaf1.Columns[2].SortMode = DataGridViewColumnSortMode.NotSortable;
-      buffDVmaf1.Columns[2].Resizable = System.Windows.Forms.DataGridViewTriState.False;
-
-      if (dualTB)
-      {
-        DataTable dt2 = new DataTable();
-        dt2.Columns.Add("Volts", typeof(double));
-        dt2.Columns.Add("Values", typeof(int));
-        dt2.Columns.Add("Adjustments", typeof(int));
-
-        foreach (double d in maf_volts)
-          dt2.Rows.Add(d);
-
-        buffDVmaf2.Rows.Clear();
-        buffDVmaf2.Columns.Clear();
-        buffDVmaf2.DataSource = null;
-        buffDVmaf2.DataSource = dt2;
-        buffDVmaf2.Columns[0].Width = 40;
-        buffDVmaf2.Columns[0].ReadOnly = true;
-        buffDVmaf2.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
-        buffDVmaf2.Columns[0].Resizable = System.Windows.Forms.DataGridViewTriState.False;
-        buffDVmaf2.Columns[1].Width = 50;
-        buffDVmaf2.Columns[1].ReadOnly = false;
-        buffDVmaf2.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
-        buffDVmaf2.Columns[1].Resizable = System.Windows.Forms.DataGridViewTriState.False;
-        buffDVmaf2.Columns[2].Width = 80;
-        buffDVmaf2.Columns[2].ReadOnly = true;
-        buffDVmaf2.Columns[2].SortMode = DataGridViewColumnSortMode.NotSortable;
-        buffDVmaf2.Columns[2].Resizable = System.Windows.Forms.DataGridViewTriState.False;
-      }
+      buffDVmaf1.DataSource = MAF1_DT;
+      buffDVmaf1.Columns["Volts"].Width = 40;
+      buffDVmaf1.Columns["Volts"].ReadOnly = true;
+      buffDVmaf1.Columns["Volts"].DefaultCellStyle.Format = "N2";
+      buffDVmaf1.Columns["Volts"].SortMode = DataGridViewColumnSortMode.NotSortable;
+      buffDVmaf1.Columns["Volts"].Resizable = System.Windows.Forms.DataGridViewTriState.False;
+      buffDVmaf1.Columns["Values"].Width = 50;
+      buffDVmaf1.Columns["Values"].ReadOnly = false;
+      buffDVmaf1.Columns["Values"].DefaultCellStyle.Format = "d";
+      buffDVmaf1.Columns["Values"].SortMode = DataGridViewColumnSortMode.NotSortable;
+      buffDVmaf1.Columns["Adjustments"].Resizable = System.Windows.Forms.DataGridViewTriState.False;
+      buffDVmaf1.Columns["Adjustments"].Width = 80;
+      buffDVmaf1.Columns["Adjustments"].ReadOnly = true;
+      buffDVmaf1.Columns["Adjustments"].DefaultCellStyle.Format = "d";
+      buffDVmaf1.Columns["Adjustments"].SortMode = DataGridViewColumnSortMode.NotSortable;
+      buffDVmaf1.Columns["Adjustments"].Resizable = System.Windows.Forms.DataGridViewTriState.False;
+      
+      // MAF 2 DataTable
+      this.MAF2_DT = MAF1_DT.Copy();
+      buffDVmaf2.DataSource = MAF2_DT;
+      buffDVmaf2.Columns["Volts"].Width = 40;
+      buffDVmaf2.Columns["Volts"].ReadOnly = true;
+      buffDVmaf2.Columns["Volts"].DefaultCellStyle.Format = "N2";
+      buffDVmaf2.Columns["Volts"].SortMode = DataGridViewColumnSortMode.NotSortable;
+      buffDVmaf2.Columns["Volts"].Resizable = System.Windows.Forms.DataGridViewTriState.False;
+      buffDVmaf2.Columns["Values"].Width = 50;
+      buffDVmaf2.Columns["Values"].ReadOnly = false;
+      buffDVmaf2.Columns["Values"].DefaultCellStyle.Format = "d";
+      buffDVmaf2.Columns["Values"].SortMode = DataGridViewColumnSortMode.NotSortable;
+      buffDVmaf2.Columns["Adjustments"].Resizable = System.Windows.Forms.DataGridViewTriState.False;
+      buffDVmaf2.Columns["Adjustments"].Width = 80;
+      buffDVmaf2.Columns["Adjustments"].ReadOnly = true;
+      buffDVmaf2.Columns["Adjustments"].DefaultCellStyle.Format = "d";
+      buffDVmaf2.Columns["Adjustments"].SortMode = DataGridViewColumnSortMode.NotSortable;
+      buffDVmaf2.Columns["Adjustments"].Resizable = System.Windows.Forms.DataGridViewTriState.False;
     }
-
 
     private void SetFileReadWidgetsVisible(bool visible)
     {
@@ -278,13 +273,15 @@ namespace AutoTune
 
     private void btn_ScaleMAF_Click(object sender, EventArgs e)
     {
+      Console.WriteLine("break"); //temp break
       //parser.PopulateMAFgrid();
     }
 
     private void buffDVmaf1_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
     {
       e.Control.KeyPress -= new KeyPressEventHandler(Column1_KeyPress);
-      if (buffDVmaf1.CurrentCell.ColumnIndex == 1)
+      if (buffDVmaf1.CurrentCell.ColumnIndex ==
+          buffDVmaf1.Columns["Values"].Index)
       {
         TextBox tb = e.Control as TextBox;
         if (tb != null)
@@ -297,7 +294,8 @@ namespace AutoTune
     private void buffDVmaf2_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
     {
       e.Control.KeyPress -= new KeyPressEventHandler(Column1_KeyPress);
-      if (buffDVmaf2.CurrentCell.ColumnIndex == 1)
+      if (buffDVmaf1.CurrentCell.ColumnIndex ==
+          buffDVmaf2.Columns["Values"].Index)
       {
         TextBox tb = e.Control as TextBox;
         if (tb != null)
@@ -309,9 +307,7 @@ namespace AutoTune
 
     private void Column1_KeyPress(object sender, KeyPressEventArgs e)
     {
-      if (!char.IsControl(e.KeyChar) 
-        && !char.IsDigit(e.KeyChar)
-        && e.KeyChar != '.')
+      if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
       {
         e.Handled = true;
       }
@@ -332,15 +328,61 @@ namespace AutoTune
       {
         
       }
-      //Clipboard.SetDataObject((object)this .  CellHex(0U, 0U), true);
     }
 
     private void pasteValue()
     {
-      string tmpstr = ((string)Clipboard.GetDataObject().GetData(DataFormats.StringFormat)).Trim().Split(' ')[0].Trim();
-      if (tmpstr.Length != 4 )
+      try
+      {
+        string tmpstr = ((string)Clipboard.GetDataObject().GetData(DataFormats.StringFormat)).Trim().Split(' ')[0].Trim();
+        if (tmpstr.Length != 4)
+          return;
+        int rowIndex = buffDVmaf1.CurrentCellAddress.Y;
+        Console.WriteLine(" rowindex is : " + rowIndex);
+        Console.WriteLine(" tmpstr is : " + tmpstr);
+        string[] lines = tmpstr.Split('\n');
+        int iFail = 0, iRow = buffDVmaf1.CurrentCell.RowIndex;
+        int iCol = buffDVmaf1.CurrentCell.ColumnIndex;
+        DataGridViewCell oCell;
+        foreach (string line in lines)
+        {
+          if (iRow < buffDVmaf1.RowCount && line.Length > 0)
+          {
+            string[] sCells = line.Split('\t');
+            for (int i = 0; i < sCells.GetLength(0); ++i)
+            {
+              if (iCol + i < this.buffDVmaf1.ColumnCount)
+              {
+                oCell = buffDVmaf1[iCol + i, iRow];
+                if (!oCell.ReadOnly)
+                {
+                  if (oCell.Value.ToString() != sCells[i])
+                  {
+                    oCell.Value = Convert.ChangeType(sCells[i],
+                                          oCell.ValueType);
+                    oCell.Style.BackColor = Color.Tomato;
+                  }
+                  else
+                    iFail++;
+                }
+              }
+              else
+              { break; }
+            }
+            iRow++;
+          }
+          else
+          { break; }
+          if (iFail > 0)
+            MessageBox.Show(string.Format("{0} updates failed due" +
+                            " to read only column setting", iFail));
+        }
+      }
+      catch (FormatException)
+      {
+        MessageBox.Show("The data you pasted is in the wrong format for the cell");
         return;
-      //after checking values == 4, take hex value and convert to int. 
+      }
     }
 
     private void buffDVmaf_KeyUp(object sender, KeyEventArgs e)
@@ -380,6 +422,43 @@ namespace AutoTune
       {
         buffDVmaf1.CurrentCell = this.buffDVmaf1[0, 0];
         this.buffDVmaf1.CurrentCell.Selected = false;
+      }
+    }
+    
+    private void buffDVmaf_CellParsing(object sender, DataGridViewCellParsingEventArgs e)
+    {
+      string tmpstr = Convert.ToString(e.Value);
+      if (e != null && e.Value != null && e.DesiredType.Equals(typeof(int)))
+      {
+        try
+        {
+          int hex;
+          if (tmpstr.EndsWith(" ") && tmpstr.Length ==5)
+          {
+            tmpstr = tmpstr.TrimEnd(' ');
+            hex = int.Parse(tmpstr, System.Globalization.NumberStyles.HexNumber);
+            e.Value = hex;
+            e.ParsingApplied = true;
+          }
+          else if (tmpstr.Length < 3 || tmpstr.Length > 5)
+          {
+            e.Value = 0000;
+            e.ParsingApplied = true;
+          }
+          else
+          {
+            e.Value = tmpstr;
+            e.ParsingApplied = true;
+          }
+        }
+        catch
+        {
+          Console.WriteLine("The data you pasted is in the wrong format for the cell");
+        }
+      }
+      else
+      {
+        e.ParsingApplied = true;
       }
     }
   }

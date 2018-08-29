@@ -32,6 +32,8 @@ namespace AutoTune
     {
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.openFileToolStripMenuItem_Open = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,31 +45,25 @@ namespace AutoTune
       this.StatusBox = new System.Windows.Forms.ToolStripStatusLabel();
       this.tabControl1 = new System.Windows.Forms.TabControl();
       this.tabPage1 = new System.Windows.Forms.TabPage();
+      this.buffDV1 = new Buffer.BuffDV();
       this.tabPage2 = new System.Windows.Forms.TabPage();
       this.btn_ScaleMAF = new System.Windows.Forms.Button();
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+      this.buffDVmaf1 = new Buffer.BuffDV();
+      this.buffDVmaf2 = new Buffer.BuffDV();
       this.textBox_MAF1 = new System.Windows.Forms.TextBox();
       this.textBox_MAF2 = new System.Windows.Forms.TextBox();
       this.btnCancelParse = new System.Windows.Forms.Button();
-      this.buffDV1 = new Buffer.BuffDV();
-      this.buffDVmaf1 = new Buffer.BuffDV();
-      this.VoltageB1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.Current_valuesB1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.AdjustmentsB1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.buffDVmaf2 = new Buffer.BuffDV();
-      this.VoltsB1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.ValuesB2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.AdjustmentsB2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.menuStrip1.SuspendLayout();
       this.statusStrip1.SuspendLayout();
       this.tabControl1.SuspendLayout();
       this.tabPage1.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.buffDV1)).BeginInit();
       this.tabPage2.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
       this.splitContainer1.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.buffDV1)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.buffDVmaf1)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.buffDVmaf2)).BeginInit();
       this.SuspendLayout();
@@ -163,6 +159,42 @@ namespace AutoTune
       this.tabPage1.Text = "User Log";
       this.tabPage1.UseVisualStyleBackColor = true;
       // 
+      // buffDV1
+      // 
+      this.buffDV1.AllowUserToAddRows = false;
+      this.buffDV1.AllowUserToDeleteRows = false;
+      this.buffDV1.AllowUserToResizeRows = false;
+      this.buffDV1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+      dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+      dataGridViewCellStyle1.BackColor = System.Drawing.Color.Navy;
+      dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
+      dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
+      dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+      this.buffDV1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+      this.buffDV1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+      dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+      dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+      dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+      this.buffDV1.DefaultCellStyle = dataGridViewCellStyle2;
+      this.buffDV1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.buffDV1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+      this.buffDV1.GridColor = System.Drawing.Color.Black;
+      this.buffDV1.Location = new System.Drawing.Point(3, 3);
+      this.buffDV1.Name = "buffDV1";
+      this.buffDV1.ReadOnly = true;
+      this.buffDV1.RowHeadersVisible = false;
+      this.buffDV1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+      this.buffDV1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+      this.buffDV1.Size = new System.Drawing.Size(786, 372);
+      this.buffDV1.TabIndex = 0;
+      this.buffDV1.Visible = false;
+      // 
       // tabPage2
       // 
       this.tabPage2.Controls.Add(this.btn_ScaleMAF);
@@ -209,6 +241,72 @@ namespace AutoTune
       this.splitContainer1.SplitterWidth = 1;
       this.splitContainer1.TabIndex = 4;
       // 
+      // buffDVmaf1
+      // 
+      this.buffDVmaf1.AllowUserToAddRows = false;
+      this.buffDVmaf1.AllowUserToDeleteRows = false;
+      this.buffDVmaf1.AllowUserToResizeColumns = false;
+      this.buffDVmaf1.AllowUserToResizeRows = false;
+      this.buffDVmaf1.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+      this.buffDVmaf1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+      dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+      dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+      dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+      dataGridViewCellStyle3.Format = "N0";
+      dataGridViewCellStyle3.NullValue = null;
+      dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+      this.buffDVmaf1.DefaultCellStyle = dataGridViewCellStyle3;
+      this.buffDVmaf1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.buffDVmaf1.Location = new System.Drawing.Point(0, 0);
+      this.buffDVmaf1.Name = "buffDVmaf1";
+      this.buffDVmaf1.RowHeadersVisible = false;
+      this.buffDVmaf1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+      this.buffDVmaf1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+      this.buffDVmaf1.ShowCellToolTips = false;
+      this.buffDVmaf1.Size = new System.Drawing.Size(200, 349);
+      this.buffDVmaf1.TabIndex = 0;
+      this.buffDVmaf1.Visible = false;
+      this.buffDVmaf1.CellParsing += new System.Windows.Forms.DataGridViewCellParsingEventHandler(this.buffDVmaf_CellParsing);
+      this.buffDVmaf1.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.buffDVmaf1_EditingControlShowing);
+      this.buffDVmaf1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyUp);
+      this.buffDVmaf1.Leave += new System.EventHandler(this.buffDVmaf1_Leave);
+      // 
+      // buffDVmaf2
+      // 
+      this.buffDVmaf2.AllowUserToAddRows = false;
+      this.buffDVmaf2.AllowUserToDeleteRows = false;
+      this.buffDVmaf2.AllowUserToResizeColumns = false;
+      this.buffDVmaf2.AllowUserToResizeRows = false;
+      this.buffDVmaf2.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+      this.buffDVmaf2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+      dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+      dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+      dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+      dataGridViewCellStyle4.Format = "N0";
+      dataGridViewCellStyle4.NullValue = null;
+      dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+      this.buffDVmaf2.DefaultCellStyle = dataGridViewCellStyle4;
+      this.buffDVmaf2.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.buffDVmaf2.Location = new System.Drawing.Point(0, 0);
+      this.buffDVmaf2.Name = "buffDVmaf2";
+      this.buffDVmaf2.RowHeadersVisible = false;
+      this.buffDVmaf2.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+      this.buffDVmaf2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+      this.buffDVmaf2.ShowCellToolTips = false;
+      this.buffDVmaf2.Size = new System.Drawing.Size(199, 349);
+      this.buffDVmaf2.TabIndex = 1;
+      this.buffDVmaf2.Visible = false;
+      this.buffDVmaf2.CellParsing += new System.Windows.Forms.DataGridViewCellParsingEventHandler(this.buffDVmaf_CellParsing);
+      this.buffDVmaf2.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.buffDVmaf2_EditingControlShowing);
+      this.buffDVmaf2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyUp);
+      this.buffDVmaf2.Leave += new System.EventHandler(this.buffDVmaf2_Leave);
+      // 
       // textBox_MAF1
       // 
       this.textBox_MAF1.BackColor = System.Drawing.SystemColors.AppWorkspace;
@@ -251,160 +349,6 @@ namespace AutoTune
       this.btnCancelParse.Visible = false;
       this.btnCancelParse.Click += new System.EventHandler(this.btnCancel_Click);
       // 
-      // buffDV1
-      // 
-      this.buffDV1.AllowUserToAddRows = false;
-      this.buffDV1.AllowUserToDeleteRows = false;
-      this.buffDV1.AllowUserToResizeRows = false;
-      this.buffDV1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-      dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-      dataGridViewCellStyle1.BackColor = System.Drawing.Color.Navy;
-      dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
-      dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
-      dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-      dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-      this.buffDV1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-      this.buffDV1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-      dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-      dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-      dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-      dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-      this.buffDV1.DefaultCellStyle = dataGridViewCellStyle2;
-      this.buffDV1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.buffDV1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-      this.buffDV1.GridColor = System.Drawing.Color.Black;
-      this.buffDV1.Location = new System.Drawing.Point(3, 3);
-      this.buffDV1.Name = "buffDV1";
-      this.buffDV1.ReadOnly = true;
-      this.buffDV1.RowHeadersVisible = false;
-      this.buffDV1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-      this.buffDV1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-      this.buffDV1.Size = new System.Drawing.Size(786, 372);
-      this.buffDV1.TabIndex = 0;
-      this.buffDV1.Visible = false;
-      // 
-      // buffDVmaf1
-      // 
-      this.buffDVmaf1.AllowUserToAddRows = false;
-      this.buffDVmaf1.AllowUserToDeleteRows = false;
-      this.buffDVmaf1.AllowUserToResizeColumns = false;
-      this.buffDVmaf1.AllowUserToResizeRows = false;
-      this.buffDVmaf1.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-      this.buffDVmaf1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-      this.buffDVmaf1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.VoltageB1,
-            this.Current_valuesB1,
-            this.AdjustmentsB1});
-      this.buffDVmaf1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.buffDVmaf1.Location = new System.Drawing.Point(0, 0);
-      this.buffDVmaf1.Name = "buffDVmaf1";
-      this.buffDVmaf1.RowHeadersVisible = false;
-      this.buffDVmaf1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-      this.buffDVmaf1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-      this.buffDVmaf1.ShowCellToolTips = false;
-      this.buffDVmaf1.Size = new System.Drawing.Size(200, 349);
-      this.buffDVmaf1.TabIndex = 0;
-      this.buffDVmaf1.Visible = false;
-      this.buffDVmaf1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyUp);
-      this.buffDVmaf1.Leave += new System.EventHandler(this.buffDVmaf1_Leave);
-      // 
-      // VoltageB1
-      // 
-      this.VoltageB1.DividerWidth = 3;
-      this.VoltageB1.HeaderText = "Volts";
-      this.VoltageB1.MaxInputLength = 5;
-      this.VoltageB1.MinimumWidth = 19;
-      this.VoltageB1.Name = "VoltageB1";
-      this.VoltageB1.ReadOnly = true;
-      this.VoltageB1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-      this.VoltageB1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.VoltageB1.Width = 40;
-      // 
-      // Current_valuesB1
-      // 
-      this.Current_valuesB1.DividerWidth = 1;
-      this.Current_valuesB1.HeaderText = "Values";
-      this.Current_valuesB1.MaxInputLength = 10;
-      this.Current_valuesB1.MinimumWidth = 10;
-      this.Current_valuesB1.Name = "Current_valuesB1";
-      this.Current_valuesB1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-      this.Current_valuesB1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.Current_valuesB1.Width = 50;
-      // 
-      // AdjustmentsB1
-      // 
-      this.AdjustmentsB1.DividerWidth = 1;
-      this.AdjustmentsB1.HeaderText = "Adjustments";
-      this.AdjustmentsB1.MaxInputLength = 10;
-      this.AdjustmentsB1.Name = "AdjustmentsB1";
-      this.AdjustmentsB1.ReadOnly = true;
-      this.AdjustmentsB1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-      this.AdjustmentsB1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.AdjustmentsB1.Width = 80;
-      // 
-      // buffDVmaf2
-      // 
-      this.buffDVmaf2.AllowUserToAddRows = false;
-      this.buffDVmaf2.AllowUserToDeleteRows = false;
-      this.buffDVmaf2.AllowUserToResizeColumns = false;
-      this.buffDVmaf2.AllowUserToResizeRows = false;
-      this.buffDVmaf2.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-      this.buffDVmaf2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-      this.buffDVmaf2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.VoltsB1,
-            this.ValuesB2,
-            this.AdjustmentsB2});
-      this.buffDVmaf2.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.buffDVmaf2.Location = new System.Drawing.Point(0, 0);
-      this.buffDVmaf2.Name = "buffDVmaf2";
-      this.buffDVmaf2.RowHeadersVisible = false;
-      this.buffDVmaf2.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-      this.buffDVmaf2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-      this.buffDVmaf2.ShowCellToolTips = false;
-      this.buffDVmaf2.Size = new System.Drawing.Size(199, 349);
-      this.buffDVmaf2.TabIndex = 1;
-      this.buffDVmaf2.Visible = false;
-      this.buffDVmaf2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyUp);
-      this.buffDVmaf2.Leave += new System.EventHandler(this.buffDVmaf2_Leave);
-      // 
-      // VoltsB1
-      // 
-      this.VoltsB1.DividerWidth = 3;
-      this.VoltsB1.HeaderText = "Volts";
-      this.VoltsB1.MaxInputLength = 5;
-      this.VoltsB1.MinimumWidth = 19;
-      this.VoltsB1.Name = "VoltsB1";
-      this.VoltsB1.ReadOnly = true;
-      this.VoltsB1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-      this.VoltsB1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.VoltsB1.Width = 40;
-      // 
-      // ValuesB2
-      // 
-      this.ValuesB2.DividerWidth = 1;
-      this.ValuesB2.HeaderText = "Values";
-      this.ValuesB2.MaxInputLength = 10;
-      this.ValuesB2.MinimumWidth = 10;
-      this.ValuesB2.Name = "ValuesB2";
-      this.ValuesB2.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-      this.ValuesB2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.ValuesB2.Width = 50;
-      // 
-      // AdjustmentsB2
-      // 
-      this.AdjustmentsB2.DividerWidth = 1;
-      this.AdjustmentsB2.HeaderText = "Adjustments";
-      this.AdjustmentsB2.MaxInputLength = 10;
-      this.AdjustmentsB2.Name = "AdjustmentsB2";
-      this.AdjustmentsB2.ReadOnly = true;
-      this.AdjustmentsB2.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-      this.AdjustmentsB2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-      this.AdjustmentsB2.Width = 80;
-      // 
       // AutoTune
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -423,13 +367,13 @@ namespace AutoTune
       this.statusStrip1.PerformLayout();
       this.tabControl1.ResumeLayout(false);
       this.tabPage1.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.buffDV1)).EndInit();
       this.tabPage2.ResumeLayout(false);
       this.tabPage2.PerformLayout();
       this.splitContainer1.Panel1.ResumeLayout(false);
       this.splitContainer1.Panel2.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
       this.splitContainer1.ResumeLayout(false);
-      ((System.ComponentModel.ISupportInitialize)(this.buffDV1)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.buffDVmaf1)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.buffDVmaf2)).EndInit();
       this.ResumeLayout(false);
@@ -460,12 +404,6 @@ namespace AutoTune
     private Buffer.BuffDV buffDVmaf2;
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
     private System.Windows.Forms.Button btn_ScaleMAF;
-    private System.Windows.Forms.DataGridViewTextBoxColumn VoltsB1;
-    private System.Windows.Forms.DataGridViewTextBoxColumn ValuesB2;
-    private System.Windows.Forms.DataGridViewTextBoxColumn AdjustmentsB2;
-    private System.Windows.Forms.DataGridViewTextBoxColumn VoltageB1;
-    private System.Windows.Forms.DataGridViewTextBoxColumn Current_valuesB1;
-    private System.Windows.Forms.DataGridViewTextBoxColumn AdjustmentsB1;
   }
 }
 
