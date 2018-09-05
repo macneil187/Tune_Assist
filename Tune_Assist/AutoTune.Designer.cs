@@ -47,7 +47,6 @@ namespace AutoTune
       this.tabPage1 = new System.Windows.Forms.TabPage();
       this.buffDV1 = new Buffer.BuffDV();
       this.tabPage2 = new System.Windows.Forms.TabPage();
-      this.btn_ScaleMAF = new System.Windows.Forms.Button();
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
       this.buffDVmaf1 = new Buffer.BuffDV();
       this.buffDVmaf2 = new Buffer.BuffDV();
@@ -99,6 +98,7 @@ namespace AutoTune
       // 
       // closeFileToolStripMenuItem
       // 
+      this.closeFileToolStripMenuItem.Enabled = false;
       this.closeFileToolStripMenuItem.Name = "closeFileToolStripMenuItem";
       this.closeFileToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
       this.closeFileToolStripMenuItem.Text = "Close File";
@@ -194,13 +194,13 @@ namespace AutoTune
       this.buffDV1.Size = new System.Drawing.Size(786, 372);
       this.buffDV1.TabIndex = 0;
       this.buffDV1.Visible = false;
+      this.buffDV1.VisibleChanged += new System.EventHandler(this.buffDV1_VisibleChanged);
+      this.buffDV1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyDown);
+      this.buffDV1.Leave += new System.EventHandler(this.buffDV1_Leave);
       // 
       // tabPage2
       // 
-      this.tabPage2.Controls.Add(this.btn_ScaleMAF);
       this.tabPage2.Controls.Add(this.splitContainer1);
-      this.tabPage2.Controls.Add(this.textBox_MAF1);
-      this.tabPage2.Controls.Add(this.textBox_MAF2);
       this.tabPage2.Location = new System.Drawing.Point(4, 22);
       this.tabPage2.Name = "tabPage2";
       this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -211,20 +211,11 @@ namespace AutoTune
       this.tabPage2.Enter += new System.EventHandler(this.tabPage2_Enter);
       this.tabPage2.Leave += new System.EventHandler(this.tabPage2_Leave);
       // 
-      // btn_ScaleMAF
-      // 
-      this.btn_ScaleMAF.Location = new System.Drawing.Point(406, 3);
-      this.btn_ScaleMAF.Name = "btn_ScaleMAF";
-      this.btn_ScaleMAF.Size = new System.Drawing.Size(75, 23);
-      this.btn_ScaleMAF.TabIndex = 3;
-      this.btn_ScaleMAF.Text = "Scale MAF";
-      this.btn_ScaleMAF.UseVisualStyleBackColor = true;
-      this.btn_ScaleMAF.Click += new System.EventHandler(this.btn_ScaleMAF_Click);
-      // 
       // splitContainer1
       // 
+      this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Left;
       this.splitContainer1.IsSplitterFixed = true;
-      this.splitContainer1.Location = new System.Drawing.Point(0, 24);
+      this.splitContainer1.Location = new System.Drawing.Point(3, 3);
       this.splitContainer1.Name = "splitContainer1";
       // 
       // splitContainer1.Panel1
@@ -236,8 +227,8 @@ namespace AutoTune
       // 
       this.splitContainer1.Panel2.Controls.Add(this.buffDVmaf2);
       this.splitContainer1.Panel2MinSize = 173;
-      this.splitContainer1.Size = new System.Drawing.Size(400, 349);
-      this.splitContainer1.SplitterDistance = 200;
+      this.splitContainer1.Size = new System.Drawing.Size(506, 372);
+      this.splitContainer1.SplitterDistance = 253;
       this.splitContainer1.SplitterWidth = 1;
       this.splitContainer1.TabIndex = 4;
       // 
@@ -266,12 +257,14 @@ namespace AutoTune
       this.buffDVmaf1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
       this.buffDVmaf1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
       this.buffDVmaf1.ShowCellToolTips = false;
-      this.buffDVmaf1.Size = new System.Drawing.Size(200, 349);
+      this.buffDVmaf1.Size = new System.Drawing.Size(253, 372);
       this.buffDVmaf1.TabIndex = 0;
       this.buffDVmaf1.Visible = false;
       this.buffDVmaf1.CellParsing += new System.Windows.Forms.DataGridViewCellParsingEventHandler(this.buffDVmaf_CellParsing);
-      this.buffDVmaf1.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.buffDVmaf1_EditingControlShowing);
-      this.buffDVmaf1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyUp);
+      this.buffDVmaf1.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.buffDVmaf1_CellValidated);
+      this.buffDVmaf1.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.buffDVmaf_EditingControlShowing);
+      this.buffDVmaf1.VisibleChanged += new System.EventHandler(this.buffDVmaf1_VisibleChanged);
+      this.buffDVmaf1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyDown);
       this.buffDVmaf1.Leave += new System.EventHandler(this.buffDVmaf1_Leave);
       // 
       // buffDVmaf2
@@ -299,24 +292,27 @@ namespace AutoTune
       this.buffDVmaf2.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
       this.buffDVmaf2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
       this.buffDVmaf2.ShowCellToolTips = false;
-      this.buffDVmaf2.Size = new System.Drawing.Size(199, 349);
+      this.buffDVmaf2.Size = new System.Drawing.Size(252, 372);
       this.buffDVmaf2.TabIndex = 1;
       this.buffDVmaf2.Visible = false;
       this.buffDVmaf2.CellParsing += new System.Windows.Forms.DataGridViewCellParsingEventHandler(this.buffDVmaf_CellParsing);
-      this.buffDVmaf2.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.buffDVmaf2_EditingControlShowing);
-      this.buffDVmaf2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyUp);
+      this.buffDVmaf2.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.buffDVmaf2_CellValidated);
+      this.buffDVmaf2.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.buffDVmaf_EditingControlShowing);
+      this.buffDVmaf2.VisibleChanged += new System.EventHandler(this.buffDVmaf2_VisibleChanged);
+      this.buffDVmaf2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyDown);
       this.buffDVmaf2.Leave += new System.EventHandler(this.buffDVmaf2_Leave);
       // 
       // textBox_MAF1
       // 
+      this.textBox_MAF1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.textBox_MAF1.BackColor = System.Drawing.SystemColors.AppWorkspace;
       this.textBox_MAF1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       this.textBox_MAF1.Cursor = System.Windows.Forms.Cursors.Default;
       this.textBox_MAF1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.textBox_MAF1.Location = new System.Drawing.Point(0, 3);
+      this.textBox_MAF1.Location = new System.Drawing.Point(4, 427);
       this.textBox_MAF1.MaxLength = 12;
       this.textBox_MAF1.Name = "textBox_MAF1";
-      this.textBox_MAF1.Size = new System.Drawing.Size(200, 20);
+      this.textBox_MAF1.Size = new System.Drawing.Size(256, 20);
       this.textBox_MAF1.TabIndex = 2;
       this.textBox_MAF1.Text = "MAF Bank 1";
       this.textBox_MAF1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -324,14 +320,15 @@ namespace AutoTune
       // 
       // textBox_MAF2
       // 
+      this.textBox_MAF2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.textBox_MAF2.BackColor = System.Drawing.SystemColors.AppWorkspace;
       this.textBox_MAF2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       this.textBox_MAF2.Cursor = System.Windows.Forms.Cursors.Default;
       this.textBox_MAF2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.textBox_MAF2.Location = new System.Drawing.Point(201, 3);
+      this.textBox_MAF2.Location = new System.Drawing.Point(261, 427);
       this.textBox_MAF2.MaxLength = 12;
       this.textBox_MAF2.Name = "textBox_MAF2";
-      this.textBox_MAF2.Size = new System.Drawing.Size(199, 20);
+      this.textBox_MAF2.Size = new System.Drawing.Size(252, 20);
       this.textBox_MAF2.TabIndex = 3;
       this.textBox_MAF2.Text = "MAF Bank 2";
       this.textBox_MAF2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -355,6 +352,8 @@ namespace AutoTune
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(800, 450);
       this.Controls.Add(this.btnCancelParse);
+      this.Controls.Add(this.textBox_MAF2);
+      this.Controls.Add(this.textBox_MAF1);
       this.Controls.Add(this.tabControl1);
       this.Controls.Add(this.statusStrip1);
       this.Controls.Add(this.menuStrip1);
@@ -369,7 +368,6 @@ namespace AutoTune
       this.tabPage1.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.buffDV1)).EndInit();
       this.tabPage2.ResumeLayout(false);
-      this.tabPage2.PerformLayout();
       this.splitContainer1.Panel1.ResumeLayout(false);
       this.splitContainer1.Panel2.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -403,7 +401,6 @@ namespace AutoTune
     private System.Windows.Forms.TextBox textBox_MAF2;
     private Buffer.BuffDV buffDVmaf2;
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
-    private System.Windows.Forms.Button btn_ScaleMAF;
   }
 }
 

@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MAF_Scaling.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="BuffDV.cs">
       <SubType>Component</SubType>
