@@ -30,16 +30,20 @@ namespace AutoTune
     /// </summary>
     private void InitializeComponent()
     {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AutoTune));
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+      this.helpForm = new HelpForm();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.openFileToolStripMenuItem_Open = new System.Windows.Forms.ToolStripMenuItem();
       this.closeFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
       this.fileToolStripMenuItem_Exit = new System.Windows.Forms.ToolStripMenuItem();
+      this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.viewHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.statusStrip1 = new System.Windows.Forms.StatusStrip();
       this.ProgressBar = new System.Windows.Forms.ToolStripProgressBar();
       this.StatusBox = new System.Windows.Forms.ToolStripStatusLabel();
@@ -53,6 +57,7 @@ namespace AutoTune
       this.textBox_MAF1 = new System.Windows.Forms.TextBox();
       this.textBox_MAF2 = new System.Windows.Forms.TextBox();
       this.btnCancelParse = new System.Windows.Forms.Button();
+      this.aboutUsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.menuStrip1.SuspendLayout();
       this.statusStrip1.SuspendLayout();
       this.tabControl1.SuspendLayout();
@@ -67,10 +72,23 @@ namespace AutoTune
       ((System.ComponentModel.ISupportInitialize)(this.buffDVmaf2)).BeginInit();
       this.SuspendLayout();
       // 
+      // helpForm
+      // 
+      this.helpForm.BackColor = System.Drawing.SystemColors.ControlLight;
+      this.helpForm.ClientSize = new System.Drawing.Size(593, 239);
+      this.helpForm.ForeColor = System.Drawing.SystemColors.ControlText;
+      this.helpForm.Location = new System.Drawing.Point(156, 156);
+      this.helpForm.Name = "helpForm";
+      this.helpForm.Opacity = 0.95D;
+      this.helpForm.ShowIcon = false;
+      this.helpForm.Text = "Help";
+      this.helpForm.Visible = false;
+      // 
       // menuStrip1
       // 
       this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.helpToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
       this.menuStrip1.Name = "menuStrip1";
       this.menuStrip1.Size = new System.Drawing.Size(800, 24);
@@ -115,6 +133,23 @@ namespace AutoTune
       this.fileToolStripMenuItem_Exit.Size = new System.Drawing.Size(124, 22);
       this.fileToolStripMenuItem_Exit.Text = "Exit";
       this.fileToolStripMenuItem_Exit.Click += new System.EventHandler(this.fileToolStripMenuItem_Exit_Click);
+      // 
+      // helpToolStripMenuItem
+      // 
+      this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewHelpToolStripMenuItem,
+            this.aboutUsToolStripMenuItem});
+      this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+      this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+      this.helpToolStripMenuItem.Text = "Help";
+      // 
+      // viewHelpToolStripMenuItem
+      // 
+      this.viewHelpToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("viewHelpToolStripMenuItem.Image")));
+      this.viewHelpToolStripMenuItem.Name = "viewHelpToolStripMenuItem";
+      this.viewHelpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.viewHelpToolStripMenuItem.Text = "View Help";
+      this.viewHelpToolStripMenuItem.Click += new System.EventHandler(this.viewHelpToolStripMenuItem_Click);
       // 
       // statusStrip1
       // 
@@ -346,6 +381,13 @@ namespace AutoTune
       this.btnCancelParse.Visible = false;
       this.btnCancelParse.Click += new System.EventHandler(this.btnCancel_Click);
       // 
+      // aboutUsToolStripMenuItem
+      // 
+      this.aboutUsToolStripMenuItem.Name = "aboutUsToolStripMenuItem";
+      this.aboutUsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.aboutUsToolStripMenuItem.Text = "About Us";
+      this.aboutUsToolStripMenuItem.Click += new System.EventHandler(this.aboutUsToolStripMenuItem_Click);
+      // 
       // AutoTune
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -393,6 +435,8 @@ namespace AutoTune
     private System.Windows.Forms.TabPage tabPage2;
     public Buffer.BuffDV buffDV1;
     private Parser parser;
+    public HelpForm helpForm;
+    public About about;
     private System.Windows.Forms.Button btnCancelParse;
     private System.Windows.Forms.ToolStripStatusLabel StatusBox;
     private Buffer.BuffDV buffDVmaf1;
@@ -401,6 +445,9 @@ namespace AutoTune
     private System.Windows.Forms.TextBox textBox_MAF2;
     private Buffer.BuffDV buffDVmaf2;
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+    private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem viewHelpToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem aboutUsToolStripMenuItem;
   }
 }
 

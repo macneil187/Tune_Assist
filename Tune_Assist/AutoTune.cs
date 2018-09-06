@@ -682,5 +682,17 @@ namespace AutoTune
         }
       }
     }
+
+    private void viewHelpToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      HelpForm helpForm = new HelpForm();
+      helpForm.Show();
+    }
+
+    private void aboutUsToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      About about = new About();
+      about.Show();
+    }
   }
 }
