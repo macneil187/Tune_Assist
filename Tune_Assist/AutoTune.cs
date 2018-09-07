@@ -103,6 +103,8 @@ namespace AutoTune
       buffDVmaf2.DataSource = null;
       buffDVmaf2.Refresh();
       tab2Loader(false);
+      buildMAF_DT();
+      SetAppState(AppStates.Idle, null);
       closeFileToolStripMenuItem.Enabled = false;
     }
 
@@ -151,8 +153,9 @@ namespace AutoTune
         else
         {
           buffDV1.DataSource = null;
+
           buffDV1.DataSource = (DataTable)e.Result;
-          if (buffDV1.RowCount > 50)
+          if (buffDV1.RowCount > 100)
           {
             buffDV1.Visible = true;
             buffDVmaf1.Visible = true;
@@ -168,6 +171,10 @@ namespace AutoTune
             }
             catch
             { }
+          }
+          else
+          {
+            buffDV1.DataSource = null;
           }
         }
       }
@@ -186,6 +193,16 @@ namespace AutoTune
     private void buildMAF_DT()
     {
       // MAF 1 DataTable
+      if (MAF1_DT.Columns.Count >0 || MAF1_DT.Rows.Count >0)
+      {
+        MAF1_DT.Clear();
+        MAF2_DT.Clear();
+        MAF1_DT.Columns.Clear();
+        MAF2_DT.Columns.Clear();
+        MAF1_DT.Rows.Clear();
+        MAF2_DT.Rows.Clear();
+      }
+
       MAF1_DT.Columns.Add("Volts", typeof(double));
       MAF1_DT.Columns.Add("Values", typeof(int));
       MAF1_DT.Columns.Add("Adjustments", typeof(int));

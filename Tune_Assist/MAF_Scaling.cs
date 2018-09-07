@@ -33,6 +33,7 @@ namespace AutoTune
     List<int> hits2 = new List<int>(64);
     int timeDex; int STb1Dex; int STb2Dex; int accelDex; int LTb1Dex; int LTb2Dex;
     int afrB1Dex; int afrB2Dex; int mafB1Dex; int mafB2Dex; int targetDex;
+    int intakeAirTempDex; int CoolantTempDEX;
     private int indexFinder1 = 0;
     private int indexFinder2 = 0;
     private int time;
@@ -45,6 +46,9 @@ namespace AutoTune
     private double upcoming_AFR2 = 0;
     private double actualAFR1;
     private double actualAFR2;
+    private double coolantTemp;
+    private double IntakeAirTemp;
+    private double IntakeAirTemp_AVG;
     private double tmpAdjustment1;
     private double tmpAdjustment2;
     private int shorttrim1;
@@ -84,10 +88,18 @@ namespace AutoTune
 
         if (tempgrid.Rows.Count >= 100)
           totalLines = tempgrid.Rows.Count;
-
-        if (mafB2Dex != -1)   // dual MAF check
-         dualTB = true;
+        else
+        {
+          MessageBox.Show("The selected CSV log is not long enough.\nPlease log more data and retry.");
+          return dt;
+        }
+        
         FindHeader_Indexes(tempgrid);
+
+        if (Properties.Settings.Default.MAF_IAT && intakeAirTempDex != -1)
+        {
+          FindIAT_average(tempgrid);
+        }
 
         if (OL_DT1.Rows.Count == 0)  //Build first line for the adjustment DataTable
         {
@@ -101,8 +113,9 @@ namespace AutoTune
           OL_DT1.Rows.Add(dr);
         }
 
-        if (dualTB)
+        if (mafB2Dex != -1)
         {
+          dualTB = true;  // Set dual MAF bool
           if (CL_DT2.Rows.Count == 0)  //Build first line for the adjustment DataTable
           {
             DataRow dr = CL_DT2.NewRow();
@@ -116,7 +129,7 @@ namespace AutoTune
           }
         }
 
-        if (targetDex != -1 && mafB1Dex != -1 && afrB1Dex != -1 && afrB2Dex != -1)
+        if (targetDex != -1 && mafB1Dex != -1 && afrB1Dex != -1 && afrB2Dex != -1 && CoolantTempDEX != -1)
         {
           for (int r = 0; r < tempgrid.Rows.Count - 1; ++r)   // Row loop
           {
@@ -131,7 +144,7 @@ namespace AutoTune
             }
             catch
             {
-              Console.WriteLine(" error while setting parameter values for row {0}", r);
+              Console.WriteLine("Error while setting parameter values for row {0}", r);
               continue;
             }
             if (timeDex != -1 && STb1Dex != -1 && STb2Dex != -1)
@@ -145,21 +158,13 @@ namespace AutoTune
                 shorttrim1 = Convert.ToInt32(tempgrid.Rows[r].Cells[STb1Dex].Value);
                 shorttrim2 = Convert.ToInt32(tempgrid.Rows[r].Cells[STb1Dex].Value);
                 accelChange = Convert.ToDouble(((nextaccel - accel) / (nexttime - time)) * 1000);
+                coolantTemp = Convert.ToDouble(tempgrid.Rows[r + 1].Cells[CoolantTempDEX].Value);
+                IntakeAirTemp = Convert.ToInt32(tempgrid.Rows[r].Cells[intakeAirTempDex].Value);
+
+
                 if (dualTB)
                 {
                   maf2v = Convert.ToDouble(tempgrid.Rows[r].Cells[mafB2Dex].Value);
-                }
-                if (r > 5 && r < CL_DT1.Rows.Count - 5 && afr1 < 14.7)
-                {
-                  actualAFR1 = Convert.ToDouble(tempgrid.Rows[r + 3].Cells[afrB1Dex].Value);
-                  if (dualTB && afr2 < 14.7)
-                    actualAFR2 = Convert.ToDouble(tempgrid.Rows[r + 3].Cells[afrB2Dex].Value);
-                  else
-                    actualAFR2 = 0;
-                }
-                else
-                {
-                  actualAFR1 = 0;
                 }
               }
               catch
@@ -168,54 +173,89 @@ namespace AutoTune
                 continue;
               }
 
-              if (LTb1Dex != -1 && dualTB) // Dual throttle bodies and have logged long term trim
+              if (target == 14.7 && coolantTemp > 176)
               {
-                longtrim1 = Convert.ToDouble(tempgrid.Rows[r].Cells[LTb1Dex].Value);
-                longtrim2 = Convert.ToDouble(tempgrid.Rows[r].Cells[LTb2Dex].Value);
-                finaltrim1 = (shorttrim1 + Convert.ToInt32(longtrim1)) / 2;
-                finaltrim2 = (shorttrim2 + Convert.ToInt32(longtrim2)) / 2;
-              }
-              else if (LTb1Dex == -1 && dualTB) // Dual throttle bodies and have NOT logged long term trim
-              {
-                finaltrim1 = shorttrim1;
-                finaltrim2 = shorttrim2;
-              }
-              else if (LTb1Dex != -1 && !dualTB) // Single throttle body and have logged long term trim
-              {
-                longtrim1 = Convert.ToDouble(tempgrid.Rows[r].Cells[LTb1Dex].Value);
-                longtrim2 = Convert.ToDouble(tempgrid.Rows[r].Cells[LTb2Dex].Value);
-                finaltrim1 = (shorttrim1 + Convert.ToInt32(longtrim1)) / 2;
-                finaltrim2 = (shorttrim2 + Convert.ToInt32(longtrim2)) / 2;
-                finaltrim1 = (finaltrim1 + finaltrim2) / 2;
-              }
-              else
-              {
-                finaltrim1 = (shorttrim1 + shorttrim2) / 2;
-                finaltrim2 = 100;
-              }
 
-              indexFinder1 = maf_volts.BinarySearch(maf1v);
-              indexFinder1 = ~indexFinder1;
-              if (dualTB)
-              {
-                indexFinder2 = maf_volts.BinarySearch(maf2v);
-                indexFinder2 = ~indexFinder2;
-              }
-              // CLOSED LOOP
-              if (target == 14.7 && accelChange > -0.1 && accelChange < 0.1 && indexFinder1 >= 0 && indexFinder1 < maf_volts.Count)
-              {
-                ClosedLoop_Start();
+                if (LTb1Dex != -1 && dualTB) // Dual throttle bodies and have logged long term trim
+                {
+                  longtrim1 = Convert.ToDouble(tempgrid.Rows[r].Cells[LTb1Dex].Value);
+                  longtrim2 = Convert.ToDouble(tempgrid.Rows[r].Cells[LTb2Dex].Value);
+                  finaltrim1 = (shorttrim1 + Convert.ToInt32(longtrim1)) / 2;
+                  finaltrim2 = (shorttrim2 + Convert.ToInt32(longtrim2)) / 2;
+                }
+                else if (LTb1Dex == -1 && dualTB) // Dual throttle bodies and have NOT logged long term trim
+                {
+                  finaltrim1 = shorttrim1;
+                  finaltrim2 = shorttrim2;
+                }
+                else if (LTb1Dex != -1 && !dualTB) // Single throttle body and have logged long term trim
+                {
+                  longtrim1 = Convert.ToDouble(tempgrid.Rows[r].Cells[LTb1Dex].Value);
+                  longtrim2 = Convert.ToDouble(tempgrid.Rows[r].Cells[LTb2Dex].Value);
+                  finaltrim1 = (shorttrim1 + Convert.ToInt32(longtrim1)) / 2;
+                  finaltrim2 = (shorttrim2 + Convert.ToInt32(longtrim2)) / 2;
+                  finaltrim1 = (finaltrim1 + finaltrim2) / 2;
+                }
+                else
+                {
+                  finaltrim1 = (shorttrim1 + shorttrim2) / 2;
+                  finaltrim2 = 100;
+                }
+
+                indexFinder1 = maf_volts.BinarySearch(maf1v);
+                indexFinder1 = ~indexFinder1;
+
+                if (dualTB)
+                {
+                  indexFinder2 = maf_volts.BinarySearch(maf2v);
+                  indexFinder2 = ~indexFinder2;
+                }
+                // CLOSED LOOP
+                //  filter out intake air temp changes  &&  filter out quick accel pedal position changes
+                if (Properties.Settings.Default.MAF_IAT && intakeAirTempDex != -1
+                        && (IntakeAirTemp >= IntakeAirTemp_AVG - 10 && IntakeAirTemp <= IntakeAirTemp_AVG + 10)
+                        && Properties.Settings.Default.MAF_ACCEL && accelChange > -0.1 && accelChange < 0.1
+                        && indexFinder1 >= 0 && indexFinder1 < maf_volts.Count)
+                {
+                  ClosedLoop_Start();
+                }
+                //  filter out quick accel pedal position changes
+                else if ((!Properties.Settings.Default.MAF_IAT || intakeAirTempDex == -1)
+                        && Properties.Settings.Default.MAF_ACCEL && accelChange > -0.1 && accelChange < 0.1
+                        && indexFinder1 >= 0 && indexFinder1 < maf_volts.Count)
+                {
+                  ClosedLoop_Start();
+                }
+                //  filter out intake air temp changes
+                else if (Properties.Settings.Default.MAF_IAT && intakeAirTempDex != -1
+                        && (IntakeAirTemp >= IntakeAirTemp_AVG-10 && IntakeAirTemp <= IntakeAirTemp_AVG + 10)
+                        && !Properties.Settings.Default.MAF_ACCEL && indexFinder1 >= 0 && indexFinder1 < maf_volts.Count)
+                {
+                  ClosedLoop_Start();
+                }
               }
             }
             else
             {
-              Console.WriteLine("Not enough parameters to calculate close loop maf scaling");
+              StringBuilder sb = new StringBuilder();
+              sb.Append("Could not find the following headers: \n");
+              if (timeDex == -1)
+                sb.Append("Time\n");
+              if (STb1Dex == -1)
+                sb.Append("A/F CORR-B1 (%)\n");
+              if (STb2Dex != -1)
+                sb.Append("A/F CORR-B2 (%)\n");
+              Console.WriteLine(sb.ToString());
+              MessageBox.Show("Error", "We could not find minimal parameters needed\n"
+                + "to calculate the MAF scaling adjustments.\n"
+                + sb.ToString());
             }
 
           /*  if (target < 14.7 && afrB1Dex != -1 && afrB2Dex != -1 && mafB1Dex != -1 && indexFinder1 >= 0 && indexFinder1 < maf_volts.Count)
             {
               OpenLoop_Start();
             }  */
+
           }  //END of looping rows
             //NOW start reading valuses from DT
 
@@ -237,7 +277,22 @@ namespace AutoTune
         }
         else
         {
-          MessageBox.Show("Error", "We could not find enough parameters to\ncalculate MAF scaling adjustments.");
+          StringBuilder sb = new StringBuilder();
+          sb.Append("Could not find the following headers: \n");
+          if (targetDex == -1)
+            sb.Append("Target AFR\n");
+          if (mafB1Dex == -1)
+            sb.Append("MAS A/F -B2 (V)\n");
+          if (afrB1Dex != -1)
+            sb.Append("AFR WB-B1 / LC-1 (1) AFR\n");
+          if (afrB2Dex != -1)
+            sb.Append("AFR WB-B2 / LC-1 (2) AFR\n");
+          if (CoolantTempDEX != -1)
+            sb.Append("Coolant Temp\n");
+          Console.WriteLine(sb.ToString());
+          MessageBox.Show("Error", "We could not find minimal parameters needed\n" 
+            + "to calculate Closed Loop MAF scaling adjustments.\n"
+            + sb.ToString());
         }
         return dt;
       }
@@ -267,7 +322,7 @@ namespace AutoTune
             CL_DT1.Rows.Add(dr);
           }
           double cell1 = Convert.ToDouble(CL_DT1.Rows[i][indexFinder1]);
-          if (finaltrim1 < 75 || finaltrim1 > 125)
+          if (finaltrim1 < 60 || finaltrim1 > 140)
             break;
           if (cell1 == 1.1 && indexFinder1 >= 0 && indexFinder1 < maf_volts.Count)
           {
@@ -294,7 +349,7 @@ namespace AutoTune
             CL_DT2.Rows.Add(dr);
           }
           double cell2 = Convert.ToDouble(CL_DT2.Rows[i][indexFinder2]);
-          if (finaltrim2 < 75 || finaltrim2 > 125)
+          if (finaltrim1 < 60 || finaltrim1 > 140)
             break;
           if (cell2 == 1.1 && indexFinder2 >= 0 && indexFinder2 < maf_volts.Count)
           {
@@ -466,6 +521,20 @@ namespace AutoTune
             }
             OL_DT1.Rows.Add(dr);
           }
+          /*   might use afr from few rows down to get more accurate reading
+             if (r > 2 && r < CL_DT1.Rows.Count - 2 && afr1 < 14.7)
+             {
+               actualAFR1 = Convert.ToDouble(tempgrid.Rows[r + 3].Cells[afrB1Dex].Value);
+               if (dualTB && afr2 < 14.7)
+                 actualAFR2 = Convert.ToDouble(tempgrid.Rows[r + 3].Cells[afrB2Dex].Value);
+               else
+                 actualAFR2 = 0;
+             }
+             else
+             {
+               actualAFR1 = 0;
+             }
+          */
 
           if (cell1 == 1.1 && actualAFR1 != 0 && indexFinder1 >= 0 && indexFinder1 < maf_volts.Count)
           {
@@ -645,9 +714,21 @@ namespace AutoTune
       }
     }
 
+    private void FindIAT_average(DataGridView tempgrid)
+    {
+      List<double> IAT_Full = new List<double>();
+
+      for (int r = 0; r < tempgrid.Rows.Count - 1; ++r)
+      {
+        double intakeAirTemp = Convert.ToDouble(tempgrid.Rows[r].Cells[intakeAirTempDex].Value);
+        IAT_Full.Add(intakeAirTemp);
+      }
+      IntakeAirTemp_AVG = (double)IAT_Full.Average();
+      Console.WriteLine("The average Intake Air Temp is: " + Convert.ToString(IntakeAirTemp_AVG));
+    }
+
     private void FindHeader_Indexes(DataGridView tempgrid)
     {
-      //Time,A/F CORR-B1 (%),A/F CORR-B2 (%),ACCEL PED POS 1 (V-Accel), LT Fuel Trim B1 (%), LT Fuel Trim B2 (%), AFR WB-B1,AFR WB-B2, MAS A/F -B1 (V),MAS A/F -B2 (V),TARGET AFR
       if (tempgrid.Columns.Contains("Time"))
         timeDex = tempgrid.Columns["Time"].Index;
       else
@@ -674,10 +755,14 @@ namespace AutoTune
         LTb2Dex = -1;
       if (tempgrid.Columns.Contains("AFR WB-B1"))
         afrB1Dex = tempgrid.Columns["AFR WB-B1"].Index;
+      else if (tempgrid.Columns.Contains("LC-1 (1) AFR"))   //Innovate LC1, LM1, LM2
+        afrB1Dex = tempgrid.Columns["LC-1 (1) AFR"].Index;
       else
         afrB1Dex = -1;
       if (tempgrid.Columns.Contains("AFR WB-B2"))
         afrB2Dex = tempgrid.Columns["AFR WB-B2"].Index;
+      else if (tempgrid.Columns.Contains("LC-1 (2) AFR"))   //Innovate LC1, LM1, LM2
+        tempgrid.Columns.Contains("LC-1 (2) AFR");
       else
         afrB2Dex = -1;
       if (tempgrid.Columns.Contains("MAS A/F -B1 (V)"))
@@ -692,6 +777,18 @@ namespace AutoTune
         targetDex = tempgrid.Columns["TARGET AFR"].Index;
       else
         targetDex = -1;
+      if (tempgrid.Columns.Contains("INTAKE AIR TMP"))
+        intakeAirTempDex = tempgrid.Columns["INTAKE AIR TMP"].Index;
+      else
+        intakeAirTempDex = -1;
+      if (tempgrid.Columns.Contains("COOLANT TEMP"))
+        CoolantTempDEX = tempgrid.Columns["COOLANT TEMP"].Index;
+      else
+        CoolantTempDEX = -1;
+
+      // Time,A/F CORR-B1 (%),A/F CORR-B2 (%),ACCEL PED POS 1 (V-Accel), LT Fuel Trim B1 (%), 
+      //    LT Fuel Trim B2 (%), AFR WB-B1,AFR WB-B2, MAS A/F -B1 (V),MAS A/F -B2 (V),TARGET AFR
+      // LC-1 (1) AFR, LC-1 (2) AFR, INTAKE AIR TMP, COOLANT TEMP
     }
   }
 }
