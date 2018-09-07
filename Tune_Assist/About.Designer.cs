@@ -124,7 +124,6 @@
       this.richTextBox1.TabIndex = 25;
       this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
       this.richTextBox1.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBox1_LinkClicked);
-      this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
       // 
       // About
       // 
@@ -133,7 +132,7 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(500, 227);
       this.Controls.Add(this.tableLayoutPanel);
-      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
       this.MaximizeBox = false;
       this.MinimizeBox = false;
       this.Name = "About";

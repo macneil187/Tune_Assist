@@ -14,9 +14,9 @@ namespace AutoTune
     public About()
     {
       InitializeComponent();
-      this.Text = String.Format("About {0}", AssemblyTitle);
+      this.Text = string.Format("About {0}", AssemblyTitle);
       this.labelProductName.Text = AssemblyProduct;
-      this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
+      this.labelVersion.Text = string.Format("Version {0}", AssemblyVersion);
     }
 
     #region Assembly Attribute Accessors
@@ -102,11 +102,6 @@ namespace AutoTune
     private void okButton_Click(object sender, EventArgs e)
     {
       this.Dispose();
-    }
-
-    private void richTextBox1_TextChanged(object sender, EventArgs e)
-    {
-
     }
 
     private void richTextBox1_LinkClicked(object sender, LinkClickedEventArgs e)

@@ -1,6 +1,6 @@
 ﻿namespace AutoTune
 {
-  partial class HelpForm
+  public partial class HelpForm
   {
     /// <summary>
     /// Required designer variable.
@@ -56,9 +56,10 @@
       this.ClientSize = new System.Drawing.Size(593, 239);
       this.Controls.Add(this.HelpTextBox);
       this.ForeColor = System.Drawing.SystemColors.ControlText;
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
       this.Name = "HelpForm";
-      this.Opacity = 0.95D;
       this.ShowIcon = false;
+      this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
       this.Text = "Help";
       this.ResumeLayout(false);
 

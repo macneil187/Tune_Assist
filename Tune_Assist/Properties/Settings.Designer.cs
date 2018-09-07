@@ -22,5 +22,53 @@ namespace AutoTune.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MAF_CL {
+            get {
+                return ((bool)(this["MAF_CL"]));
+            }
+            set {
+                this["MAF_CL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MAF_OL {
+            get {
+                return ((bool)(this["MAF_OL"]));
+            }
+            set {
+                this["MAF_OL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MAF_IAT {
+            get {
+                return ((bool)(this["MAF_IAT"]));
+            }
+            set {
+                this["MAF_IAT"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MAF_ACCEL {
+            get {
+                return ((bool)(this["MAF_ACCEL"]));
+            }
+            set {
+                this["MAF_ACCEL"] = value;
+            }
+        }
     }
 }

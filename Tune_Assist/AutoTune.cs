@@ -13,30 +13,26 @@ namespace AutoTune
 {
   public partial class AutoTune : Form
   {
-    public static AutoTune autotune;
     private enum AppStates { Idle, ParsingLog };
+    public static AutoTune autotune;
+    public List<int> MAFb1UserInput = new List<int>();
+    public List<int> MAFb2UserInput = new List<int>();
+    public List<int> AdjustMAFb1 = new List<int>();
+    public List<int> AdjustMAFb2 = new List<int>();
     private BackgroundWorker worker;
     private BackgroundWorker mafWorker;
-    private string fileName;
-    private bool dualTB;
     private DataTable MAF1_DT = new DataTable();
     private DataTable MAF2_DT = new DataTable();
     private TextBox TextBox1 = new TextBox();
-
-    public List<double> maf_volts = new List<double>
-    {
-      0.08, 0.16, 0.23, 0.31, 0.39, 0.47, 0.55, 0.63, 0.70, 0.78, 0.86, 0.94, 1.02, 1.09, 1.17, 1.25, 1.33,
-      1.41, 1.48, 1.56, 1.64, 1.72, 1.80, 1.88, 1.95, 2.03, 2.11, 2.19, 2.27, 2.34, 2.42, 2.50, 2.58, 2.66,
-      2.73, 2.81, 2.89, 2.97, 3.05, 3.13, 3.20, 3.28, 3.36, 3.44, 3.52, 3.59, 3.67, 3.75, 3.83, 3.91, 3.98,
-      4.06, 4.14, 4.22, 4.30, 4.38, 4.45, 4.53, 4.61, 4.69, 4.77, 4.84, 4.92, 5.00
-    };
-
+    private MAF_Scaling mafScaling = new MAF_Scaling();
     private List<Tuple<double, int, int>> MafB1 = new List<Tuple<double, int, int>>();
     private List<Tuple<double, int, int>> MafB2 = new List<Tuple<double, int, int>>();
-    public List<Int32> MAFb1UserInput = new List<Int32>(); //64
-    public List<Int32> MAFb2UserInput = new List<Int32>();
-    public List<Int32> AdjustMAFb1 = new List<Int32>();
-    public List<Int32> AdjustMAFb2 = new List<Int32>();
+    private string fileName;
+    private bool dualTB;
+    private bool mafOption_CL = Properties.Settings.Default.MAF_CL;
+    private bool mafOption_OL = Properties.Settings.Default.MAF_OL;
+    private bool mafOption_IAT = Properties.Settings.Default.MAF_IAT;
+    private bool mafOption_ACCEL = Properties.Settings.Default.MAF_ACCEL;
 
 
     public static List<string> mafHeaders = new List<string>
@@ -68,13 +64,17 @@ namespace AutoTune
           StatusBox.Text = this.fileName;
           try
           {
-            worker = new BackgroundWorker();
-            worker.DoWork += worker_ParseLog;
-            worker.RunWorkerCompleted += worker_ParseLogCompleted;
-            worker.WorkerReportsProgress = true;
-            worker.WorkerSupportsCancellation = true;
-            worker.ProgressChanged += worker_ProgressChanged;
-            worker.RunWorkerAsync(openFileDialog.FileName);
+            if (Properties.Settings.Default.MAF_CL)
+            {
+              worker = new BackgroundWorker();
+              worker.DoWork += worker_ParseLog;
+              worker.RunWorkerCompleted += worker_ParseLogCompleted;
+              worker.WorkerReportsProgress = true;
+              worker.WorkerSupportsCancellation = true;
+              worker.ProgressChanged += worker_ProgressChanged;
+              worker.RunWorkerAsync(openFileDialog.FileName);
+            }
+
           }
           catch
           {
@@ -191,9 +191,9 @@ namespace AutoTune
       MAF1_DT.Columns.Add("Adjustments", typeof(int));
       MAF1_DT.Columns.Add("Multiplier", typeof(double));
 
-      foreach (double d in maf_volts)
+      foreach (double d in mafScaling.maf_volts)
         MAF1_DT.Rows.Add(d);
-      
+
       buffDVmaf1.Rows.Clear();
       buffDVmaf1.Columns.Clear();
       buffDVmaf1.DataSource = null;
@@ -658,8 +658,8 @@ namespace AutoTune
          string valueB = row.Cells["Multiplier"].Value.ToString();
          int value;
          double multi = 0;
-         if (Int32.TryParse(valueA, out value)
-             && Double.TryParse(valueB, out multi))
+         if (int.TryParse(valueA, out value)
+             && double.TryParse(valueB, out multi))
          {
           row.Cells["Adjustments"].Value = (double)value * multi;
          }
@@ -675,8 +675,8 @@ namespace AutoTune
         string valueB = row.Cells["Multiplier"].Value.ToString();
         int value;
         double multi = 0;
-        if (Int32.TryParse(valueA, out value)
-            && Double.TryParse(valueB, out multi))
+        if (int.TryParse(valueA, out value)
+            && double.TryParse(valueB, out multi))
         {
           row.Cells["Adjustments"].Value = (double)value * multi;
         }
@@ -693,6 +693,12 @@ namespace AutoTune
     {
       About about = new About();
       about.Show();
+    }
+
+    private void toolStripMenuItem1_Click(object sender, EventArgs e)
+    {
+      OptionForm optionsForm = new OptionForm();
+      optionsForm.Show();
     }
   }
 }

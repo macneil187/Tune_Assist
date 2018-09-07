@@ -11,8 +11,16 @@ namespace AutoTune
 {
   public class MAF_Scaling
   {
-    List<int> maf1values = AutoTune.autotune.MAFb1UserInput;
-    List<int> maf2values = AutoTune.autotune.MAFb2UserInput;
+    public List<double> maf_volts = new List<double>
+    {
+      0.08, 0.16, 0.23, 0.31, 0.39, 0.47, 0.55, 0.63, 0.70, 0.78, 0.86, 0.94, 1.02, 1.09, 1.17, 1.25, 1.33,
+      1.41, 1.48, 1.56, 1.64, 1.72, 1.80, 1.88, 1.95, 2.03, 2.11, 2.19, 2.27, 2.34, 2.42, 2.50, 2.58, 2.66,
+      2.73, 2.81, 2.89, 2.97, 3.05, 3.13, 3.20, 3.28, 3.36, 3.44, 3.52, 3.59, 3.67, 3.75, 3.83, 3.91, 3.98,
+      4.06, 4.14, 4.22, 4.30, 4.38, 4.45, 4.53, 4.61, 4.69, 4.77, 4.84, 4.92, 5.00
+    };
+
+    //List<int> maf1values = AutoTune.autotune.MAFb1UserInput;
+    //List<int> maf2values = AutoTune.autotune.MAFb2UserInput;
     List<double> maf1ClosedLoop = new List<double>();
     List<double> maf2ClosedLoop = new List<double>();
     List<double> maf1OpenLoop = new List<double>();
@@ -23,46 +31,36 @@ namespace AutoTune
     DataTable OL_DT2 = new DataTable();
     List<int> hits1 = new List<int>(64);
     List<int> hits2 = new List<int>(64);
-    List<double> maf1Adjust = new List<double>(64);
-    List<double> maf2Adjust = new List<double>(64);
-    List<int> tmpMAF1 = new List<int>();
-    List<double> maf_volts = new List<double>
-    {
-      0.08, 0.16, 0.23, 0.31, 0.39, 0.47, 0.55, 0.63, 0.70, 0.78, 0.86, 0.94, 1.02, 1.09, 1.17, 1.25, 1.33,
-      1.41, 1.48, 1.56, 1.64, 1.72, 1.80, 1.88, 1.95, 2.03, 2.11, 2.19, 2.27, 2.34, 2.42, 2.50, 2.58, 2.66,
-      2.73, 2.81, 2.89, 2.97, 3.05, 3.13, 3.20, 3.28, 3.36, 3.44, 3.52, 3.59, 3.67, 3.75, 3.83, 3.91, 3.98,
-      4.06, 4.14, 4.22, 4.30, 4.38, 4.45, 4.53, 4.61, 4.69, 4.77, 4.84, 4.92, 5.00
-    };
     int timeDex; int STb1Dex; int STb2Dex; int accelDex; int LTb1Dex; int LTb2Dex;
     int afrB1Dex; int afrB2Dex; int mafB1Dex; int mafB2Dex; int targetDex;
-    int indexFinder1 = 0;
-    int indexFinder2 = 0;
-    int time;
-    int nexttime;
-    double accel;
-    double nextaccel;
-    double afr1;
-    double upcoming_AFR1 = 0;
-    double afr2;
-    double upcoming_AFR2 = 0;
-    double actualAFR1;
-    double actualAFR2;
-    double tmpAdjustment1;
-    double tmpAdjustment2;
-    int shorttrim1;
-    int shorttrim2 = 100;
-    double target;
-    double accelChange;
-    double maf1v;
-    double maf2v = 0;
-    double longtrim1;
-    double longtrim2;
-    int finaltrim1;
-    int finaltrim2;
-    int totalLines = 0;
-    int readLines = 0;
-    bool dualTB = false;
-    
+    private int indexFinder1 = 0;
+    private int indexFinder2 = 0;
+    private int time;
+    private int nexttime;
+    private double accel;
+    private double nextaccel;
+    private double afr1;
+    private double upcoming_AFR1 = 0;
+    private double afr2;
+    private double upcoming_AFR2 = 0;
+    private double actualAFR1;
+    private double actualAFR2;
+    private double tmpAdjustment1;
+    private double tmpAdjustment2;
+    private int shorttrim1;
+    private int shorttrim2 = 100;
+    private double target;
+    private double accelChange;
+    private double maf1v;
+    private double maf2v = 0;
+    private double longtrim1;
+    private double longtrim2;
+    private int finaltrim1;
+    private int finaltrim2;
+    private int totalLines = 0;
+    private int readLines = 0;
+    private bool dualTB = false;
+
   public void MAF_Scaler(object sender, DoWorkEventArgs e)
     {
     }
@@ -80,28 +78,17 @@ namespace AutoTune
           //maf2OpenLoop.Add(100.00);
           CL_DT1.Columns.Add(Convert.ToString(d));
           CL_DT2.Columns.Add(Convert.ToString(d));
-          OL_DT1.Columns.Add(Convert.ToString(d)); 
+          OL_DT1.Columns.Add(Convert.ToString(d));
           OL_DT2.Columns.Add(Convert.ToString(d));
         }
 
-        if (maf1values.Count == 64)
+        if (tempgrid.Rows.Count >= 100)
           totalLines = tempgrid.Rows.Count;
 
         if (mafB2Dex != -1)   // dual MAF check
          dualTB = true;
         FindHeader_Indexes(tempgrid);
 
-        if (CL_DT1.Rows.Count == 0)  //Build first line for the adjustment DataTable
-        {
-          DataRow dr = CL_DT1.NewRow();
-          int c = 0;
-          foreach (double d in maf_volts)
-          {
-            dr[c] = 1.1;
-            ++c;
-          }
-          CL_DT1.Rows.Add(dr);
-        }
         if (OL_DT1.Rows.Count == 0)  //Build first line for the adjustment DataTable
         {
           DataRow dr = OL_DT1.NewRow();
@@ -126,17 +113,6 @@ namespace AutoTune
               ++c;
             }
             CL_DT2.Rows.Add(dr);
-          }
-          if (OL_DT2.Rows.Count == 0)  //Build first line for the adjustment DataTable
-          {
-            DataRow dr = OL_DT2.NewRow();
-            int c = 0;
-            foreach (double d in maf_volts)
-            {
-              dr[c] = 1.1;
-              ++c;
-            }
-            OL_DT2.Rows.Add(dr);
           }
         }
 
@@ -279,7 +255,7 @@ namespace AutoTune
         //MAF1
         for (int i = 0; ;)   //find empty spot to insert value in DataTable
         {
-          if (i == CL_DT1.Rows.Count - 1)
+          if (i == CL_DT1.Rows.Count - 1 || CL_DT1.Rows.Count == 0)
           {
             DataRow dr = CL_DT1.NewRow();
             int c = 0;
@@ -306,7 +282,7 @@ namespace AutoTune
         //MAF 2
         for (int i = 0; ;)  //Find empty spot to insert value in DataTable 2
         {
-          if (i == CL_DT2.Rows.Count - 1)
+          if (i == CL_DT2.Rows.Count - 1 || CL_DT2.Rows.Count == 0)
           {
             DataRow dr = CL_DT2.NewRow();
             int c = 0;
@@ -337,7 +313,7 @@ namespace AutoTune
         {
           double cell1 = Convert.ToDouble(CL_DT1.Rows[i][indexFinder1]);
 
-          if (i == CL_DT1.Rows.Count - 1)
+          if (i == CL_DT1.Rows.Count - 1 || CL_DT1.Rows.Count == 0)
           {
             DataRow dr = CL_DT1.NewRow();
             int c = 0;
