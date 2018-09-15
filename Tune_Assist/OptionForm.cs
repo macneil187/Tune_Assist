@@ -28,5 +28,21 @@ namespace AutoTune
       Properties.Settings.Default.Save();
       this.Dispose();
     }
+
+    private void checkBoxClosedLoop_CheckedChanged(object sender, EventArgs e)
+    {
+      if (checkBoxClosedLoop.Checked)
+      {
+        checkBoxAccelChange.Checked = true; // Properties.Settings.Default.MAF_IAT = true;
+        checkBoxAirTemp.Checked = true; //Properties.Settings.Default.MAF_ACCEL = true;
+        checkBoxClosedLoop.Checked = true;
+      }
+      else
+      {
+        checkBoxAccelChange.Checked = false;
+        checkBoxAirTemp.Checked = false;
+        checkBoxClosedLoop.Checked = false;
+      }
+    }
   }
 }
