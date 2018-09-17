@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Windows.Forms;
-
-namespace Buffer
+﻿namespace AutoTune
 {
+  using System;
+  using System.Collections.Generic;
+  using System.Data;
+  using System.Windows.Forms;
+
   public class BuffDV : DataGridView
   {
     public BuffDV()
     {
-      DoubleBuffered = true;
+      this.DoubleBuffered = true;
     }
   }
 
@@ -27,7 +27,7 @@ namespace Buffer
 
     public BuffDV_FuelComp()
     {
-      DoubleBuffered = true;
+      this.DoubleBuffered = true;
     }
 
     public DataTable DV_FCrpm()
@@ -39,6 +39,7 @@ namespace Buffer
       {
         rpm.Rows.Add(Convert.ToInt32(i));
       }
+
       return rpm;
     }
   }
@@ -51,7 +52,7 @@ namespace Buffer
       for (int i = 0; i < 8; ++i)
       {
 
-        dt.Columns.Add("", typeof(double));
+        dt.Columns.Add(string.Empty, typeof(double));
         dt.Columns[i].ColumnName = "x" + i;
         dt.Columns[i].ReadOnly = true;
       }
@@ -74,7 +75,7 @@ namespace Buffer
       for (int i = 0; i < 8; ++i)
       {
 
-        dt.Columns.Add("", typeof(double));
+        dt.Columns.Add(string.Empty, typeof(double));
         dt.Columns[i].ColumnName = "x" + i;
         dt.Columns[i].ReadOnly = true;
       }
@@ -97,7 +98,7 @@ namespace Buffer
       for (int i = 0; i < 8; ++i)
       {
 
-        dt.Columns.Add("", typeof(double));
+        dt.Columns.Add(string.Empty, typeof(double));
         dt.Columns[i].ColumnName = "x" + i;
         dt.Columns[i].ReadOnly = true;
       }
@@ -120,7 +121,7 @@ namespace Buffer
       for (int i = 0; i < 8; ++i)
       {
 
-        dt.Columns.Add("", typeof(double));
+        dt.Columns.Add(string.Empty, typeof(double));
         dt.Columns[i].ColumnName = "x" + i;
         dt.Columns[i].ReadOnly = true;
       }
@@ -143,7 +144,7 @@ namespace Buffer
       for (int i = 0; i < 8; ++i)
       {
 
-        dt.Columns.Add("", typeof(double));
+        dt.Columns.Add(string.Empty, typeof(double));
         dt.Columns[i].ColumnName = "x" + i;
         dt.Columns[i].ReadOnly = true;
       }
@@ -166,7 +167,7 @@ namespace Buffer
       for (int i = 0; i < 8; ++i)
       {
 
-        dt.Columns.Add("", typeof(double));
+        dt.Columns.Add(string.Empty, typeof(double));
         dt.Columns[i].ColumnName = "x" + i;
         dt.Columns[i].ReadOnly = true;
       }

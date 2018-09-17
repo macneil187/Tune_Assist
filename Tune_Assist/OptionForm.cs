@@ -14,7 +14,7 @@ namespace AutoTune
   {
     public OptionForm()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     private void buttonCancel_Click(object sender, EventArgs e)
@@ -31,17 +31,17 @@ namespace AutoTune
 
     private void checkBoxClosedLoop_CheckedChanged(object sender, EventArgs e)
     {
-      if (checkBoxClosedLoop.Checked)
+      if (this.checkBoxClosedLoop.Checked)
       {
-        checkBoxAccelChange.Checked = true; // Properties.Settings.Default.MAF_IAT = true;
-        checkBoxAirTemp.Checked = true; //Properties.Settings.Default.MAF_ACCEL = true;
-        checkBoxClosedLoop.Checked = true;
+        this.checkBoxAccelChange.Checked = true; // Properties.Settings.Default.MAF_IAT = true;
+        this.checkBoxAirTemp.Checked = true; //Properties.Settings.Default.MAF_ACCEL = true;
+        this.checkBoxClosedLoop.Checked = true;
       }
       else
       {
-        checkBoxAccelChange.Checked = false;
-        checkBoxAirTemp.Checked = false;
-        checkBoxClosedLoop.Checked = false;
+        this.checkBoxAccelChange.Checked = false;
+        this.checkBoxAirTemp.Checked = false;
+        this.checkBoxClosedLoop.Checked = false;
       }
     }
   }

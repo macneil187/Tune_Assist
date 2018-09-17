@@ -31,13 +31,13 @@ namespace AutoTune
     private void InitializeComponent()
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AutoTune));
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,9 +55,17 @@ namespace AutoTune
       this.StatusBox = new System.Windows.Forms.ToolStripStatusLabel();
       this.tabControl1 = new System.Windows.Forms.TabControl();
       this.tabPage1 = new System.Windows.Forms.TabPage();
+      this.buffDV1 = new BuffDV();
       this.tabPage2 = new System.Windows.Forms.TabPage();
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+      this.buffDVmaf1 = new BuffDV();
+      this.buffDVmaf2 = new BuffDV();
       this.tabPage3 = new System.Windows.Forms.TabPage();
+      this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+      this.DV_FuelComp_RPM = new System.Windows.Forms.DataGridView();
+      this.RPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.DV_FuelComp_XdataByte = new System.Windows.Forms.DataGridView();
+      this.DV_FuelComp = new System.Windows.Forms.DataGridView();
       this.tabPage4 = new System.Windows.Forms.TabPage();
       this.DV_Target = new System.Windows.Forms.DataGridView();
       this.comboBox_Stage = new System.Windows.Forms.ComboBox();
@@ -65,15 +73,7 @@ namespace AutoTune
       this.textBox_MAF1 = new System.Windows.Forms.TextBox();
       this.textBox_MAF2 = new System.Windows.Forms.TextBox();
       this.btnCancelParse = new System.Windows.Forms.Button();
-      this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-      this.DV_FuelComp_RPM = new System.Windows.Forms.DataGridView();
-      this.DV_FuelComp_XdataByte = new System.Windows.Forms.DataGridView();
-      this.DV_FuelComp = new System.Windows.Forms.DataGridView();
-      this.RPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.buffDV1 = new Buffer.BuffDV();
-      this.buffDVmaf1 = new Buffer.BuffDV();
-      this.buffDVmaf2 = new Buffer.BuffDV();
-      this.buffDT = new Buffer.BuffDT();
+      this.buffDT = new BuffDT();
       this.databyte0 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.databyte1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.databyte2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -94,21 +94,21 @@ namespace AutoTune
       this.statusStrip1.SuspendLayout();
       this.tabControl1.SuspendLayout();
       this.tabPage1.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.buffDV1)).BeginInit();
       this.tabPage2.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
       this.splitContainer1.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.buffDVmaf1)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.buffDVmaf2)).BeginInit();
       this.tabPage3.SuspendLayout();
-      this.tabPage4.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.DV_Target)).BeginInit();
       this.tableLayoutPanel1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.DV_FuelComp_RPM)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.DV_FuelComp_XdataByte)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.DV_FuelComp)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.buffDV1)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.buffDVmaf1)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.buffDVmaf2)).BeginInit();
+      this.tabPage4.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.DV_Target)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.buffDT)).BeginInit();
       this.SuspendLayout();
       // 
@@ -246,13 +246,53 @@ namespace AutoTune
       this.tabPage1.Text = "User Log";
       this.tabPage1.UseVisualStyleBackColor = true;
       // 
+      // buffDV1
+      // 
+      this.buffDV1.AllowUserToAddRows = false;
+      this.buffDV1.AllowUserToDeleteRows = false;
+      this.buffDV1.AllowUserToResizeRows = false;
+      this.buffDV1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+      dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+      dataGridViewCellStyle1.BackColor = System.Drawing.Color.Navy;
+      dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
+      dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
+      dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+      this.buffDV1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+      this.buffDV1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+      dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+      dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+      dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+      this.buffDV1.DefaultCellStyle = dataGridViewCellStyle2;
+      this.buffDV1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.buffDV1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+      this.buffDV1.GridColor = System.Drawing.Color.Black;
+      this.buffDV1.Location = new System.Drawing.Point(3, 3);
+      this.buffDV1.Name = "buffDV1";
+      this.buffDV1.ReadOnly = true;
+      this.buffDV1.RowHeadersVisible = false;
+      this.buffDV1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+      this.buffDV1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+      this.buffDV1.Size = new System.Drawing.Size(790, 377);
+      this.buffDV1.TabIndex = 0;
+      this.buffDV1.Visible = false;
+      this.buffDV1.ColumnHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DV_ColumnHeaderMouseDoubleClick);
+      this.buffDV1.VisibleChanged += new System.EventHandler(this.buffDV1_VisibleChanged);
+      this.buffDV1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyDown);
+      this.buffDV1.Leave += new System.EventHandler(this.DV_Leave);
+      // 
       // tabPage2
       // 
       this.tabPage2.Controls.Add(this.splitContainer1);
       this.tabPage2.Location = new System.Drawing.Point(4, 22);
       this.tabPage2.Name = "tabPage2";
       this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage2.Size = new System.Drawing.Size(792, 378);
+      this.tabPage2.Size = new System.Drawing.Size(796, 383);
       this.tabPage2.TabIndex = 1;
       this.tabPage2.Text = "MAF Scaling";
       this.tabPage2.UseVisualStyleBackColor = true;
@@ -275,10 +315,82 @@ namespace AutoTune
       // 
       this.splitContainer1.Panel2.Controls.Add(this.buffDVmaf2);
       this.splitContainer1.Panel2MinSize = 173;
-      this.splitContainer1.Size = new System.Drawing.Size(506, 372);
+      this.splitContainer1.Size = new System.Drawing.Size(506, 377);
       this.splitContainer1.SplitterDistance = 253;
       this.splitContainer1.SplitterWidth = 1;
       this.splitContainer1.TabIndex = 4;
+      // 
+      // buffDVmaf1
+      // 
+      this.buffDVmaf1.AllowUserToAddRows = false;
+      this.buffDVmaf1.AllowUserToDeleteRows = false;
+      this.buffDVmaf1.AllowUserToResizeColumns = false;
+      this.buffDVmaf1.AllowUserToResizeRows = false;
+      this.buffDVmaf1.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+      this.buffDVmaf1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+      dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+      dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+      dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+      dataGridViewCellStyle3.Format = "N0";
+      dataGridViewCellStyle3.NullValue = null;
+      dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+      this.buffDVmaf1.DefaultCellStyle = dataGridViewCellStyle3;
+      this.buffDVmaf1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.buffDVmaf1.Location = new System.Drawing.Point(0, 0);
+      this.buffDVmaf1.Name = "buffDVmaf1";
+      this.buffDVmaf1.RowHeadersVisible = false;
+      this.buffDVmaf1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+      this.buffDVmaf1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+      this.buffDVmaf1.ShowCellToolTips = false;
+      this.buffDVmaf1.Size = new System.Drawing.Size(253, 377);
+      this.buffDVmaf1.TabIndex = 0;
+      this.buffDVmaf1.Visible = false;
+      this.buffDVmaf1.CellParsing += new System.Windows.Forms.DataGridViewCellParsingEventHandler(this.buffDVmaf_CellParsing);
+      this.buffDVmaf1.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.buffDVmaf1_CellValidated);
+      this.buffDVmaf1.ColumnHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DV_ColumnHeaderMouseDoubleClick);
+      this.buffDVmaf1.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.buffDVmaf_EditingControlShowing);
+      this.buffDVmaf1.VisibleChanged += new System.EventHandler(this.buffDVmaf1_VisibleChanged);
+      this.buffDVmaf1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyDown);
+      this.buffDVmaf1.Leave += new System.EventHandler(this.buffDVmaf1_Leave);
+      // 
+      // buffDVmaf2
+      // 
+      this.buffDVmaf2.AllowUserToAddRows = false;
+      this.buffDVmaf2.AllowUserToDeleteRows = false;
+      this.buffDVmaf2.AllowUserToResizeColumns = false;
+      this.buffDVmaf2.AllowUserToResizeRows = false;
+      this.buffDVmaf2.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+      this.buffDVmaf2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+      dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+      dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+      dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+      dataGridViewCellStyle4.Format = "N0";
+      dataGridViewCellStyle4.NullValue = null;
+      dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+      this.buffDVmaf2.DefaultCellStyle = dataGridViewCellStyle4;
+      this.buffDVmaf2.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.buffDVmaf2.Location = new System.Drawing.Point(0, 0);
+      this.buffDVmaf2.Name = "buffDVmaf2";
+      this.buffDVmaf2.RowHeadersVisible = false;
+      this.buffDVmaf2.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+      this.buffDVmaf2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+      this.buffDVmaf2.ShowCellToolTips = false;
+      this.buffDVmaf2.Size = new System.Drawing.Size(252, 377);
+      this.buffDVmaf2.TabIndex = 1;
+      this.buffDVmaf2.Visible = false;
+      this.buffDVmaf2.CellParsing += new System.Windows.Forms.DataGridViewCellParsingEventHandler(this.buffDVmaf_CellParsing);
+      this.buffDVmaf2.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.buffDVmaf2_CellValidated);
+      this.buffDVmaf2.ColumnHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DV_ColumnHeaderMouseDoubleClick);
+      this.buffDVmaf2.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.buffDVmaf_EditingControlShowing);
+      this.buffDVmaf2.VisibleChanged += new System.EventHandler(this.buffDVmaf2_VisibleChanged);
+      this.buffDVmaf2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyDown);
+      this.buffDVmaf2.Leave += new System.EventHandler(this.buffDVmaf2_Leave);
       // 
       // tabPage3
       // 
@@ -291,6 +403,117 @@ namespace AutoTune
       this.tabPage3.Text = "Fuel Comp";
       this.tabPage3.UseVisualStyleBackColor = true;
       // 
+      // tableLayoutPanel1
+      // 
+      this.tableLayoutPanel1.ColumnCount = 2;
+      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 752F));
+      this.tableLayoutPanel1.Controls.Add(this.DV_FuelComp_RPM, 0, 2);
+      this.tableLayoutPanel1.Controls.Add(this.DV_FuelComp_XdataByte, 1, 1);
+      this.tableLayoutPanel1.Controls.Add(this.DV_FuelComp, 1, 2);
+      this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+      this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(1);
+      this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+      this.tableLayoutPanel1.RowCount = 3;
+      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 5.277045F));
+      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 94.72295F));
+      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 352F));
+      this.tableLayoutPanel1.Size = new System.Drawing.Size(793, 379);
+      this.tableLayoutPanel1.TabIndex = 0;
+      // 
+      // DV_FuelComp_RPM
+      // 
+      this.DV_FuelComp_RPM.AllowUserToAddRows = false;
+      this.DV_FuelComp_RPM.AllowUserToDeleteRows = false;
+      this.DV_FuelComp_RPM.AllowUserToResizeColumns = false;
+      this.DV_FuelComp_RPM.AllowUserToResizeRows = false;
+      this.DV_FuelComp_RPM.ColumnHeadersHeight = 22;
+      this.DV_FuelComp_RPM.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+      this.DV_FuelComp_RPM.ColumnHeadersVisible = false;
+      this.DV_FuelComp_RPM.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.RPM});
+      this.DV_FuelComp_RPM.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.DV_FuelComp_RPM.Location = new System.Drawing.Point(1, 27);
+      this.DV_FuelComp_RPM.Margin = new System.Windows.Forms.Padding(1);
+      this.DV_FuelComp_RPM.Name = "DV_FuelComp_RPM";
+      this.DV_FuelComp_RPM.RowHeadersVisible = false;
+      this.DV_FuelComp_RPM.ScrollBars = System.Windows.Forms.ScrollBars.None;
+      this.DV_FuelComp_RPM.ShowEditingIcon = false;
+      this.DV_FuelComp_RPM.Size = new System.Drawing.Size(39, 351);
+      this.DV_FuelComp_RPM.TabIndex = 0;
+      // 
+      // RPM
+      // 
+      this.RPM.HeaderText = "RPM";
+      this.RPM.Name = "RPM";
+      // 
+      // DV_FuelComp_XdataByte
+      // 
+      this.DV_FuelComp_XdataByte.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+      this.DV_FuelComp_XdataByte.ColumnHeadersVisible = false;
+      dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+      dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+      dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+      dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+      this.DV_FuelComp_XdataByte.DefaultCellStyle = dataGridViewCellStyle5;
+      this.DV_FuelComp_XdataByte.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.DV_FuelComp_XdataByte.Location = new System.Drawing.Point(42, 2);
+      this.DV_FuelComp_XdataByte.Margin = new System.Windows.Forms.Padding(1);
+      this.DV_FuelComp_XdataByte.Name = "DV_FuelComp_XdataByte";
+      this.DV_FuelComp_XdataByte.RowHeadersVisible = false;
+      this.DV_FuelComp_XdataByte.ScrollBars = System.Windows.Forms.ScrollBars.None;
+      this.DV_FuelComp_XdataByte.ShowEditingIcon = false;
+      this.DV_FuelComp_XdataByte.Size = new System.Drawing.Size(750, 23);
+      this.DV_FuelComp_XdataByte.TabIndex = 1;
+      // 
+      // DV_FuelComp
+      // 
+      this.DV_FuelComp.AllowUserToAddRows = false;
+      this.DV_FuelComp.AllowUserToDeleteRows = false;
+      this.DV_FuelComp.AllowUserToResizeColumns = false;
+      this.DV_FuelComp.AllowUserToResizeRows = false;
+      this.DV_FuelComp.ColumnHeadersHeight = 22;
+      this.DV_FuelComp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+      this.DV_FuelComp.ColumnHeadersVisible = false;
+      this.DV_FuelComp.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.databyte0,
+            this.databyte1,
+            this.databyte2,
+            this.databyte3,
+            this.databyte4,
+            this.databyte5,
+            this.databyte6,
+            this.databyte7,
+            this.databyte8,
+            this.databyte9,
+            this.databyte10,
+            this.databyte11,
+            this.databyte12,
+            this.databyte13,
+            this.databyte14,
+            this.databyte15});
+      dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+      dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
+      dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
+      dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+      this.DV_FuelComp.DefaultCellStyle = dataGridViewCellStyle7;
+      this.DV_FuelComp.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.DV_FuelComp.Location = new System.Drawing.Point(42, 27);
+      this.DV_FuelComp.Margin = new System.Windows.Forms.Padding(1);
+      this.DV_FuelComp.Name = "DV_FuelComp";
+      this.DV_FuelComp.RowHeadersVisible = false;
+      this.DV_FuelComp.RowHeadersWidth = 22;
+      this.DV_FuelComp.ScrollBars = System.Windows.Forms.ScrollBars.None;
+      this.DV_FuelComp.ShowEditingIcon = false;
+      this.DV_FuelComp.Size = new System.Drawing.Size(750, 351);
+      this.DV_FuelComp.TabIndex = 2;
+      // 
       // tabPage4
       // 
       this.tabPage4.Controls.Add(this.DV_Target);
@@ -299,7 +522,7 @@ namespace AutoTune
       this.tabPage4.Location = new System.Drawing.Point(4, 22);
       this.tabPage4.Name = "tabPage4";
       this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage4.Size = new System.Drawing.Size(792, 378);
+      this.tabPage4.Size = new System.Drawing.Size(796, 383);
       this.tabPage4.TabIndex = 3;
       this.tabPage4.Text = "Fuel Target";
       this.tabPage4.UseVisualStyleBackColor = true;
@@ -415,229 +638,6 @@ namespace AutoTune
       this.btnCancelParse.Visible = false;
       this.btnCancelParse.Click += new System.EventHandler(this.btnCancel_Click);
       // 
-      // tableLayoutPanel1
-      // 
-      this.tableLayoutPanel1.ColumnCount = 2;
-      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 752F));
-      this.tableLayoutPanel1.Controls.Add(this.DV_FuelComp_RPM, 0, 2);
-      this.tableLayoutPanel1.Controls.Add(this.DV_FuelComp_XdataByte, 1, 1);
-      this.tableLayoutPanel1.Controls.Add(this.DV_FuelComp, 1, 2);
-      this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
-      this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(1);
-      this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-      this.tableLayoutPanel1.RowCount = 3;
-      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 5.277045F));
-      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 94.72295F));
-      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 352F));
-      this.tableLayoutPanel1.Size = new System.Drawing.Size(793, 379);
-      this.tableLayoutPanel1.TabIndex = 0;
-      // 
-      // DV_FuelComp_RPM
-      // 
-      this.DV_FuelComp_RPM.AllowUserToAddRows = false;
-      this.DV_FuelComp_RPM.AllowUserToDeleteRows = false;
-      this.DV_FuelComp_RPM.AllowUserToResizeColumns = false;
-      this.DV_FuelComp_RPM.AllowUserToResizeRows = false;
-      this.DV_FuelComp_RPM.ColumnHeadersHeight = 22;
-      this.DV_FuelComp_RPM.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-      this.DV_FuelComp_RPM.ColumnHeadersVisible = false;
-      this.DV_FuelComp_RPM.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.RPM});
-      this.DV_FuelComp_RPM.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.DV_FuelComp_RPM.Location = new System.Drawing.Point(1, 27);
-      this.DV_FuelComp_RPM.Margin = new System.Windows.Forms.Padding(1);
-      this.DV_FuelComp_RPM.Name = "DV_FuelComp_RPM";
-      this.DV_FuelComp_RPM.RowHeadersVisible = false;
-      this.DV_FuelComp_RPM.ScrollBars = System.Windows.Forms.ScrollBars.None;
-      this.DV_FuelComp_RPM.ShowEditingIcon = false;
-      this.DV_FuelComp_RPM.Size = new System.Drawing.Size(39, 351);
-      this.DV_FuelComp_RPM.TabIndex = 0;
-      // 
-      // DV_FuelComp_XdataByte
-      // 
-      this.DV_FuelComp_XdataByte.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-      this.DV_FuelComp_XdataByte.ColumnHeadersVisible = false;
-      dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-      dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-      dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-      dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-      dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-      this.DV_FuelComp_XdataByte.DefaultCellStyle = dataGridViewCellStyle5;
-      this.DV_FuelComp_XdataByte.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.DV_FuelComp_XdataByte.Location = new System.Drawing.Point(42, 2);
-      this.DV_FuelComp_XdataByte.Margin = new System.Windows.Forms.Padding(1);
-      this.DV_FuelComp_XdataByte.Name = "DV_FuelComp_XdataByte";
-      this.DV_FuelComp_XdataByte.RowHeadersVisible = false;
-      this.DV_FuelComp_XdataByte.ScrollBars = System.Windows.Forms.ScrollBars.None;
-      this.DV_FuelComp_XdataByte.ShowEditingIcon = false;
-      this.DV_FuelComp_XdataByte.Size = new System.Drawing.Size(750, 23);
-      this.DV_FuelComp_XdataByte.TabIndex = 1;
-      // 
-      // DV_FuelComp
-      // 
-      this.DV_FuelComp.AllowUserToAddRows = false;
-      this.DV_FuelComp.AllowUserToDeleteRows = false;
-      this.DV_FuelComp.AllowUserToResizeColumns = false;
-      this.DV_FuelComp.AllowUserToResizeRows = false;
-      this.DV_FuelComp.ColumnHeadersHeight = 22;
-      this.DV_FuelComp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-      this.DV_FuelComp.ColumnHeadersVisible = false;
-      this.DV_FuelComp.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.databyte0,
-            this.databyte1,
-            this.databyte2,
-            this.databyte3,
-            this.databyte4,
-            this.databyte5,
-            this.databyte6,
-            this.databyte7,
-            this.databyte8,
-            this.databyte9,
-            this.databyte10,
-            this.databyte11,
-            this.databyte12,
-            this.databyte13,
-            this.databyte14,
-            this.databyte15});
-      dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-      dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
-      dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
-      dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-      dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-      this.DV_FuelComp.DefaultCellStyle = dataGridViewCellStyle7;
-      this.DV_FuelComp.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.DV_FuelComp.Location = new System.Drawing.Point(42, 27);
-      this.DV_FuelComp.Margin = new System.Windows.Forms.Padding(1);
-      this.DV_FuelComp.Name = "DV_FuelComp";
-      this.DV_FuelComp.RowHeadersVisible = false;
-      this.DV_FuelComp.RowHeadersWidth = 22;
-      this.DV_FuelComp.ScrollBars = System.Windows.Forms.ScrollBars.None;
-      this.DV_FuelComp.ShowEditingIcon = false;
-      this.DV_FuelComp.Size = new System.Drawing.Size(750, 351);
-      this.DV_FuelComp.TabIndex = 2;
-      // 
-      // RPM
-      // 
-      this.RPM.HeaderText = "RPM";
-      this.RPM.Name = "RPM";
-      // 
-      // buffDV1
-      // 
-      this.buffDV1.AllowUserToAddRows = false;
-      this.buffDV1.AllowUserToDeleteRows = false;
-      this.buffDV1.AllowUserToResizeRows = false;
-      this.buffDV1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-      dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-      dataGridViewCellStyle1.BackColor = System.Drawing.Color.Navy;
-      dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
-      dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
-      dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-      dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-      this.buffDV1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-      this.buffDV1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-      dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-      dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-      dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-      dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-      this.buffDV1.DefaultCellStyle = dataGridViewCellStyle2;
-      this.buffDV1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.buffDV1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-      this.buffDV1.GridColor = System.Drawing.Color.Black;
-      this.buffDV1.Location = new System.Drawing.Point(3, 3);
-      this.buffDV1.Name = "buffDV1";
-      this.buffDV1.ReadOnly = true;
-      this.buffDV1.RowHeadersVisible = false;
-      this.buffDV1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-      this.buffDV1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-      this.buffDV1.Size = new System.Drawing.Size(790, 377);
-      this.buffDV1.TabIndex = 0;
-      this.buffDV1.Visible = false;
-      this.buffDV1.ColumnHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DV_ColumnHeaderMouseDoubleClick);
-      this.buffDV1.VisibleChanged += new System.EventHandler(this.buffDV1_VisibleChanged);
-      this.buffDV1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyDown);
-      this.buffDV1.Leave += new System.EventHandler(this.DV_Leave);
-      // 
-      // buffDVmaf1
-      // 
-      this.buffDVmaf1.AllowUserToAddRows = false;
-      this.buffDVmaf1.AllowUserToDeleteRows = false;
-      this.buffDVmaf1.AllowUserToResizeColumns = false;
-      this.buffDVmaf1.AllowUserToResizeRows = false;
-      this.buffDVmaf1.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-      this.buffDVmaf1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-      dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-      dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-      dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-      dataGridViewCellStyle3.Format = "N0";
-      dataGridViewCellStyle3.NullValue = null;
-      dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-      dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-      this.buffDVmaf1.DefaultCellStyle = dataGridViewCellStyle3;
-      this.buffDVmaf1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.buffDVmaf1.Location = new System.Drawing.Point(0, 0);
-      this.buffDVmaf1.Name = "buffDVmaf1";
-      this.buffDVmaf1.RowHeadersVisible = false;
-      this.buffDVmaf1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-      this.buffDVmaf1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-      this.buffDVmaf1.ShowCellToolTips = false;
-      this.buffDVmaf1.Size = new System.Drawing.Size(253, 372);
-      this.buffDVmaf1.TabIndex = 0;
-      this.buffDVmaf1.Visible = false;
-      this.buffDVmaf1.CellParsing += new System.Windows.Forms.DataGridViewCellParsingEventHandler(this.buffDVmaf_CellParsing);
-      this.buffDVmaf1.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.buffDVmaf1_CellValidated);
-      this.buffDVmaf1.ColumnHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DV_ColumnHeaderMouseDoubleClick);
-      this.buffDVmaf1.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.buffDVmaf_EditingControlShowing);
-      this.buffDVmaf1.VisibleChanged += new System.EventHandler(this.buffDVmaf1_VisibleChanged);
-      this.buffDVmaf1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyDown);
-      this.buffDVmaf1.Leave += new System.EventHandler(this.buffDVmaf1_Leave);
-      // 
-      // buffDVmaf2
-      // 
-      this.buffDVmaf2.AllowUserToAddRows = false;
-      this.buffDVmaf2.AllowUserToDeleteRows = false;
-      this.buffDVmaf2.AllowUserToResizeColumns = false;
-      this.buffDVmaf2.AllowUserToResizeRows = false;
-      this.buffDVmaf2.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-      this.buffDVmaf2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-      dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-      dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-      dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-      dataGridViewCellStyle4.Format = "N0";
-      dataGridViewCellStyle4.NullValue = null;
-      dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-      dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-      this.buffDVmaf2.DefaultCellStyle = dataGridViewCellStyle4;
-      this.buffDVmaf2.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.buffDVmaf2.Location = new System.Drawing.Point(0, 0);
-      this.buffDVmaf2.Name = "buffDVmaf2";
-      this.buffDVmaf2.RowHeadersVisible = false;
-      this.buffDVmaf2.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-      this.buffDVmaf2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-      this.buffDVmaf2.ShowCellToolTips = false;
-      this.buffDVmaf2.Size = new System.Drawing.Size(252, 372);
-      this.buffDVmaf2.TabIndex = 1;
-      this.buffDVmaf2.Visible = false;
-      this.buffDVmaf2.CellParsing += new System.Windows.Forms.DataGridViewCellParsingEventHandler(this.buffDVmaf_CellParsing);
-      this.buffDVmaf2.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.buffDVmaf2_CellValidated);
-      this.buffDVmaf2.ColumnHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DV_ColumnHeaderMouseDoubleClick);
-      this.buffDVmaf2.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.buffDVmaf_EditingControlShowing);
-      this.buffDVmaf2.VisibleChanged += new System.EventHandler(this.buffDVmaf2_VisibleChanged);
-      this.buffDVmaf2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyDown);
-      this.buffDVmaf2.Leave += new System.EventHandler(this.buffDVmaf2_Leave);
-      // 
       // databyte0
       // 
       dataGridViewCellStyle6.Format = "N2";
@@ -647,6 +647,7 @@ namespace AutoTune
       this.databyte0.MaxInputLength = 10;
       this.databyte0.MinimumWidth = 47;
       this.databyte0.Name = "databyte0";
+      this.databyte0.Resizable = System.Windows.Forms.DataGridViewTriState.False;
       this.databyte0.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       this.databyte0.Width = 47;
       // 
@@ -656,6 +657,7 @@ namespace AutoTune
       this.databyte1.MaxInputLength = 10;
       this.databyte1.MinimumWidth = 47;
       this.databyte1.Name = "databyte1";
+      this.databyte1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
       this.databyte1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       this.databyte1.Width = 47;
       // 
@@ -806,21 +808,21 @@ namespace AutoTune
       this.statusStrip1.PerformLayout();
       this.tabControl1.ResumeLayout(false);
       this.tabPage1.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.buffDV1)).EndInit();
       this.tabPage2.ResumeLayout(false);
       this.splitContainer1.Panel1.ResumeLayout(false);
       this.splitContainer1.Panel2.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
       this.splitContainer1.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.buffDVmaf1)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.buffDVmaf2)).EndInit();
       this.tabPage3.ResumeLayout(false);
-      this.tabPage4.ResumeLayout(false);
-      ((System.ComponentModel.ISupportInitialize)(this.DV_Target)).EndInit();
       this.tableLayoutPanel1.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.DV_FuelComp_RPM)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.DV_FuelComp_XdataByte)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.DV_FuelComp)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.buffDV1)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.buffDVmaf1)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.buffDVmaf2)).EndInit();
+      this.tabPage4.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.DV_Target)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.buffDT)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
@@ -839,18 +841,18 @@ namespace AutoTune
     private System.Windows.Forms.TabControl tabControl1;
     private System.Windows.Forms.TabPage tabPage1;
     private System.Windows.Forms.TabPage tabPage2;
-    public Buffer.BuffDV buffDV1;
-    private Buffer.BuffDT buffDT;
+    public BuffDV buffDV1;
+    private BuffDT buffDT;
     private Loader loader;
     public HelpForm helpForm;
     public About about;
     private System.Windows.Forms.Button btnCancelParse;
     private System.Windows.Forms.ToolStripStatusLabel StatusBox;
-    private Buffer.BuffDV buffDVmaf1;
+    private BuffDV buffDVmaf1;
     private System.Windows.Forms.TextBox textBox_MAF1;
     private System.Windows.Forms.SplitContainer splitContainer1;
     private System.Windows.Forms.TextBox textBox_MAF2;
-    private Buffer.BuffDV buffDVmaf2;
+    private BuffDV buffDVmaf2;
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
     private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem viewHelpToolStripMenuItem;

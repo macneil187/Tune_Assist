@@ -14,7 +14,7 @@ namespace AutoTune
   {
     public HelpForm()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
   }
 }

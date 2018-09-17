@@ -1,29 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace AutoTune
+﻿namespace AutoTune
 {
+  using System;
+  using System.Collections.Generic;
+  using System.ComponentModel;
+  using System.Data;
+  using System.IO;
+
   public class Loader
   {
-    DataGridView AT = AutoTune.autotune.buffDV1;
-    List<string> cleanedHeaders = new List<string>();
     private List<string> matchedHeaders = new List<string>();
-    
 
     public DataTable LoadLog(BackgroundWorker bw, string fileName)
     {
       int numLines = 0;
-      
-      using (DataTable DT = new DataTable())
+      using (DataTable dt = new DataTable())
       using (StreamReader sr = new StreamReader(fileName))
       {
         string full = sr.ReadToEnd();
@@ -32,11 +22,18 @@ namespace AutoTune
           full = full.TrimEnd('\n');
           full = full.TrimEnd('\r');
         }
+
         string[] lines = full.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
         if (lines[0].EndsWith(","))
+        {
           lines[0].TrimEnd(',');
+        }
+
         if (lines.Length < 10)
-          return DT;
+        {
+          return dt;
+        }
+
         List<string> headers = new List<string>(lines[0].Split(','));
         List<int> skipValues = new List<int>();
         FileInfo fi = new FileInfo(fileName);
@@ -46,25 +43,31 @@ namespace AutoTune
 
         foreach (var label in headers)
         {
-          if (!matchedHeaders.Contains(label))
+          if (!this.matchedHeaders.Contains(label))
           {
-            matchedHeaders.Add(label);
+            this.matchedHeaders.Add(label);
           }
           else
           {
             skipValues.Add(headerindex);
           }
+
           headerindex++;
         }
-        //Create columns from headers
-        for (int h = 0; h < matchedHeaders.Count; ++h)
+
+        // Create columns from headers
+        for (int h = 0; h < this.matchedHeaders.Count; ++h)
         {
-          if (matchedHeaders[h] == null)
+          if (this.matchedHeaders[h] == null)
+          {
             break;
-          DT.Columns.Add();
-          DT.Columns[h].ColumnName = matchedHeaders[h];
-          DT.Columns[h].ReadOnly = true;
+          }
+
+          dt.Columns.Add();
+          dt.Columns[h].ColumnName = this.matchedHeaders[h];
+          dt.Columns[h].ReadOnly = true;
         }
+
         for (int x = 1; x < lines.Length - 1; ++x)
         {
           if (lines[x] == null)
@@ -75,18 +78,22 @@ namespace AutoTune
           {
             lines[x] = lines[x].TrimEnd(',');
           }
+
           string[] line = lines[x].Split(',');
           List<string> cells = new List<string>();
-          //Update ProgressBar
+
+          // Update ProgressBar
           bytesRead += sr.CurrentEncoding.GetByteCount(lines[x]);
           numLines++;
           int pctComplete = (int)(((double)bytesRead / (double)totalBytes) * 100);
           bw.ReportProgress(pctComplete);
 
-          if (line == null || line.Length > headers.Count || line.Length < matchedHeaders.Count)
+          if (line == null || line.Length > headers.Count || line.Length < this.matchedHeaders.Count)
+          {
             continue;
+          }
 
-          for (int i = 0; i < matchedHeaders.Count; ++i)
+          for (int i = 0; i < this.matchedHeaders.Count; ++i)
           {
             if (line[i] == null)
             {
@@ -102,10 +109,14 @@ namespace AutoTune
               break;
             }
           }
+
           if (cells != null)
-            DT.Rows.Add(cells.ToArray());
+          {
+            dt.Rows.Add(cells.ToArray());
+          }
         }
-        return DT;
+
+        return dt;
       }
     }
   }
