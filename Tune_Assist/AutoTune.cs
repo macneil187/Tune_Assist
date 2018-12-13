@@ -203,7 +203,7 @@ namespace AutoTune
       Parser maf_scaler = new Parser();
       BackgroundWorker bw = sender as BackgroundWorker;
       DataGridView tempgrid = (DataGridView)e.Argument;
-      e.Result = maf_scaler.AdjustMAF_CL(bw, tempgrid);
+      e.Result = maf_scaler.AdjustMAF(bw, tempgrid);
       if (bw.CancellationPending)
       {
         e.Cancel = true;
@@ -263,7 +263,7 @@ namespace AutoTune
       Parser fuelComp = new Parser();
       BackgroundWorker bw = sender as BackgroundWorker;
       DataGridView tempgrid = (DataGridView)e.Argument;
-      e.Result = fuelComp.AdjustFuelComp(bw, tempgrid);
+      //e.Result = fuelComp.AdjustFuelComp(bw, tempgrid);
       if (bw.CancellationPending)
       {
         e.Cancel = true;
@@ -587,7 +587,7 @@ namespace AutoTune
           try
           {
             string templine = this.buffDVmaf1.GetClipboardContent().GetText();
-            string[] entries  = templine.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            string[] entries = templine.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
             List<string> hexValues = new List<string>();
             foreach (var s in entries)
             {
@@ -602,6 +602,7 @@ namespace AutoTune
                 hexValues.Add("0000");
               }
             }
+
             var newvalues = hexValues.Aggregate((a, b) => a + " \r\n" + b);
             System.Windows.Forms.Clipboard.SetText(newvalues);
           }

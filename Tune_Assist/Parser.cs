@@ -10,12 +10,12 @@
 
   public class Parser
   {
-    public List<double> mafVolts = new List<double>
+    public readonly List<double> mafVolts = new List<double>
     {
-      0.08, 0.16, 0.23, 0.31, 0.39, 0.47, 0.55, 0.63, 0.70, 0.78, 0.86, 0.94, 1.02, 1.09, 1.17, 1.25, 1.33,
-      1.41, 1.48, 1.56, 1.64, 1.72, 1.80, 1.88, 1.95, 2.03, 2.11, 2.19, 2.27, 2.34, 2.42, 2.50, 2.58, 2.66,
-      2.73, 2.81, 2.89, 2.97, 3.05, 3.13, 3.20, 3.28, 3.36, 3.44, 3.52, 3.59, 3.67, 3.75, 3.83, 3.91, 3.98,
-      4.06, 4.14, 4.22, 4.30, 4.38, 4.45, 4.53, 4.61, 4.69, 4.77, 4.84, 4.92, 5.00
+      0.00, 0.08, 0.16, 0.24, 0.32, 0.40, 0.48, 0.56, 0.64, 0.72, 0.80, 0.88, 0.96, 1.04, 1.12, 1.20, 1.28,
+      1.36, 1.44, 1.52, 1.60, 1.68, 1.76, 1.84, 1.92, 2.00, 2.08, 2.16, 2.24, 2.32, 2.40, 2.48, 2.56, 2.64,
+      2.72, 2.80, 2.88, 2.96, 3.04, 3.12, 3.20, 3.28, 3.36, 3.44, 3.52, 3.60, 3.68, 3.76, 3.84, 3.92, 4.00,
+      4.08, 4.16, 4.24, 4.32, 4.40, 4.48, 4.56, 4.64, 4.72, 4.80, 4.88, 4.96, 5.04
     };
 
     private List<double> maf1ClosedLoop = new List<double>();
@@ -37,6 +37,8 @@
     private double coolantTemp;
     private int finaltrim1;
     private int finaltrim2;
+    private double OLtrim1;
+    private double OLtrim2;
     private int indexFinder1;
     private int indexFinder2;
     private double intakeAirTemp;
@@ -74,6 +76,7 @@
     private int fuelCompTraceDex;
     private int rpmDex;
     private bool dualTB;
+    private bool accelAfterDecel;
 
     public void FindHeader_Indexes(DataGridView tempgrid)
     {
@@ -104,7 +107,11 @@
         this.stB2Dex = -1;
       }
 
-      if (tempgrid.Columns.Contains("ACCEL PED POS 1 (V-Accel)"))
+      if (tempgrid.Columns.Contains("THROTTLE SENSOR 1 - B1(V)"))
+      {
+        this.accelDex = tempgrid.Columns["THROTTLE SENSOR 1 - B1(V)"].Index;
+      }
+      else if (tempgrid.Columns.Contains("ACCEL PED POS 1 (V-Accel)"))
       {
         this.accelDex = tempgrid.Columns["ACCEL PED POS 1 (V-Accel)"].Index;
       }
@@ -131,26 +138,26 @@
         this.ltB2Dex = -1;
       }
 
-      if (tempgrid.Columns.Contains("AFR WB-B1"))
-      {
-        this.afrB1Dex = tempgrid.Columns["AFR WB-B1"].Index;
-      }
-      else if (tempgrid.Columns.Contains("LC-1 (1) AFR"))
+      if (tempgrid.Columns.Contains("LC-1 (1) AFR"))
       {
         this.afrB1Dex = tempgrid.Columns["LC-1 (1) AFR"].Index;
+      }
+      else if (tempgrid.Columns.Contains("AFR WB-B1"))
+      {
+        this.afrB1Dex = tempgrid.Columns["AFR WB-B1"].Index;
       }
       else
       {
         this.afrB1Dex = -1;
       }
 
-      if (tempgrid.Columns.Contains("AFR WB-B2"))
-      {
-        this.afrB2Dex = tempgrid.Columns["AFR WB-B2"].Index;
-      }
-      else if (tempgrid.Columns.Contains("LC-1 (2) AFR"))
+      if (tempgrid.Columns.Contains("LC-1 (2) AFR"))
       {
         tempgrid.Columns.Contains("LC-1 (2) AFR");
+      }
+      else if (tempgrid.Columns.Contains("AFR WB-B2"))
+      {
+        this.afrB2Dex = tempgrid.Columns["AFR WB-B2"].Index;
       }
       else
       {
@@ -221,7 +228,7 @@
       }
     }
 
-    public DataTable AdjustMAF_CL(BackgroundWorker bw, DataGridView tempgrid)
+    public DataTable AdjustMAF(BackgroundWorker bw, DataGridView tempgrid)
     {
       using (DataTable dt = new DataTable())
       {
@@ -257,7 +264,40 @@
           this.FindIAT_average(tempgrid);
         }
 
-        // Build first line for the adjustment DataTable
+        // Build first line for the adjustment CL DataTable
+        if (this.clDT1.Rows.Count == 0)
+        {
+          DataRow dr = this.clDT1.NewRow();
+          int c = 0;
+          foreach (double d in this.mafVolts)
+          {
+            dr[c] = 1.1;
+            ++c;
+          }
+
+          this.clDT1.Rows.Add(dr);
+        }
+
+        if (this.mafB2Dex != -1)
+        {
+          this.dualTB = true;
+
+          // Build first line for the adjustment CL DataTable
+          if (this.clDT2.Rows.Count == 0)
+          {
+            DataRow dr = this.clDT2.NewRow();
+            int c = 0;
+            foreach (double d in this.mafVolts)
+            {
+              dr[c] = 1.1;
+              ++c;
+            }
+
+            this.clDT2.Rows.Add(dr);
+          }
+        }
+
+        // Build first line for the adjustment OL DataTable
         if (this.olDT1.Rows.Count == 0)
         {
           DataRow dr = this.olDT1.NewRow();
@@ -275,10 +315,10 @@
         {
           this.dualTB = true;
 
-          // Build first line for the adjustment DataTable
-          if (this.clDT2.Rows.Count == 0)
+          // Build first line for the adjustment OL DataTable
+          if (this.olDT2.Rows.Count == 0)
           {
-            DataRow dr = this.clDT2.NewRow();
+            DataRow dr = this.olDT2.NewRow();
             int c = 0;
             foreach (double d in this.mafVolts)
             {
@@ -286,7 +326,7 @@
               ++c;
             }
 
-            this.clDT2.Rows.Add(dr);
+            this.olDT2.Rows.Add(dr);
           }
         }
 
@@ -338,6 +378,20 @@
                 continue;
               }
 
+              // Back on accel after decel  ** This will skip down rows to avoid skewing values
+              if (this.afr1 == 60)
+              {
+                this.accelAfterDecel = true;
+                continue;
+              }
+              else if (this.afr1 < 20 && this.accelAfterDecel)
+              {
+                r += 9;
+                this.accelAfterDecel = false;
+                continue;
+              }
+
+              // Closed loop
               if (this.target == 14.7 && this.coolantTemp > 176)
               {
                 // Dual throttle bodies and have logged long term trim
@@ -412,42 +466,81 @@
                   this.ClosedLoop_Start();
                 }
               }
+
+              // Open loop
+              else if (this.target < 14.7 && this.shorttrim1 == 100 && this.afr1 < 20 && this.coolantTemp > 176 && Properties.Settings.Default.MAF_OL)
+              {
+                this.OLtrim1 = this.afr1 / this.target;
+                this.OLtrim2 = this.afr2 / this.target;
+
+                this.indexFinder1 = this.mafVolts.BinarySearch(this.maf1v);
+                if (this.indexFinder1 < 0)
+                {
+                  this.indexFinder1 = ~this.indexFinder1;
+                }
+
+                if (this.dualTB)
+                {
+                  this.indexFinder2 = this.mafVolts.BinarySearch(this.maf2v);
+                  if (this.indexFinder2 < 0)
+                  {
+                    this.indexFinder2 = ~this.indexFinder2;
+                  }
+                }
+
+                // Test "actual AFR"
+                if (r > 2)
+                {
+                  this.actualAFR1 = 0;
+                  this.actualAFR2 = 0;
+
+                  try
+                  {
+                    this.actualAFR1 = Convert.ToDouble(tempgrid.Rows[r + 3].Cells[this.afrB1Dex].Value);
+                    if (this.dualTB)
+                    {
+                      this.actualAFR2 = Convert.ToDouble(tempgrid.Rows[r + 3].Cells[this.afrB2Dex].Value);
+                    }
+                  }
+                  catch
+                  {
+                    Console.WriteLine(" error while actualAFR values for row {0}", r);
+                    continue;
+                  }
+                }
+
+                this.OpenLoop_Start();
+              }
             }
             else
             {
               StringBuilder sb = new StringBuilder();
               sb.Append("Could not find the following headers: \n");
-              if (this.timeDex == -1)
-              {
-                sb.Append("Time\n");
-              }
-
-              if (this.stB1Dex == -1)
-              {
-                sb.Append("A/F CORR-B1 (%)\n");
-              }
-
-              if (this.stB2Dex != -1)
-              {
-                sb.Append("A/F CORR-B2 (%)\n");
-              }
+              if (this.timeDex == -1) {sb.Append("Time\n"); }
+              if (this.stB1Dex == -1) {sb.Append("A/F CORR-B1 (%)\n"); }
+              if (this.stB2Dex != -1) {sb.Append("A/F CORR-B2 (%)\n"); }
+              if (this.accelDex != -1) {sb.Append("ACCEL PED POS 1\n"); }
+              if (this.ltB1Dex != -1) {sb.Append("LT Fuel Trim B1 (%)\n"); }
+              if (this.ltB2Dex != -1) {sb.Append("LT Fuel Trim B2 (%)\n"); }
+              if (this.afrB1Dex != -1) {sb.Append("AFR WB-B1\n"); }
+              if (this.afrB2Dex != -1) {sb.Append("AFR WB-B2\n"); }
+              if (this.mafB1Dex != -1) {sb.Append("MAS A/F -B1 (V)\n"); }
+              if (this.mafB2Dex != -1) {sb.Append("MAS A/F -B2 (V)\n"); }
+              if (this.targetDex != -1) {sb.Append("TARGET AFR\n"); }
+              if (this.intakeAirTempDex != -1) {sb.Append("INTAKE AIR TMP\n"); }
+              if (this.coolantTempDex != -1) {sb.Append("COOLANT TEMP\n"); }
 
               Console.WriteLine(sb.ToString());
-              MessageBox.Show("Error", "We could not find minimal parameters needed\nto calculate the MAF scaling adjustments.\n{0}" + sb.ToString());
+              MessageBox.Show("Error", "We could not find minimal parameters needed\nto calculate the MAF scaling adjustments.\n"
+                + sb.ToString() + "\n Please add these parameters to the uprev logger and try again.");
             }
-
-            /*  if (target < 14.7 && afrB1Dex != -1 && afrB2Dex != -1 && mafB1Dex != -1 && indexFinder1 >= 0 && indexFinder1 < maf_volts.Count)
-              {
-                OpenLoop_Start();
-              }  */
-
           }
 
-           // END of looping rows
+          // END of looping rows
           // NOW start reading valuses from DT
           this.ClosedLoop_Finish();
 
-          // OpenLoop_Finish();
+          this.OpenLoop_Finish();
 
           // Build DataTable for returning values
           dt.Columns.Add("Voltage", typeof(double));
@@ -459,246 +552,24 @@
           {
             DataRow dr = dt.NewRow();
             dr[0] = (double)this.mafVolts[i];
-            dr[1] = (double)this.maf1ClosedLoop[i];
-            dr[2] = (double)this.maf2ClosedLoop[i];
-            dr[3] = (int)this.hits1[i];
-            dr[4] = (int)this.hits2[i];
-            dt.Rows.Add(dr);
-          }
-        }
-        else
-        {
-          StringBuilder sb = new StringBuilder();
-          sb.Append("Could not find the following headers: \n");
-          if (this.targetDex == -1)
-          {
-            sb.Append("Target AFR\n");
-          }
-
-          if (this.mafB1Dex == -1)
-          {
-            sb.Append("MAS A/F -B2 (V)\n");
-          }
-
-          if (this.afrB1Dex != -1)
-          {
-            sb.Append("AFR WB-B1 / LC-1 (1) AFR\n");
-          }
-
-          if (this.afrB2Dex != -1)
-          {
-            sb.Append("AFR WB-B2 / LC-1 (2) AFR\n");
-          }
-
-          if (this.coolantTempDex != -1)
-          {
-            sb.Append("Coolant Temp\n");
-          }
-
-          Console.WriteLine(sb.ToString());
-          MessageBox.Show("Error", "We could not find minimal parameters needed\nto calculate Closed Loop MAF scaling adjustments.\n" + sb.ToString());
-        }
-
-        return dt;
-      }
-    }
-
-    public DataTable AdjustMAF_CL_test(BackgroundWorker bw, DataGridView tempgrid)
-    {
-      using (DataTable dt = new DataTable())
-      {
-        // init the adjustment lists and add voltage columns
-        foreach (double d in this.mafVolts)
-        {
-          this.maf1ClosedLoop.Add(100.00);
-          this.maf2ClosedLoop.Add(100.00);
-          this.maf1OpenLoop.Add(100.00);
-          this.maf2OpenLoop.Add(100.00);
-          this.hits1.Add(0);
-          this.hits2.Add(0);
-          this.clDT1.Columns.Add(Convert.ToString(d));
-          this.clDT2.Columns.Add(Convert.ToString(d));
-          this.olDT1.Columns.Add(Convert.ToString(d));
-          this.olDT2.Columns.Add(Convert.ToString(d));
-        }
-
-        this.FindHeader_Indexes(tempgrid);
-        this.SetConfig();
-
-        if (tempgrid.Rows.Count >= 50)
-        {
-          this.totalLines = tempgrid.Rows.Count;
-        }
-        else
-        {
-          MessageBox.Show("The selected CSV log is not long enough.\nPlease log more data and retry.");
-          return dt;
-        }
-
-        if (this.coolantTempDex == -1)
-        {
-          MessageBox.Show("Coolant Temp", "Could not find the coolant temperature values.\nPlease verify you are logging the coolant temperatures.");
-          return dt;
-        }
-
-        if (this.clStatus == "Error" && this.olStatus == "Error")
-        {
-          Console.WriteLine("Could not find the required parameters for MAF scaling.\nPlease log more parameters if MAF scaling is needed.");
-          return dt;
-        }
-
-        if (this.clStatus == "CL_Full" || this.clStatus == "CL_IAT") //if (Properties.Settings.Default.MAF_CL && Properties.Settings.Default.MAF_IAT && intakeAirTempDex != -1)
-        {
-          this.FindIAT_average(tempgrid);
-        }
-
-        if (this.olDT1.Rows.Count == 0)  //Build first line for the adjustment DataTable
-        {
-          DataRow dr = this.olDT1.NewRow();
-          int c = 0;
-          foreach (double d in this.mafVolts)
-          {
-            dr[c] = 1.1;
-            ++c;
-          }
-
-          this.olDT1.Rows.Add(dr);
-        }
-
-        if (this.mafB2Dex != -1)
-        {
-          this.dualTB = true;  // Set dual MAF bool
-          if (this.clDT2.Rows.Count == 0)  //Build first line for the adjustment DataTable
-          {
-            DataRow dr = this.clDT2.NewRow();
-            int c = 0;
-            foreach (double d in this.mafVolts)
+            if (this.maf1ClosedLoop[i] == 100 && this.maf1OpenLoop[i] != 100)
             {
-              dr[c] = 1.1;
-              ++c;
+              dr[1] = (double)this.maf1OpenLoop[i];
+            }
+            else
+            {
+              dr[1] = (double)this.maf1ClosedLoop[i];
             }
 
-            this.clDT2.Rows.Add(dr);
-          }
-        }
-
-        // if Closed Loop option is true and log has required parameters
-        if (this.clStatus != "Error")
-        {
-          for (int r = 0; r < tempgrid.Rows.Count - 1; ++r)   // Row loop
-          {
-            this.target = Convert.ToDouble(tempgrid.Rows[r].Cells[this.targetDex].Value);
-            this.coolantTemp = Convert.ToDouble(tempgrid.Rows[r + 1].Cells[this.coolantTempDex].Value);
-            if (this.target == 14.7 && this.coolantTemp > 176)
+            if (this.maf2ClosedLoop[i] == 100 && this.maf2OpenLoop[i] != 100)
             {
-              this.time = Convert.ToInt32(tempgrid.Rows[r].Cells[this.timeDex].Value);
-              this.nexttime = Convert.ToInt32(tempgrid.Rows[r + 1].Cells[this.timeDex].Value);
-              this.maf1v = Convert.ToDouble(tempgrid.Rows[r].Cells[this.mafB1Dex].Value);
-              this.afr1 = Convert.ToDouble(tempgrid.Rows[r].Cells[this.afrB1Dex].Value);
-              this.afr2 = Convert.ToDouble(tempgrid.Rows[r].Cells[this.afrB2Dex].Value);
-              this.shorttrim1 = Convert.ToInt32(tempgrid.Rows[r].Cells[this.stB1Dex].Value);
-              this.shorttrim2 = Convert.ToInt32(tempgrid.Rows[r].Cells[this.stB1Dex].Value);
-              this.accelChange = Convert.ToDouble(((this.nextaccel - this.accel) / (this.nexttime - this.time)) * 1000);
-
-              this.indexFinder1 = this.mafVolts.BinarySearch(this.maf1v);
-              if (this.indexFinder1 < 0)
-              {
-                this.indexFinder1 = ~this.indexFinder1;
-              }
-
-              if (this.dualTB)
-              {
-                this.maf2v = Convert.ToDouble(tempgrid.Rows[r].Cells[this.mafB2Dex].Value);
-                this.indexFinder2 = this.mafVolts.BinarySearch(this.maf2v);
-                if (this.indexFinder2 < 0)
-                {
-                  this.indexFinder2 = ~this.indexFinder2;
-                }
-              }
-
-              if (this.ltB1Dex != -1 && this.dualTB) // Dual throttle bodies and have logged long term trim
-              {
-                this.longtrim1 = Convert.ToDouble(tempgrid.Rows[r].Cells[this.ltB1Dex].Value);
-                this.longtrim2 = Convert.ToDouble(tempgrid.Rows[r].Cells[this.ltB2Dex].Value);
-                this.finaltrim1 = (this.shorttrim1 + Convert.ToInt32(this.longtrim1)) / 2;
-                this.finaltrim2 = (this.shorttrim2 + Convert.ToInt32(this.longtrim2)) / 2;
-              }
-              else if (this.ltB1Dex == -1 && this.dualTB) // Dual throttle bodies and have NOT logged long term trim
-              {
-                this.finaltrim1 = this.shorttrim1;
-                this.finaltrim2 = this.shorttrim2;
-              }
-              else if (this.ltB1Dex != -1 && !this.dualTB) // Single throttle body and have logged long term trim
-              {
-                this.longtrim1 = Convert.ToDouble(tempgrid.Rows[r].Cells[this.ltB1Dex].Value);
-                this.longtrim2 = Convert.ToDouble(tempgrid.Rows[r].Cells[this.ltB2Dex].Value);
-                this.finaltrim1 = (this.shorttrim1 + Convert.ToInt32(this.longtrim1)) / 2;
-                this.finaltrim2 = (this.shorttrim2 + Convert.ToInt32(this.longtrim2)) / 2;
-                this.finaltrim1 = (this.finaltrim1 + this.finaltrim2) / 2;
-              }
-              else
-              {
-                this.finaltrim1 = (this.shorttrim1 + this.shorttrim2) / 2;
-                this.finaltrim2 = 100;
-              }
-
-              if (this.clStatus == "CL_ACCEL" || this.clStatus == "CL_Full")
-              {
-                this.accel = Convert.ToDouble(tempgrid.Rows[r].Cells[this.accelDex].Value);
-                this.nextaccel = Convert.ToDouble(tempgrid.Rows[r + 1].Cells[this.accelDex].Value);
-              }
-
-              if (this.clStatus == "CL_IAT" || this.clStatus == "CL_Full")
-              {
-                this.intakeAirTemp = Convert.ToInt32(tempgrid.Rows[r].Cells[this.intakeAirTempDex].Value);
-              }
-
-              if (this.clStatus == "CL_Basic")
-              {
-                this.ClosedLoop_Start();
-              }
-              else if (this.clStatus == "CL_IAT"
-                   && this.intakeAirTemp >= this.intakeAirTempAVG - 10
-                   && this.intakeAirTemp <= this.intakeAirTempAVG + 10
-                   && this.indexFinder1 < this.mafVolts.Count)
-              {
-                this.ClosedLoop_Start();
-              }
-              else if (this.clStatus == "CL_ACCEL"
-                   && this.accelChange > -0.1
-                   && this.accelChange < 0.1
-                   && this.indexFinder1 < this.mafVolts.Count)
-              {
-                this.ClosedLoop_Start();
-              }
-              else if (this.clStatus == "CL_Full"
-                   && this.intakeAirTemp >= this.intakeAirTempAVG - 10
-                   && this.intakeAirTemp <= this.intakeAirTempAVG + 10
-                   && this.accelChange > -0.1
-                   && this.accelChange < 0.1
-                   && this.indexFinder1 < this.mafVolts.Count)
-              {
-                this.ClosedLoop_Start();
-              }
+              dr[2] = (double)this.maf2OpenLoop[i];
             }
-          }
+            else
+            {
+              dr[2] = (double)this.maf2ClosedLoop[i];
+            }
 
-          this.ClosedLoop_Finish();
-
-          // OpenLoop_Finish();
-
-          // Build DataTable for returning values
-          dt.Columns.Add("Voltage", typeof(double));
-          dt.Columns.Add("ClosedLoop_B1", typeof(double));
-          dt.Columns.Add("ClosedLoop_B2", typeof(double));
-          dt.Columns.Add("Hits_B1", typeof(int));
-          dt.Columns.Add("Hits_B2", typeof(int));
-          for (int i = 0; i < this.mafVolts.Count; ++i)
-          {
-            DataRow dr = dt.NewRow();
-            dr[0] = (double)this.mafVolts[i];
-            dr[1] = (double)this.maf1ClosedLoop[i];
-            dr[2] = (double)this.maf2ClosedLoop[i];
             dr[3] = (int)this.hits1[i];
             dr[4] = (int)this.hits2[i];
             dt.Rows.Add(dr);
@@ -879,7 +750,15 @@
           }
 
           // Shows how many hits were for each voltage
-          this.hits1[c] = tmpList.Count;
+          if (this.hits1[c] == 0)
+          {
+            this.hits1[c] = tmpList.Count;
+          }
+          else
+          {
+            this.hits1[c] += tmpList.Count;
+          }
+
           if (tmpList.Count > 5)
           {
             this.maf1ClosedLoop[c] = (double)tmpList.Average();
@@ -909,7 +788,15 @@
           }
 
           // Shows how many hits were for each voltage
-          this.hits2[c] = tmpList.Count;
+          if (this.hits2[c] == 0)
+          {
+            this.hits2[c] = tmpList.Count;
+          }
+          else
+          {
+            this.hits2[c] += tmpList.Count;
+          }
+
           if (tmpList.Count > 5)
           {
             this.maf2ClosedLoop[c] = (double)tmpList.Average();
@@ -924,7 +811,7 @@
       // Single MAF
       else
       {
-        // read values from DataTable 
+        // read values from DataTable
         for (int c = 0; c < this.clDT1.Columns.Count - 1; ++c)
         {
           List<double> tmpList = new List<double>();
@@ -942,7 +829,15 @@
           }
 
           // Shows how many hits were for each voltage
-          this.hits1[c] = tmpList.Count;
+          if (this.hits1[c] == 0)
+          {
+            this.hits1[c] = tmpList.Count;
+          }
+          else
+          {
+            this.hits1[c] += tmpList.Count;
+          }
+
           if (tmpList.Count > 5)
           {
             this.maf1ClosedLoop[c] = (double)tmpList.Average();
@@ -955,14 +850,62 @@
       }
     }
 
-
     private void OpenLoop_Start()
     {
       this.dualTB = this.dualTB && this.mafB2Dex != -1 ? true : false;
-      if (this.dualTB)
+
+      // MAF 1 - write values to datatable
+      for (int i = 0; ;)
       {
-        // Build first line for 2nd adjustment DataTable
-        if (this.olDT2.Rows.Count == 0)
+        double cell1 = Convert.ToDouble(this.olDT1.Rows[i][this.indexFinder1]);
+
+        if (this.actualAFR1 != 0)
+        {
+          this.tmpAdjustment1 = (this.actualAFR1 / this.target) * 100;
+        }
+
+        // Add extra row if close to the end
+        if (i == this.olDT1.Rows.Count - 1 || this.clDT1.Rows.Count == 0)
+        {
+          DataRow dr = this.olDT1.NewRow();
+          int c = 0;
+          foreach (double d in this.mafVolts)
+          {
+            dr[c] = 1.1;
+            ++c;
+          }
+
+          this.olDT1.Rows.Add(dr);
+        }
+
+        if (cell1 == 1.1 && this.actualAFR1 != 0 && this.indexFinder1 >= 0 && this.indexFinder1 < this.mafVolts.Count)
+        {
+          this.olDT1.Rows[i][this.indexFinder1] = this.tmpAdjustment1;
+          break;
+        }
+        else
+        {
+          ++i;
+        }
+      }
+
+      if (!this.dualTB)
+      {
+        return;
+      }
+
+      // MAF 2 - write values to datatable
+      if (this.actualAFR2 != 0)
+      {
+        this.tmpAdjustment2 = (this.actualAFR2 / this.target) * 100;
+      }
+
+      for (int i = 0; ;)
+      {
+        double cell2 = Convert.ToDouble(this.olDT2.Rows[i][this.indexFinder2]);
+
+        // Add extra row if close to the end
+        if (i == this.olDT2.Rows.Count - 1)
         {
           DataRow dr = this.olDT2.NewRow();
           int c = 0;
@@ -975,229 +918,98 @@
           this.olDT2.Rows.Add(dr);
         }
 
-        // MAF 1 - write values to datatable
-        for (int i = 0; ; )
+        if (cell2 == 1.1 && this.actualAFR2 != 0 && this.indexFinder1 >= 0 && this.indexFinder1 < this.mafVolts.Count)
         {
-          double cell1 = Convert.ToDouble(this.olDT1.Rows[i][this.indexFinder1]);
-
-          if (this.actualAFR1 != 0)
-          {
-            this.tmpAdjustment1 = (this.actualAFR1 / this.target) * 100;
-          }
-
-          if (i == this.olDT1.Rows.Count - 1) // Add extra row if close to the end
-          {
-            DataRow dr = this.olDT1.NewRow();
-            int c = 0;
-            foreach (double d in this.mafVolts)
-            {
-              dr[c] = 1.1;
-              ++c;
-            }
-
-            this.olDT1.Rows.Add(dr);
-          }
-
-          /*   might use afr from few rows down to get more accurate reading
-             if (r > 2 && r < CL_DT1.Rows.Count - 2 && afr1 < 14.7)
-             {
-               actualAFR1 = Convert.ToDouble(tempgrid.Rows[r + 3].Cells[afrB1Dex].Value);
-               if (dualTB && afr2 < 14.7)
-                 actualAFR2 = Convert.ToDouble(tempgrid.Rows[r + 3].Cells[afrB2Dex].Value);
-               else
-                 actualAFR2 = 0;
-             }
-             else
-             {
-               actualAFR1 = 0;
-             }
-          */
-
-          if (cell1 == 1.1 && this.actualAFR1 != 0 && this.indexFinder1 >= 0 && this.indexFinder1 < this.mafVolts.Count)
-          {
-            this.olDT1.Rows[i][this.indexFinder1] = this.tmpAdjustment1;
-            break;
-          }
-          else
-          {
-            ++i;
-            continue;
-          }
+          this.olDT2.Rows[i][this.indexFinder2] = this.tmpAdjustment2;
+          break;
         }
-
-        // MAF 2 - write values to datatable
-        if (this.actualAFR2 != 0)
+        else
         {
-          this.tmpAdjustment2 = (this.actualAFR2 / this.target) * 100;
-        }
-
-        for (int i = 0; ; )
-        {
-          double cell2 = Convert.ToDouble(this.olDT2.Rows[i][this.indexFinder2]);
-          // Add extra row if close to the end
-          if (i == this.olDT2.Rows.Count - 1)
-          {
-            DataRow dr = this.olDT2.NewRow();
-            int c = 0;
-            foreach (double d in this.mafVolts)
-            {
-              dr[c] = 1.1;
-              ++c;
-            }
-
-            this.olDT2.Rows.Add(dr);
-          }
-
-          if (cell2 == 1.1 && this.actualAFR2 != 0 && this.indexFinder1 >= 0 && this.indexFinder1 < this.mafVolts.Count)
-          {
-            this.olDT2.Rows[i][this.indexFinder2] = this.tmpAdjustment2;
-            break;
-          }
-          else
-          {
-            ++i;
-          }
-        }
-      }
-      else
-      {
-        // Single MAF - Write values to DataTable
-        for (int i = 0; ;)
-        {
-          double cell1 = Convert.ToDouble(this.olDT1.Rows[i][this.indexFinder1]);
-
-          if (this.actualAFR1 !=0 && this.actualAFR2 != 0)
-          {
-            this.tmpAdjustment1 = (this.actualAFR1 / this.target) * 100;
-            this.tmpAdjustment2 = (this.actualAFR1 / this.target) * 100;
-          }
-
-          // Add extra row if close to the end
-          if (i == this.olDT1.Rows.Count - 1)
-          {
-            DataRow dr = this.olDT1.NewRow();
-            int c = 0;
-            foreach (double d in this.mafVolts)
-            {
-              dr[c] = 1.1;
-              ++c;
-            }
-
-            this.olDT1.Rows.Add(dr);
-          }
-
-          if (cell1 == 1.1 && this.actualAFR1 != 0 && this.actualAFR2 != 0 && this.indexFinder1 >= 0 && this.indexFinder1 < this.mafVolts.Count)
-          {
-            this.olDT1.Rows[i][this.indexFinder1] = (this.tmpAdjustment1 + this.tmpAdjustment1) / 2;
-            break;
-          }
-          else
-          {
-            ++i;
-          }
+          ++i;
         }
       }
     }
 
     private void OpenLoop_Finish()
     {
-      // DUAL THROTTLE BODIES
-      if (this.dualTB)
+      // MAF1 - Read values from datatable
+      for (int c = 0; c < this.olDT1.Columns.Count - 1; ++c)
       {
-        // Build first line for 2nd adjustment DataTable
-        if (this.olDT2.Rows.Count == 0)
+        // Read values from DataTable
+        List<double> tmpList = new List<double>();
+        for (int line = 0; line < this.olDT1.Rows.Count - 1; ++line)
         {
-          DataRow dr = this.olDT2.NewRow();
-          int c = 0;
-          foreach (double d in this.mafVolts)
+          double cell = Convert.ToDouble(this.olDT1.Rows[line][c]);
+          if (cell != 1.1)
           {
-            dr[c] = 1.1;
-            ++c;
-          }
-          this.olDT2.Rows.Add(dr);
-        }
-
-        // MAF1 - Read values from datatable
-        for (int c = 0; c < this.olDT1.Columns.Count - 1; ++c)
-        {
-          List<double> tmpList = new List<double>();
-          for (int line = 0; line < this.olDT1.Rows.Count - 1; ++line)
-          {
-            double cell = Convert.ToDouble(this.olDT1.Rows[line][c]);
-            if (cell != 1.1)
-            {
-              tmpList.Add(Convert.ToDouble(this.olDT1.Rows[line][c]));
-            }
-            else
-            {
-              break;
-            }
-          }
-          if (tmpList.Count > 5)
-          {
-            this.maf1OpenLoop[c] = (double)tmpList.Average();
+            tmpList.Add(Convert.ToDouble(this.olDT1.Rows[line][c]));
           }
           else
           {
-            this.maf1OpenLoop[c] = 100;
+            break;
           }
         }
 
-        // MAF2 - Read vales from datatable
-        for (int c = 0; c < this.olDT2.Columns.Count - 1; ++c)
+        // Shows how many hits were for each voltage
+        if (this.hits1[c] == 0)
         {
-          // Read values from DataTable 2
-          List<double> tmpList = new List<double>();
-          for (int line = 0; line < this.olDT2.Rows.Count - 1; ++line)
-          {
-            double cell2 = Convert.ToDouble(this.olDT2.Rows[line][c]);
-            if (cell2 != 1.1)
-            {
-              tmpList.Add(Convert.ToDouble(this.olDT2.Rows[line][c]));
-            }
-            else
-            {
-              break;
-            }
-          }
+          this.hits1[c] = tmpList.Count;
+        }
+        else
+        {
+          this.hits1[c] += tmpList.Count;
+        }
 
-          if (tmpList.Count > 5)
-          {
-            this.maf2OpenLoop[c] = (double)tmpList.Average();
-          }
-          else
-          {
-            this.maf2OpenLoop[c] = 100;
-          }
+        if (tmpList.Count > 5)
+        {
+          this.maf1OpenLoop[c] = (double)tmpList.Average();
+        }
+        else
+        {
+          this.maf1OpenLoop[c] = 100;
         }
       }
-      else
-      {
-        // Single MAF - Write values to DataTable
-        for (int c = 0; c < this.olDT1.Columns.Count - 1; ++c)
-        {
-          List<double> tmpList = new List<double>();
-          for (int line = 0; line < this.olDT1.Rows.Count - 1; ++line)
-          {
-            double cell = Convert.ToDouble(this.olDT1.Rows[line][c]);
-            if (cell != 1.1)
-            {
-              tmpList.Add(Convert.ToDouble(this.olDT1.Rows[line][c]));
-            }
-            else
-            {
-              break;
-            }
-          }
 
-          if (tmpList.Count > 5)
+      if (!this.dualTB)
+      {
+        return;
+      }
+
+      // MAF2 - Read vales from datatable
+      for (int c = 0; c < this.olDT2.Columns.Count - 1; ++c)
+      {
+        // Read values from DataTable 2
+        List<double> tmpList = new List<double>();
+        for (int line = 0; line < this.olDT2.Rows.Count - 1; ++line)
+        {
+          double cell2 = Convert.ToDouble(this.olDT2.Rows[line][c]);
+          if (cell2 != 1.1)
           {
-            this.maf1OpenLoop[c] = (double)tmpList.Average();
+            tmpList.Add(Convert.ToDouble(this.olDT2.Rows[line][c]));
           }
           else
           {
-            this.maf1OpenLoop[c] = 100;
+            break;
           }
+        }
+
+        // Shows how many hits were for each voltage
+        if (this.hits2[c] == 0)
+        {
+          this.hits2[c] = tmpList.Count;
+        }
+        else
+        {
+          this.hits2[c] += tmpList.Count;
+        }
+
+        if (tmpList.Count > 5)
+        {
+          this.maf2OpenLoop[c] = (double)tmpList.Average();
+        }
+        else
+        {
+          this.maf2OpenLoop[c] = 100;
         }
       }
     }
@@ -1425,6 +1237,7 @@
             if (this.actualAFR1 != 0 && this.actualAFR2 != 0)
             {
               tmpAdjustment1 = ((this.actualAFR1 + this.actualAFR2) / target) * 100;
+
             }
             else
             {
