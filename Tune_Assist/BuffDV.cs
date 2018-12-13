@@ -20,9 +20,9 @@
       800, 1000, 1200, 1600, 2000, 2400, 2800, 3200, 3600, 4000, 4400, 4800, 5200, 5600, 6000, 6400
     };
 
-    public static List<int> FC_XdataByte = new List<int>
+    public static List<double> FC_XdataByte = new List<double>
     {
-      16, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240, 255
+      16.00, 32.00, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240, 255
     };
 
     public BuffDV_FuelComp()

@@ -222,7 +222,7 @@ namespace AutoTune
         if (e.Error != null)
           MessageBox.Show(e.Error.Message, "Error During Maf Adjustments");
         else if (e.Cancelled)
-          this.StatusBox.Text = "** Cancelled **";
+          this.StatusBox.Text = "** Canceled **";
         else
         {
           DataTable dt = new DataTable();
@@ -263,7 +263,7 @@ namespace AutoTune
       Parser fuelComp = new Parser();
       BackgroundWorker bw = sender as BackgroundWorker;
       DataGridView tempgrid = (DataGridView)e.Argument;
-      //e.Result = fuelComp.AdjustFuelComp(bw, tempgrid);
+      e.Result = fuelComp.AdjustFuelComp(bw, tempgrid);
       if (bw.CancellationPending)
       {
         e.Cancel = true;
@@ -280,9 +280,9 @@ namespace AutoTune
       try
       {
         if (e.Error != null)
-          MessageBox.Show(e.Error.Message, "Error During Maf Adjustments");
+          MessageBox.Show(e.Error.Message, "Error During Fuel Comp Adjustments");
         else if (e.Cancelled)
-          this.StatusBox.Text = "** Cancelled **";
+          this.StatusBox.Text = "** Canceled **";
         else
         {
           if ((DataTable)e.Result != null)
@@ -393,22 +393,24 @@ namespace AutoTune
 
     private void buildFC_DT()
     {
-      int Index = 0;
+      int index = 0;
       foreach (int i in BuffDV_FuelComp.FC_RPM)
       {
         this.DV_FuelComp_RPM.Rows.Add();
-        this.DV_FuelComp_RPM.Rows[Index].Height = 22;
-        this.DV_FuelComp_RPM[0, Index].Value = i;
-        ++Index;
+        this.DV_FuelComp_RPM.Rows[index].Height = 22;
+        this.DV_FuelComp_RPM[0, index].Value = i;
+        ++index;
       }
-      Index = 0;
+
+      index = 0;
       foreach (int i in BuffDV_FuelComp.FC_XdataByte)
       {
         this.DV_FuelComp_XdataByte.Columns.Add(Convert.ToString(i), Convert.ToString(i));
-        this.DV_FuelComp_XdataByte.Columns[Index].Width = 47;
+        this.DV_FuelComp_XdataByte.Columns[index].Width = 47;
         this.DV_FuelComp_XdataByte[Convert.ToString(i), 0].Value = i;
-        ++Index;
+        ++index;
       }
+
       try
       {
         this.fuelCompWorker = new BackgroundWorker();
