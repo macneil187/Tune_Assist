@@ -28,6 +28,11 @@
     private DataTable olDT2 = new DataTable();
     private List<int> hits1 = new List<int>(64);
     private List<int> hits2 = new List<int>(64);
+    List<int> tmpRPMlist = BuffDV_FuelComp.FC_RPM;
+    List<double> tmpXlist = BuffDV_FuelComp.FC_XdataByte;
+    DataTable DT_FC_hits = new DataTable();
+    DataTable DT_FC_totals = new DataTable();
+    DataTable DT_FC = new DataTable();
     private double accel;
     private double accelChange;
     private double actualAFR1;
@@ -1084,12 +1089,6 @@
     // *********** Fuel Comp Adjustments below.
     public DataTable AdjustFuelComp(BackgroundWorker bw, DataGridView tempgrid)
     {
-      List<int> tmpRPMlist = BuffDV_FuelComp.FC_RPM;
-      List<double> tmpXlist = BuffDV_FuelComp.FC_XdataByte;
-      DataTable DT_FC_hits = new DataTable();
-      DataTable DT_FC_totals = new DataTable();
-      DataTable DT_FC = new DataTable();
-
       this.FindHeader_Indexes(tempgrid);
 
       if (this.targetDex != -1 && this.fuelCompTraceDex != -1
@@ -1115,16 +1114,26 @@
 
         foreach (int i in tmpXlist)
         {
-          DT_FC_hits.Columns.Add(Convert.ToString(i), typeof(int));
-          DT_FC_totals.Columns.Add(Convert.ToString(i), typeof(double));
-          DT_FC.Columns.Add(Convert.ToString(i), typeof(decimal));
+          this.DT_FC_hits.Columns.Add(Convert.ToString(i), typeof(int));
+          this.DT_FC_totals.Columns.Add(Convert.ToString(i), typeof(double));
+          this.DT_FC.Columns.Add(Convert.ToString(i), typeof(decimal));
         }
 
         foreach (int i in tmpRPMlist)
         {
-          DT_FC_hits.Rows.Add();
-          DT_FC_totals.Rows.Add();
-          DT_FC.Rows.Add();
+          this.DT_FC_hits.Rows.Add();
+          this.DT_FC_totals.Rows.Add();
+          this.DT_FC.Rows.Add();
+        }
+
+        for (int row = 0; row < this.DT_FC_totals.Rows.Count; ++row)
+        {
+          for (int col = 0; col < this.DT_FC_totals.Columns.Count; ++col)
+          {
+            this.DT_FC_totals.Rows[row][col] = "100";
+            this.DT_FC_hits.Rows[row][col] = "1";
+            this.DT_FC.Rows[row][col] = "100";
+          }
         }
 
         for (int row = 1; row < tempgrid.Rows.Count; ++row)
@@ -1165,12 +1174,15 @@
             indexFinderRPM = ~indexFinderRPM;
           }
 
-          //indexFinderDB--;
-          //indexFinderRPM--;
           if (indexFinderDB == 16)
+          {
             indexFinderDB = 15;
+          }
+
           if (indexFinderRPM == 16)
+          {
             indexFinderRPM = 15;
+          }
 
           if (this.stB1Dex != -1 && this.stB2Dex != -1 && afr1 < 25 && afr2 < 25)
           {
@@ -1198,24 +1210,36 @@
 
           if (target == 14.7)
           {
-            if (DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] == null
-              || string.IsNullOrEmpty(DT_FC_totals.Rows[indexFinderRPM][indexFinderDB].ToString()))
+            actualAFR1 = Convert.ToDouble(tempgrid.Rows[row + 2].Cells[this.afrB1Dex].Value);
+            if (this.dualTB && afr2 < 14.7)
             {
-              DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] = this.finaltrim1;
+              actualAFR2 = Convert.ToDouble(tempgrid.Rows[row + 2].Cells[this.afrB2Dex].Value);
             }
             else
             {
-              DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] = Convert.ToDecimal(DT_FC_totals.Rows[indexFinderRPM][indexFinderDB]) + this.finaltrim1;
+              actualAFR2 = 0;
             }
 
-            if (DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] == null
-              || string.IsNullOrEmpty(DT_FC_hits.Rows[indexFinderRPM][indexFinderDB].ToString()))
+            if (actualAFR1 != 0 && actualAFR2 != 0)
             {
-              DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = 1;
+              tmpAdjustment1 = ((actualAFR1 + actualAFR2) / target) * 100;
             }
             else
             {
-              DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = Convert.ToInt32(DT_FC_hits.Rows[indexFinderRPM][indexFinderDB]) + 1;
+              tmpAdjustment1 = (actualAFR1 / target) * 100;
+            }
+
+            if (this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] == "100")
+            {
+              this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] = tmpAdjustment1;
+              this.DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = "2";
+            }
+            else
+            {
+              double test = Convert.ToDouble(this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB]);
+              this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] = Convert.ToDouble(this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB]) + tmpAdjustment1;
+              int hitCount = Convert.ToInt32(this.DT_FC_hits.Rows[indexFinderRPM][indexFinderDB]);
+              this.DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = Convert.ToString(hitCount + 1);
             }
           }
           else if (target < 14.7 && afr1 < 25 && afr2 < 25)
@@ -1239,42 +1263,54 @@
               tmpAdjustment1 = (actualAFR1 / target) * 100;
             }
 
-            if (DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] == null
-            || string.IsNullOrEmpty(DT_FC_totals.Rows[indexFinderRPM][indexFinderDB].ToString()))
+            if (this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] == null
+            || string.IsNullOrEmpty(this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB].ToString()))
             {
-              DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] = tmpAdjustment1;
+              this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] = tmpAdjustment1 + 100;
+              this.DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = 2;
             }
             else
             {
-              double test = Convert.ToDouble(DT_FC_totals.Rows[indexFinderRPM][indexFinderDB]);
-              DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] = Convert.ToDouble(DT_FC_totals.Rows[indexFinderRPM][indexFinderDB]) + tmpAdjustment1;
-            }
-
-            if (DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] == null
-            || string.IsNullOrEmpty(DT_FC_hits.Rows[indexFinderRPM][indexFinderDB].ToString()))
-            {
-              DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = 1;
-              int testvalues = Convert.ToInt32(DT_FC_hits.Rows[indexFinderRPM][indexFinderDB]);
-            }
-            else
-            {
-              int testvalue = Convert.ToInt32(DT_FC_hits.Rows[indexFinderRPM][indexFinderDB]);
-              DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = testvalue + 1;
+              double test = Convert.ToDouble(this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB]);
+              this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] = Convert.ToDouble(this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB]) + tmpAdjustment1;
+              int hitCount = Convert.ToInt32(this.DT_FC_hits.Rows[indexFinderRPM][indexFinderDB]);
+              this.DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = hitCount + 1;
             }
           }
         }
 
-        for (int row = 0; row < DT_FC_totals.Rows.Count; ++row)
+        for (int row = 0; row < this.DT_FC_totals.Rows.Count; ++row)
         {
-          for (int col = 0; col < DT_FC_totals.Columns.Count; ++col)
+          for (int col = 0; col < this.DT_FC_totals.Columns.Count; ++col)
           {
-            if (!string.IsNullOrEmpty(DT_FC_totals.Rows[row][col].ToString())
-            || !string.IsNullOrEmpty(DT_FC_hits.Rows[row][col].ToString()))
+            double total = 100;
+            int hits = 1;
+            if (this.DT_FC_totals.Rows[row][col].ToString() == "0" || this.DT_FC_totals.Rows[row][col].ToString() == "100" || string.IsNullOrEmpty(this.DT_FC_totals.Rows[row][col].ToString()))
             {
-              double total = Convert.ToDouble(DT_FC_totals.Rows[row][col]);
-              int hit = Convert.ToInt32(DT_FC_hits.Rows[row][col]);
-              decimal final = Convert.ToDecimal(Convert.ToDouble(DT_FC_totals.Rows[row][col]) / Convert.ToInt32(DT_FC_hits.Rows[row][col]));
-              DT_FC.Rows[row][col] = Convert.ToDecimal(Convert.ToDouble(DT_FC_totals.Rows[row][col]) / Convert.ToInt32(DT_FC_hits.Rows[row][col]));
+              total = 100;
+            }
+            else if (this.DT_FC_totals.Rows[row][col] != null || !string.IsNullOrEmpty(this.DT_FC_totals.Rows[row][col].ToString()))
+            {
+              string totalvalue = Convert.ToString(this.DT_FC_totals.Rows[row][col]);
+              total = Convert.ToDouble(totalvalue);
+            }
+
+            if (this.DT_FC_hits.Rows[row][col].ToString() == "0" || this.DT_FC_hits.Rows[row][col].ToString() == "1" || string.IsNullOrEmpty(this.DT_FC_hits.Rows[row][col].ToString()))
+            {
+              hits = 1;
+            }
+            else if (this.DT_FC_hits.Rows[row][col] != null || !string.IsNullOrEmpty(this.DT_FC_hits.Rows[row][col].ToString()))
+            {
+              hits = Convert.ToInt32(this.DT_FC_hits.Rows[row][col]);
+            }
+
+            if (total ==100 && hits == 1)
+            {
+              this.DT_FC.Rows[row][col] = 100;
+            }
+            else
+            {
+              this.DT_FC.Rows[row][col] = Convert.ToDouble(Convert.ToDouble(this.DT_FC_totals.Rows[row][col]) / Convert.ToInt32(this.DT_FC_hits.Rows[row][col]));
             }
           }
         }
@@ -1300,7 +1336,6 @@
         if (this.rpmDex == -1) {sb.Append("ENGINE RPM (rpm)\n"); }
 
         Console.WriteLine(sb.ToString());
-
       }
 
       return DT_FC;
