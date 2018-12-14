@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-
-namespace AutoTune
+﻿namespace AutoTune
 {
+  using System;
+  using System.Collections.Generic;
+  using System.ComponentModel;
+  using System.Data;
+  using System.IO;
+  using System.Linq;
+  using System.Windows.Forms;
+
   public partial class AutoTune : Form
   {
     private enum AppStates { Idle, ParsingLog };
@@ -97,6 +97,9 @@ namespace AutoTune
       {
         return;
       }
+      
+      this.DV_FuelComp.DataSource = null;
+      this.DV_FuelComp.Refresh();
       this.buffDV1.DataSource = null;
       this.buffDV1.Refresh();
       this.buffDVmaf1.DataSource = null;

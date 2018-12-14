@@ -1135,7 +1135,7 @@
           afr1 = Convert.ToDouble(tempgrid.Rows[row].Cells[this.afrB1Dex].Value);
           afr2 = Convert.ToDouble(tempgrid.Rows[row].Cells[this.afrB2Dex].Value);
 
-          if (target > 15)
+          if (target > 15 || rpm < 600)
           {
             continue;
           }
@@ -1165,6 +1165,13 @@
             indexFinderRPM = ~indexFinderRPM;
           }
 
+          //indexFinderDB--;
+          //indexFinderRPM--;
+          if (indexFinderDB == 16)
+            indexFinderDB = 15;
+          if (indexFinderRPM == 16)
+            indexFinderRPM = 15;
+
           if (this.stB1Dex != -1 && this.stB2Dex != -1 && afr1 < 25 && afr2 < 25)
           {
             shorttrim1 = Convert.ToInt32(tempgrid.Rows[row].Cells[this.stB1Dex].Value);
@@ -1189,7 +1196,7 @@
             continue;
           }
 
-          if (this.target == 14.7)
+          if (target == 14.7)
           {
             if (DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] == null
               || string.IsNullOrEmpty(DT_FC_totals.Rows[indexFinderRPM][indexFinderDB].ToString()))
@@ -1213,23 +1220,23 @@
           }
           else if (target < 14.7 && afr1 < 25 && afr2 < 25)
           {
-            this.actualAFR1 = Convert.ToDouble(tempgrid.Rows[row + 2].Cells[this.afrB1Dex].Value);
+            actualAFR1 = Convert.ToDouble(tempgrid.Rows[row + 2].Cells[this.afrB1Dex].Value);
             if (this.dualTB && afr2 < 14.7)
             {
-              this.actualAFR2 = Convert.ToDouble(tempgrid.Rows[row + 2].Cells[this.afrB2Dex].Value);
+              actualAFR2 = Convert.ToDouble(tempgrid.Rows[row + 2].Cells[this.afrB2Dex].Value);
             }
             else
             {
-              this.actualAFR2 = 0;
+              actualAFR2 = 0;
             }
 
-            if (this.actualAFR1 != 0 && this.actualAFR2 != 0)
+            if (actualAFR1 != 0 && actualAFR2 != 0)
             {
-              tmpAdjustment1 = ((this.actualAFR1 + this.actualAFR2) / target) * 100;
+              tmpAdjustment1 = ((actualAFR1 + actualAFR2) / target) * 100;
             }
             else
             {
-              tmpAdjustment1 = (this.actualAFR1 / target) * 100;
+              tmpAdjustment1 = (actualAFR1 / target) * 100;
             }
 
             if (DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] == null
@@ -1239,6 +1246,7 @@
             }
             else
             {
+              double test = Convert.ToDouble(DT_FC_totals.Rows[indexFinderRPM][indexFinderDB]);
               DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] = Convert.ToDouble(DT_FC_totals.Rows[indexFinderRPM][indexFinderDB]) + tmpAdjustment1;
             }
 
@@ -1246,10 +1254,12 @@
             || string.IsNullOrEmpty(DT_FC_hits.Rows[indexFinderRPM][indexFinderDB].ToString()))
             {
               DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = 1;
+              int testvalues = Convert.ToInt32(DT_FC_hits.Rows[indexFinderRPM][indexFinderDB]);
             }
             else
             {
-              DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = Convert.ToInt32(DT_FC_hits.Rows[indexFinderRPM][indexFinderDB]) + 1;
+              int testvalue = Convert.ToInt32(DT_FC_hits.Rows[indexFinderRPM][indexFinderDB]);
+              DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = testvalue + 1;
             }
           }
         }
@@ -1273,21 +1283,21 @@
       {
         StringBuilder sb = new StringBuilder();
         sb.Append("Could not find the following headers: \n");
-        if (this.timeDex == -1) { sb.Append("Time\n"); }
-        if (this.stB1Dex == -1) { sb.Append("A/F CORR-B1 (%)\n"); }
-        if (this.stB2Dex == -1) { sb.Append("A/F CORR-B2 (%)\n"); }
-        if (this.accelDex == -1) { sb.Append("ACCEL PED POS 1\n"); }
-        if (this.ltB1Dex == -1) { sb.Append("LT Fuel Trim B1 (%)\n"); }
-        if (this.ltB2Dex == -1) { sb.Append("LT Fuel Trim B2 (%)\n"); }
-        if (this.afrB1Dex == -1) { sb.Append("AFR WB-B1\n"); }
-        if (this.afrB2Dex == -1) { sb.Append("AFR WB-B2\n"); }
-        if (this.mafB1Dex == -1) { sb.Append("MAS A/F -B1 (V)\n"); }
-        if (this.mafB2Dex == -1) { sb.Append("MAS A/F -B2 (V)\n"); }
-        if (this.targetDex == -1) { sb.Append("TARGET AFR\n"); }
-        if (this.intakeAirTempDex == -1) { sb.Append("INTAKE AIR TMP\n"); }
-        if (this.coolantTempDex == -1) { sb.Append("COOLANT TEMP\n"); }
-        if (this.fuelCompTraceDex == -1) { sb.Append("Fuel Compensation X Trace\n"); }
-        if (this.rpmDex == -1) { sb.Append("ENGINE RPM (rpm)\n"); }
+        if (this.timeDex == -1) {sb.Append("Time\n"); }
+        if (this.stB1Dex == -1) {sb.Append("A/F CORR-B1 (%)\n"); }
+        if (this.stB2Dex == -1) {sb.Append("A/F CORR-B2 (%)\n"); }
+        if (this.accelDex == -1) {sb.Append("ACCEL PED POS 1\n"); }
+        if (this.ltB1Dex == -1) {sb.Append("LT Fuel Trim B1 (%)\n"); }
+        if (this.ltB2Dex == -1) {sb.Append("LT Fuel Trim B2 (%)\n"); }
+        if (this.afrB1Dex == -1) {sb.Append("AFR WB-B1\n"); }
+        if (this.afrB2Dex == -1) {sb.Append("AFR WB-B2\n"); }
+        if (this.mafB1Dex == -1) {sb.Append("MAS A/F -B1 (V)\n"); }
+        if (this.mafB2Dex == -1) {sb.Append("MAS A/F -B2 (V)\n"); }
+        if (this.targetDex == -1) {sb.Append("TARGET AFR\n"); }
+        if (this.intakeAirTempDex == -1) {sb.Append("INTAKE AIR TMP\n"); }
+        if (this.coolantTempDex == -1) {sb.Append("COOLANT TEMP\n"); }
+        if (this.fuelCompTraceDex == -1) {sb.Append("Fuel Compensation X Trace\n"); }
+        if (this.rpmDex == -1) {sb.Append("ENGINE RPM (rpm)\n"); }
 
         Console.WriteLine(sb.ToString());
 
