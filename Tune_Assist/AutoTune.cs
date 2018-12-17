@@ -236,6 +236,20 @@
             {
               if (!dt.Rows[a][1].Equals(100))
               {
+                // Multiplier Easer.  This is a test to make the multiplier less
+                double easer = ((double)dt.Rows[a][1] + 100) / 2;
+                this.buffDVmaf1["Multiplier", a].Value = easer / 100;
+              }
+
+              if (!dt.Rows[a][2].Equals(100))
+              {
+                double easer = ((double)dt.Rows[a][2] + 100) / 2;
+                this.buffDVmaf2["Multiplier", a].Value = easer / 100;
+              }
+
+              /*
+              if (!dt.Rows[a][1].Equals(100))
+              {
                 this.buffDVmaf1["Multiplier", a].Value = ((double)dt.Rows[a][1] / 100);
               }
 
@@ -243,10 +257,11 @@
               {
                 this.buffDVmaf2["Multiplier", a].Value = ((double)dt.Rows[a][2] / 100);
               }
-
+              */
               this.buffDVmaf1["Hits", a].Value = (int)dt.Rows[a][3];
               this.buffDVmaf2["Hits", a].Value = (int)dt.Rows[a][4];
             }
+
             this.buffDVmaf1.Refresh();
             this.buffDVmaf2.Refresh();
             
