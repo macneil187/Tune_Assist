@@ -28,11 +28,11 @@
     private DataTable olDT2 = new DataTable();
     private List<int> hits1 = new List<int>(64);
     private List<int> hits2 = new List<int>(64);
-    List<int> tmpRPMlist = BuffDV_FuelComp.FC_RPM;
-    List<double> tmpXlist = BuffDV_FuelComp.FC_XdataByte;
-    DataTable DT_FC_hits = new DataTable();
-    DataTable DT_FC_totals = new DataTable();
-    DataTable DT_FC = new DataTable();
+    private List<int> tmpRPMlist = BuffDV_FuelComp.FC_RPM;
+    private List<double> tmpXlist = BuffDV_FuelComp.FC_XdataByte;
+    private DataTable DT_FC_hits = new DataTable();
+    private DataTable DT_FC_totals = new DataTable();
+    private DataTable DT_FC = new DataTable();
     private double accel;
     private double accelChange;
     private double actualAFR1;
@@ -40,8 +40,8 @@
     private double afr1;
     private double afr2;
     private double coolantTemp;
-    private int finaltrim1;
-    private int finaltrim2;
+    private double finaltrim1;
+    private double finaltrim2;
     private double OLtrim1;
     private double OLtrim2;
     private int indexFinder1;
@@ -241,6 +241,7 @@
     {
       using (DataTable dt = new DataTable())
       {
+        Console.WriteLine("MAF adjust has {0} lines to read.", tempgrid.RowCount);
         // init the adjustment lists and add voltage columns
         foreach (double d in this.mafVolts)
         {
@@ -1090,255 +1091,244 @@
     public DataTable AdjustFuelComp(BackgroundWorker bw, DataGridView tempgrid)
     {
       this.FindHeader_Indexes(tempgrid);
+      Console.WriteLine("Fuel Comp adjust has {0} lines to read.", tempgrid.RowCount);
 
-      if (this.targetDex != -1 && this.fuelCompTraceDex != -1
-        && this.rpmDex != -1 && tempgrid.Rows.Count > 50
-        && this.afrB1Dex != -1 && this.afrB2Dex != -1)
-      {
-        Console.WriteLine(" total Lines are  {0}", tempgrid.Rows.Count);
-        double afr1;
-        double afr2;
-        int finaltrim1;
-        int finaltrim2;
-        double fuelXtrace;
-        double longtrim1;
-        double longtrim2;
-        int rpm;
-        int shorttrim1;
-        int shorttrim2 = 100;
-        double target;
-        double tmpAdjustment1;
-        int indexFinderDB;
-        int indexFinderRPM;
-        bool accelAfterDecel = false;
-
-        foreach (int i in tmpXlist)
-        {
-          this.DT_FC_hits.Columns.Add(Convert.ToString(i), typeof(int));
-          this.DT_FC_totals.Columns.Add(Convert.ToString(i), typeof(double));
-          this.DT_FC.Columns.Add(Convert.ToString(i), typeof(decimal));
-        }
-
-        foreach (int i in tmpRPMlist)
-        {
-          this.DT_FC_hits.Rows.Add();
-          this.DT_FC_totals.Rows.Add();
-          this.DT_FC.Rows.Add();
-        }
-
-        for (int row = 0; row < this.DT_FC_totals.Rows.Count; ++row)
-        {
-          for (int col = 0; col < this.DT_FC_totals.Columns.Count; ++col)
-          {
-            this.DT_FC_totals.Rows[row][col] = "100";
-            this.DT_FC_hits.Rows[row][col] = "1";
-            this.DT_FC.Rows[row][col] = "100";
-          }
-        }
-
-        for (int row = 1; row < tempgrid.Rows.Count; ++row)
-        {
-          target = Convert.ToDouble(tempgrid.Rows[row].Cells[this.targetDex].Value);
-          fuelXtrace = Convert.ToDouble(tempgrid.Rows[row].Cells[this.fuelCompTraceDex].Value);
-          rpm = Convert.ToInt32(tempgrid.Rows[row].Cells[this.rpmDex].Value);
-          afr1 = Convert.ToDouble(tempgrid.Rows[row].Cells[this.afrB1Dex].Value);
-          afr2 = Convert.ToDouble(tempgrid.Rows[row].Cells[this.afrB2Dex].Value);
-
-          if (target > 15 || rpm < 600)
-          {
-            continue;
-          }
-
-          // Back on accel after decel  ** This will skip down rows to avoid skewing values
-          if (afr1 == 60)
-          {
-            accelAfterDecel = true;
-            continue;
-          }
-          else if (afr1 < 20 && accelAfterDecel)
-          {
-            row += 9;
-            accelAfterDecel = false;
-            continue;
-          }
-
-          indexFinderDB = tmpXlist.BinarySearch(fuelXtrace);
-          if (indexFinderDB < 0)
-          {
-            indexFinderDB = ~indexFinderDB;
-          }
-
-          indexFinderRPM = tmpRPMlist.BinarySearch(rpm);
-          if (indexFinderRPM < 0)
-          {
-            indexFinderRPM = ~indexFinderRPM;
-          }
-
-          if (indexFinderDB == 16)
-          {
-            indexFinderDB = 15;
-          }
-
-          if (indexFinderRPM == 16)
-          {
-            indexFinderRPM = 15;
-          }
-
-          if (this.stB1Dex != -1 && this.stB2Dex != -1 && afr1 < 25 && afr2 < 25)
-          {
-            shorttrim1 = Convert.ToInt32(tempgrid.Rows[row].Cells[this.stB1Dex].Value);
-            shorttrim2 = Convert.ToInt32(tempgrid.Rows[row].Cells[this.stB2Dex].Value);
-
-            // if long term trimlogged
-            if (this.ltB1Dex != -1 && this.ltB2Dex != -1)
-            {
-              longtrim1 = Convert.ToDouble(tempgrid.Rows[row].Cells[this.ltB1Dex].Value);
-              longtrim2 = Convert.ToDouble(tempgrid.Rows[row].Cells[this.ltB2Dex].Value);
-              finaltrim1 = (shorttrim1 + Convert.ToInt32(longtrim1)) / 2;
-              finaltrim2 = (shorttrim2 + Convert.ToInt32(longtrim2)) / 2;
-              finaltrim1 = (finaltrim1 + finaltrim2) / 2;
-            }
-            else
-            {
-              finaltrim1 = (shorttrim1 + shorttrim2) / 2;
-            }
-          }
-          else
-          {
-            continue;
-          }
-
-          if (target == 14.7)
-          {
-            actualAFR1 = Convert.ToDouble(tempgrid.Rows[row + 2].Cells[this.afrB1Dex].Value);
-            if (this.dualTB && afr2 < 14.7)
-            {
-              actualAFR2 = Convert.ToDouble(tempgrid.Rows[row + 2].Cells[this.afrB2Dex].Value);
-            }
-            else
-            {
-              actualAFR2 = 0;
-            }
-
-            if (actualAFR1 != 0 && actualAFR2 != 0)
-            {
-              tmpAdjustment1 = ((actualAFR1 + actualAFR2) / target) * 100;
-            }
-            else
-            {
-              tmpAdjustment1 = (actualAFR1 / target) * 100;
-            }
-
-            if (this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] == "100")
-            {
-              this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] = tmpAdjustment1;
-              this.DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = "2";
-            }
-            else
-            {
-              double test = Convert.ToDouble(this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB]);
-              this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] = Convert.ToDouble(this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB]) + tmpAdjustment1;
-              int hitCount = Convert.ToInt32(this.DT_FC_hits.Rows[indexFinderRPM][indexFinderDB]);
-              this.DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = Convert.ToString(hitCount + 1);
-            }
-          }
-          else if (target < 14.7 && afr1 < 25 && afr2 < 25)
-          {
-            actualAFR1 = Convert.ToDouble(tempgrid.Rows[row + 2].Cells[this.afrB1Dex].Value);
-            if (this.dualTB && afr2 < 14.7)
-            {
-              actualAFR2 = Convert.ToDouble(tempgrid.Rows[row + 2].Cells[this.afrB2Dex].Value);
-            }
-            else
-            {
-              actualAFR2 = 0;
-            }
-
-            if (actualAFR1 != 0 && actualAFR2 != 0)
-            {
-              tmpAdjustment1 = ((actualAFR1 + actualAFR2) / target) * 100;
-            }
-            else
-            {
-              tmpAdjustment1 = (actualAFR1 / target) * 100;
-            }
-
-            if (this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] == null
-            || string.IsNullOrEmpty(this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB].ToString()))
-            {
-              this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] = tmpAdjustment1 + 100;
-              this.DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = 2;
-            }
-            else
-            {
-              double test = Convert.ToDouble(this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB]);
-              this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] = Convert.ToDouble(this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB]) + tmpAdjustment1;
-              int hitCount = Convert.ToInt32(this.DT_FC_hits.Rows[indexFinderRPM][indexFinderDB]);
-              this.DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = hitCount + 1;
-            }
-          }
-        }
-
-        for (int row = 0; row < this.DT_FC_totals.Rows.Count; ++row)
-        {
-          for (int col = 0; col < this.DT_FC_totals.Columns.Count; ++col)
-          {
-            double total = 100;
-            int hits = 1;
-            if (this.DT_FC_totals.Rows[row][col].ToString() == "0" || this.DT_FC_totals.Rows[row][col].ToString() == "100" || string.IsNullOrEmpty(this.DT_FC_totals.Rows[row][col].ToString()))
-            {
-              total = 100;
-            }
-            else if (this.DT_FC_totals.Rows[row][col] != null || !string.IsNullOrEmpty(this.DT_FC_totals.Rows[row][col].ToString()))
-            {
-              string totalvalue = Convert.ToString(this.DT_FC_totals.Rows[row][col]);
-              total = Convert.ToDouble(totalvalue);
-            }
-
-            if (this.DT_FC_hits.Rows[row][col].ToString() == "0" || this.DT_FC_hits.Rows[row][col].ToString() == "1" || string.IsNullOrEmpty(this.DT_FC_hits.Rows[row][col].ToString()))
-            {
-              hits = 1;
-            }
-            else if (this.DT_FC_hits.Rows[row][col] != null || !string.IsNullOrEmpty(this.DT_FC_hits.Rows[row][col].ToString()))
-            {
-              hits = Convert.ToInt32(this.DT_FC_hits.Rows[row][col]);
-            }
-
-            if (total ==100 && hits == 1)
-            {
-              this.DT_FC.Rows[row][col] = 100;
-            }
-            else
-            {
-              this.DT_FC.Rows[row][col] = Convert.ToDouble(Convert.ToDouble(this.DT_FC_totals.Rows[row][col]) / Convert.ToInt32(this.DT_FC_hits.Rows[row][col]));
-            }
-          }
-        }
-      }
-      else
+      if (this.targetDex == -1 || this.fuelCompTraceDex == -1
+        || this.rpmDex == -1 || tempgrid.Rows.Count < 50
+        || this.afrB1Dex == -1 || this.afrB2Dex == -1 
+        || this.accelDex == -1)
       {
         StringBuilder sb = new StringBuilder();
         sb.Append("Could not find the following headers: \n");
-        if (this.timeDex == -1) {sb.Append("Time\n"); }
-        if (this.stB1Dex == -1) {sb.Append("A/F CORR-B1 (%)\n"); }
-        if (this.stB2Dex == -1) {sb.Append("A/F CORR-B2 (%)\n"); }
-        if (this.accelDex == -1) {sb.Append("ACCEL PED POS 1\n"); }
-        if (this.ltB1Dex == -1) {sb.Append("LT Fuel Trim B1 (%)\n"); }
-        if (this.ltB2Dex == -1) {sb.Append("LT Fuel Trim B2 (%)\n"); }
-        if (this.afrB1Dex == -1) {sb.Append("AFR WB-B1\n"); }
-        if (this.afrB2Dex == -1) {sb.Append("AFR WB-B2\n"); }
-        if (this.mafB1Dex == -1) {sb.Append("MAS A/F -B1 (V)\n"); }
-        if (this.mafB2Dex == -1) {sb.Append("MAS A/F -B2 (V)\n"); }
-        if (this.targetDex == -1) {sb.Append("TARGET AFR\n"); }
-        if (this.intakeAirTempDex == -1) {sb.Append("INTAKE AIR TMP\n"); }
-        if (this.coolantTempDex == -1) {sb.Append("COOLANT TEMP\n"); }
-        if (this.fuelCompTraceDex == -1) {sb.Append("Fuel Compensation X Trace\n"); }
-        if (this.rpmDex == -1) {sb.Append("ENGINE RPM (rpm)\n"); }
+        if (this.timeDex == -1) { sb.Append("Time\n"); }
+        if (this.stB1Dex == -1) { sb.Append("A/F CORR-B1 (%)\n"); }
+        if (this.stB2Dex == -1) { sb.Append("A/F CORR-B2 (%)\n"); }
+        if (this.accelDex == -1) { sb.Append("ACCEL PED POS 1\n"); }
+        if (this.ltB1Dex == -1) { sb.Append("LT Fuel Trim B1 (%)\n"); }
+        if (this.ltB2Dex == -1) { sb.Append("LT Fuel Trim B2 (%)\n"); }
+        if (this.afrB1Dex == -1) { sb.Append("AFR WB-B1\n"); }
+        if (this.afrB2Dex == -1) { sb.Append("AFR WB-B2\n"); }
+        if (this.mafB1Dex == -1) { sb.Append("MAS A/F -B1 (V)\n"); }
+        if (this.mafB2Dex == -1) { sb.Append("MAS A/F -B2 (V)\n"); }
+        if (this.targetDex == -1) { sb.Append("TARGET AFR\n"); }
+        if (this.intakeAirTempDex == -1) { sb.Append("INTAKE AIR TMP\n"); }
+        if (this.coolantTempDex == -1) { sb.Append("COOLANT TEMP\n"); }
+        if (this.fuelCompTraceDex == -1) { sb.Append("Fuel Compensation X Trace\n"); }
+        if (this.rpmDex == -1) { sb.Append("ENGINE RPM (rpm)\n"); }
 
         Console.WriteLine(sb.ToString());
+        this.DT_FC = null;
+        return this.DT_FC;
+      }
+      
+      int time;
+      int nexttime;
+      double afr1;
+      double afr2;
+      double accel;
+      double nextaccel;
+      double accelChange;
+      double finaltrim1=0;
+      double finaltrim2=0;
+      double fuelXtrace;
+      double longtrim1;
+      double longtrim2;
+      int rpm;
+      int shorttrim1;
+      int shorttrim2 = 100;
+      double target;
+      int indexFinderDB;
+      int indexFinderRPM;
+      bool accelAfterDecel = false;
+      double actualAFR1;
+      double actualAFR2;
+
+      this.FindIAT_average(tempgrid);
+      foreach (int i in this.tmpXlist)
+      {
+        this.DT_FC_hits.Columns.Add(Convert.ToString(i), typeof(int));
+        this.DT_FC_totals.Columns.Add(Convert.ToString(i), typeof(double));
+        this.DT_FC.Columns.Add(Convert.ToString(i), typeof(double));
       }
 
-      return DT_FC;
+      foreach (int i in this.tmpRPMlist)
+      {
+        this.DT_FC_hits.Rows.Add();
+        this.DT_FC_totals.Rows.Add();
+        this.DT_FC.Rows.Add();
+      }
+
+      for (int row = 0; row < this.DT_FC_totals.Rows.Count; ++row)
+      {
+        for (int col = 0; col < this.DT_FC_totals.Columns.Count; ++col)
+        {
+          this.DT_FC_totals.Rows[row][col] = "100";
+          this.DT_FC_hits.Rows[row][col] = "1";
+          this.DT_FC.Rows[row][col] = "100";
+        }
+      }
+
+      for (int row = 1; row < tempgrid.Rows.Count - 10; ++row)
+      {
+        time = Convert.ToInt32(tempgrid.Rows[row].Cells[this.timeDex].Value);
+        nexttime = Convert.ToInt32(tempgrid.Rows[row + 1].Cells[this.timeDex].Value);
+        target = Convert.ToDouble(tempgrid.Rows[row].Cells[this.targetDex].Value);
+        fuelXtrace = Convert.ToDouble(tempgrid.Rows[row].Cells[this.fuelCompTraceDex].Value);
+        rpm = Convert.ToInt32(tempgrid.Rows[row].Cells[this.rpmDex].Value);
+        afr1 = Convert.ToDouble(tempgrid.Rows[row].Cells[this.afrB1Dex].Value);
+        afr2 = Convert.ToDouble(tempgrid.Rows[row].Cells[this.afrB2Dex].Value);
+        accel = Convert.ToDouble(tempgrid.Rows[row].Cells[this.accelDex].Value);
+        nextaccel = Convert.ToDouble(tempgrid.Rows[row + 1].Cells[this.accelDex].Value);
+        accelChange = Convert.ToDouble(((nextaccel - accel) / (nexttime - time)) * 1000);
+
+        // Makes sure the given RPM value lands in the last index.
+       // int lastRPMx = this.tmpRPMlist.Count - 1;
+        // if (rpm > this.tmpRPMlist[lastRPMx])
+        // {
+        //   rpm = this.tmpRPMlist[lastRPMx];
+        // }
+         if (rpm > 6800)
+         {
+           rpm = 6800;
+         }
+
+        if (target > 15 || rpm < 600)
+        {
+          continue;
+        }
+
+        // Back on accel after decel  ** This will skip down rows to avoid skewing values
+        if (afr1 == 60 || target == 30)
+        {
+          accelAfterDecel = true;
+          continue;
+        }
+        else if (accelAfterDecel)
+        {
+          row += 10;
+          accelAfterDecel = false;
+          continue;
+        }
+
+        // Only allows rows where intake air temp are close to the average.
+        if (this.intakeAirTemp <= this.intakeAirTempAVG - 8 && this.intakeAirTemp >= this.intakeAirTempAVG + 8
+          /*&& Properties.Settings.Default.MAF_ACCEL*/ && this.accelChange > -0.1 && this.accelChange < 0.1)
+        {
+          continue;
+        }
+
+        indexFinderDB = this.tmpXlist.BinarySearch(fuelXtrace);
+        if (indexFinderDB < 0)
+        {
+          indexFinderDB = ~indexFinderDB;
+        }
+
+        indexFinderRPM = this.tmpRPMlist.BinarySearch(rpm);
+        if (indexFinderRPM < 0)
+        {
+          indexFinderRPM = ~indexFinderRPM;
+        }
+
+        if (this.stB1Dex != -1 && this.stB2Dex != -1 && afr1 < 25 && afr2 < 25 && target == 14.7)
+        {
+          shorttrim1 = Convert.ToInt32(tempgrid.Rows[row].Cells[this.stB1Dex].Value);
+          shorttrim2 = Convert.ToInt32(tempgrid.Rows[row].Cells[this.stB2Dex].Value);
+
+          // if long term trimlogged
+          if (this.ltB1Dex != -1 && this.ltB2Dex != -1)
+          {
+            longtrim1 = Convert.ToDouble(tempgrid.Rows[row].Cells[this.ltB1Dex].Value);
+            longtrim2 = Convert.ToDouble(tempgrid.Rows[row].Cells[this.ltB2Dex].Value);
+            finaltrim1 = (shorttrim1 + Convert.ToInt32(longtrim1)) - 100;
+            finaltrim2 = (shorttrim2 + Convert.ToInt32(longtrim2)) - 100;
+            finaltrim1 = (finaltrim1 + finaltrim2) / 2;
+          }
+          else
+          {
+            finaltrim1 = (shorttrim1 + shorttrim2) / 2;
+          }
+        }
+        else if (this.stB1Dex != -1 && this.stB2Dex != -1 && afr1 < 25 && afr2 < 25 && target < 14.7)
+        {
+          actualAFR1 = Convert.ToDouble(tempgrid.Rows[row + 2].Cells[this.afrB1Dex].Value);
+
+          if (this.dualTB)
+          {
+            actualAFR2 = Convert.ToDouble(tempgrid.Rows[row + 2].Cells[this.afrB2Dex].Value);
+          }
+          else
+          {
+            actualAFR2 = 0;
+          }
+
+          if (actualAFR1 == 0 || actualAFR1 > 18 || actualAFR2 > 18)
+          {
+            finaltrim1 = 0;
+            continue;
+          }
+          else if (actualAFR1 != 0 && actualAFR2 != 0)
+          {
+            finaltrim1 = (((actualAFR1 + actualAFR2) / 2) / target) * 100;
+          }
+          else
+          {
+            finaltrim1 = (actualAFR1 / target) * 100;
+          }
+        }
+
+        int hitCount = Convert.ToInt32(this.DT_FC_hits.Rows[indexFinderRPM][indexFinderDB]);
+        double value = Convert.ToDouble(this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB]);
+
+        if (value == 100
+          && hitCount == 1)
+        {
+          this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] = finaltrim1 + 100;
+          this.DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = hitCount + 1;
+        }
+        else
+        {
+          this.DT_FC_totals.Rows[indexFinderRPM][indexFinderDB] = value + finaltrim1;
+          this.DT_FC_hits.Rows[indexFinderRPM][indexFinderDB] = Convert.ToString(hitCount + 1);
+        }
+      }
+
+      for (int row = 0; row < this.DT_FC_totals.Rows.Count; ++row)
+      {
+        for (int col = 0; col < this.DT_FC_totals.Columns.Count; ++col)
+        {
+          double total = 100;
+          int hits = 1;
+          if (this.DT_FC_totals.Rows[row][col].ToString() == "0" || this.DT_FC_totals.Rows[row][col].ToString() == "100" || string.IsNullOrEmpty(this.DT_FC_totals.Rows[row][col].ToString()))
+          {
+            total = 100;
+          }
+          else if (this.DT_FC_totals.Rows[row][col] != null || !string.IsNullOrEmpty(this.DT_FC_totals.Rows[row][col].ToString()))
+          {
+            string totalvalue = Convert.ToString(this.DT_FC_totals.Rows[row][col]);
+            total = Convert.ToDouble(totalvalue);
+          }
+
+          if (this.DT_FC_hits.Rows[row][col].ToString() == "0" || this.DT_FC_hits.Rows[row][col].ToString() == "1" || string.IsNullOrEmpty(this.DT_FC_hits.Rows[row][col].ToString()))
+          {
+            hits = 1;
+          }
+          else if (this.DT_FC_hits.Rows[row][col] != null || !string.IsNullOrEmpty(this.DT_FC_hits.Rows[row][col].ToString()))
+          {
+            hits = Convert.ToInt32(this.DT_FC_hits.Rows[row][col]);
+          }
+
+          if (total == 0 || hits == 0)
+          {
+            this.DT_FC.Rows[row][col] = 100;
+          }
+          else
+          {
+            this.DT_FC.Rows[row][col] = Convert.ToDouble(Convert.ToDouble(this.DT_FC_totals.Rows[row][col]) / Convert.ToInt32(this.DT_FC_hits.Rows[row][col]));
+          }
+        }
+      }
+
+      return this.DT_FC;
     }
   }
 }
