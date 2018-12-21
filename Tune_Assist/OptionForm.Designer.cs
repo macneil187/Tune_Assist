@@ -32,6 +32,7 @@
       this.OptionTabControl = new System.Windows.Forms.TabControl();
       this.OptionTab1 = new System.Windows.Forms.TabPage();
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+      this.Minimal_MAF_checkbox = new System.Windows.Forms.CheckBox();
       this.checkBoxAirTemp = new System.Windows.Forms.CheckBox();
       this.checkBoxAccelChange = new System.Windows.Forms.CheckBox();
       this.checkBoxOpenLoop = new System.Windows.Forms.CheckBox();
@@ -79,6 +80,7 @@
       // 
       // splitContainer1.Panel1
       // 
+      this.splitContainer1.Panel1.Controls.Add(this.Minimal_MAF_checkbox);
       this.splitContainer1.Panel1.Controls.Add(this.checkBoxAirTemp);
       this.splitContainer1.Panel1.Controls.Add(this.checkBoxAccelChange);
       this.splitContainer1.Panel1.Controls.Add(this.checkBoxOpenLoop);
@@ -90,6 +92,20 @@
       this.splitContainer1.Size = new System.Drawing.Size(459, 192);
       this.splitContainer1.SplitterDistance = 198;
       this.splitContainer1.TabIndex = 0;
+      // 
+      // Minimal_MAF_checkbox
+      // 
+      this.Minimal_MAF_checkbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.Minimal_MAF_checkbox.AutoSize = true;
+      this.Minimal_MAF_checkbox.Checked = global::AutoTune.Properties.Settings.Default.Maf_MINIMAL;
+      this.Minimal_MAF_checkbox.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.Minimal_MAF_checkbox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AutoTune.Properties.Settings.Default, "Maf_MINIMAL", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.Minimal_MAF_checkbox.Location = new System.Drawing.Point(3, 145);
+      this.Minimal_MAF_checkbox.Name = "Minimal_MAF_checkbox";
+      this.Minimal_MAF_checkbox.Size = new System.Drawing.Size(136, 17);
+      this.Minimal_MAF_checkbox.TabIndex = 4;
+      this.Minimal_MAF_checkbox.Text = "Minimize MAF Changes";
+      this.Minimal_MAF_checkbox.UseVisualStyleBackColor = true;
       // 
       // checkBoxAirTemp
       // 
@@ -239,5 +255,6 @@
     private System.Windows.Forms.CheckBox checkBoxOpenLoop;
     private System.Windows.Forms.CheckBox checkBoxClosedLoop;
     private System.Windows.Forms.RichTextBox richTextBoxOptions;
+    private System.Windows.Forms.CheckBox Minimal_MAF_checkbox;
   }
 }

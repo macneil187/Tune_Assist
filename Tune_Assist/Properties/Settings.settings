@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="MAF_CL" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="MAF_OL" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -12,6 +12,9 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="MAF_ACCEL" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Maf_MINIMAL" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>

@@ -13,36 +13,91 @@
     private enum AppStates { Idle, ParsingLog };
 
     public static AutoTune autotune;
-    public List<int> MAFb1UserInput = new List<int>();
-    public List<int> MAFb2UserInput = new List<int>();
-    public List<int> AdjustMAFb1 = new List<int>();
-    public List<int> AdjustMAFb2 = new List<int>();
+    private static List<int> mafB1UserInput = new List<int>();
+    private static List<int> mafB2UserInput = new List<int>();
+    private static List<int> adjustMAFb1 = new List<int>();
+    private static List<int> adjustMAFb2 = new List<int>();
     private BackgroundWorker worker;
     private BackgroundWorker mafWorker;
     private BackgroundWorker fuelCompWorker;
     private DataTable MAF1_DT = new DataTable();
     private DataTable MAF2_DT = new DataTable();
+    private Loader loader = new Loader();
     private TextBox TextBox1 = new TextBox();
-    private Parser parser = new Parser();
-    //private Buffer.BuffDV_FuelComp DV_FC = new Buffer.BuffDV_FuelComp();
-    private List<Tuple<double, int, int>> MafB1 = new List<Tuple<double, int, int>>();
-    private List<Tuple<double, int, int>> MafB2 = new List<Tuple<double, int, int>>();
+    private ParserMAF parserMAF = new ParserMAF();
+    private ParserFuelComp parserFuelComp = new ParserFuelComp();
+    private List<Tuple<double, int, int>> mafB1 = new List<Tuple<double, int, int>>();
+    private List<Tuple<double, int, int>> mafB2 = new List<Tuple<double, int, int>>();
     private string fileName;
     private bool dualTB;
     private bool mafOption_CL = Properties.Settings.Default.MAF_CL;
     private bool mafOption_OL = Properties.Settings.Default.MAF_OL;
     private bool mafOption_IAT = Properties.Settings.Default.MAF_IAT;
     private bool mafOption_ACCEL = Properties.Settings.Default.MAF_ACCEL;
-    
-    public static List<string> mafHeaders = new List<string>
+    private bool mafOption_MINIMAL = Properties.Settings.Default.Maf_MINIMAL;
+
+  /*  public static List<string> mafHeaders = new List<string>
       { "Time", "A/F CORR-B1 (%)", "A/F CORR-B2 (%)",
       "ACCEL PED POS 1 (V-Accel)", "MAS A/F -B1 (V)",
-      "MAS A/F -B2 (V)", "INTAKE AIR TMP", "TARGET AFR" };
+      "MAS A/F -B2 (V)", "INTAKE AIR TMP", "TARGET AFR" }; */
+
+    public List<int> MafB1UserInput
+    {
+      get
+      {
+        return mafB1UserInput;
+      }
+
+      set
+      {
+        mafB1UserInput = value;
+      }
+    }
+
+    public List<int> MafB2UserInput
+    {
+      get
+      {
+        return mafB2UserInput;
+      }
+
+      set
+      {
+        mafB2UserInput = value;
+      }
+    }
+
+    public List<int> AdjustMAFb1
+    {
+      get
+      {
+        return adjustMAFb1;
+      }
+
+      set
+      {
+        adjustMAFb1 = value;
+      }
+    }
+
+    public List<int> AdjustMAFb2
+    {
+      get
+      {
+        return adjustMAFb2;
+      }
+
+      set
+      {
+        adjustMAFb2 = value;
+      }
+    }
+
 
     public AutoTune()
     {
       this.InitializeComponent();
-      this.buildMAF_DT();
+      this.BuildMAF_DT();
       this.SetAppState(AppStates.Idle, null);
       autotune = this;
     }
@@ -79,6 +134,7 @@
             this.SetAppState(AppStates.Idle, null);
             Console.WriteLine(" ERROR! ");
           }
+
           this.closeFileToolStripMenuItem.Enabled = true;
         }
       }
@@ -97,7 +153,7 @@
       {
         return;
       }
-      
+
       this.DV_FuelComp.DataSource = null;
       this.DV_FuelComp.Refresh();
       this.buffDV1.DataSource = null;
@@ -135,9 +191,9 @@
       }
     }
 
-    void loadworker_Start(object sender, DoWorkEventArgs e)
+    private void loadworker_Start(object sender, DoWorkEventArgs e)
     {
-      Loader loader = new Loader();
+      //Loader loader = new Loader();
       BackgroundWorker bw = sender as BackgroundWorker;
       string sFileToRead = (string)e.Argument;
       e.Result = loader.LoadLog(bw, sFileToRead);
@@ -147,24 +203,26 @@
       }
     }
 
-    void loadworker_ParseLogCompleted(object sender, RunWorkerCompletedEventArgs e)
+    private void loadworker_ParseLogCompleted(object sender, RunWorkerCompletedEventArgs e)
     {
       try
       {
         if (e.Error != null)
+        {
           MessageBox.Show(e.Error.Message, "Error During File Read");
+        }
         else if (e.Cancelled)
+        {
           this.StatusBox.Text = "** Cancelled **";
+        }
         else
         {
           this.buffDV1.DataSource = null;
-
           this.buffDV1.DataSource = (DataTable)e.Result;
           if (this.buffDV1.RowCount > 80)
           {
             this.buffDV1.Visible = true;
             this.buffDVmaf1.Visible = true;
-            
             for (int c = 0; c < this.buffDV1.Columns.Count; ++c)
             {
               this.buffDV1.Columns[c].SortMode = DataGridViewColumnSortMode.NotSortable;
@@ -178,7 +236,8 @@
                 this.dualTB = true;
                 this.buffDVmaf2.Refresh();
               }
-              this.scaleMAF();
+
+              this.ScaleMAF();
             }
             catch
             { }
@@ -196,36 +255,39 @@
       }
     }
 
-    void loadworker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+    private void loadworker_ProgressChanged(object sender, ProgressChangedEventArgs e)
     {
       this.ProgressBar.Value = e.ProgressPercentage;
     }
 
-    void mafWorker_Start(object sender, DoWorkEventArgs e)
+    private void mafWorker_Start(object sender, DoWorkEventArgs e)
     {
-      Parser maf_scaler = new Parser();
       BackgroundWorker bw = sender as BackgroundWorker;
       DataGridView tempgrid = (DataGridView)e.Argument;
-      e.Result = maf_scaler.AdjustMAF(bw, tempgrid);
+      e.Result = this.parserMAF.AdjustMAF(bw, tempgrid);
       if (bw.CancellationPending)
       {
         e.Cancel = true;
       }
     }
 
-    void mafWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+    private void mafWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
     {
       this.ProgressBar.Value = e.ProgressPercentage;
     }
 
-    void mafWorker_Completed(object sender, RunWorkerCompletedEventArgs e)
+    private void mafWorker_Completed(object sender, RunWorkerCompletedEventArgs e)
     {
       try
       {
         if (e.Error != null)
+        {
           MessageBox.Show(e.Error.Message, "Error During Maf Adjustments");
+        }
         else if (e.Cancelled)
+        {
           this.StatusBox.Text = "** Canceled **";
+        }
         else
         {
           DataTable dt = new DataTable();
@@ -247,24 +309,12 @@
                 this.buffDVmaf2["Multiplier", a].Value = easer / 100;
               }
 
-              /*
-              if (!dt.Rows[a][1].Equals(100))
-              {
-                this.buffDVmaf1["Multiplier", a].Value = ((double)dt.Rows[a][1] / 100);
-              }
-
-              if (!dt.Rows[a][2].Equals(100))
-              {
-                this.buffDVmaf2["Multiplier", a].Value = ((double)dt.Rows[a][2] / 100);
-              }
-              */
               this.buffDVmaf1["Hits", a].Value = (int)dt.Rows[a][3];
               this.buffDVmaf2["Hits", a].Value = (int)dt.Rows[a][4];
             }
 
             this.buffDVmaf1.Refresh();
             this.buffDVmaf2.Refresh();
-            
           }
         }
       }
@@ -278,10 +328,9 @@
 
     private void FuelCompWorker_Start(object sender, DoWorkEventArgs e)
     {
-      Parser fuelComp = new Parser();
       BackgroundWorker bw = sender as BackgroundWorker;
       DataGridView tempgrid = (DataGridView)e.Argument;
-      e.Result = fuelComp.AdjustFuelComp(bw, tempgrid);
+      e.Result = this.parserFuelComp.AdjustFuelComp(bw, tempgrid);
       if (bw.CancellationPending)
       {
         e.Cancel = true;
@@ -298,9 +347,15 @@
       try
       {
         if (e.Error != null)
+        {
           MessageBox.Show(e.Error.Message, "Error During Fuel Comp Adjustments");
+
+        }
         else if (e.Cancelled)
+        {
           this.StatusBox.Text = "** Canceled **";
+
+        }
         else
         {
           if ((DataTable)e.Result != null)
@@ -327,7 +382,7 @@
       }
     }
 
-    private void buildMAF_DT()
+    private void BuildMAF_DT()
     {
       // MAF 1 DataTable
       if (this.MAF1_DT.Columns.Count >0 || this.MAF1_DT.Rows.Count >0)
@@ -346,7 +401,7 @@
       this.MAF1_DT.Columns.Add("Multiplier", typeof(double));
       this.MAF1_DT.Columns.Add("Hits", typeof(int));
 
-      foreach (double d in this.parser.mafVolts)
+      foreach (double d in this.parserMAF.MafVolts)
       {
         this.MAF1_DT.Rows.Add(d);
       }
@@ -446,27 +501,32 @@
       }
     }
 
-      private void scaleMAF()
+      private void ScaleMAF()
     {
-      //MAF1
-      this.MAFb1UserInput.Clear();
+      // MAF1
+      mafB1UserInput.Clear();
       if (this.buffDVmaf1 != null)
       {
         for (int r = 0; r < this.buffDVmaf1.RowCount; ++r)
         {
           string teststr = Convert.ToString(this.buffDVmaf1["Values", r].Value);
           if (teststr != string.Empty)
-            this.MAFb1UserInput.Add(Convert.ToInt32(teststr));
+          {
+            mafB1UserInput.Add(Convert.ToInt32(teststr));
+
+          }
           else
           {
-            this.MAFb1UserInput.Clear();
+            mafB1UserInput.Clear();
             break;
           }
         }
       }
-      bool maf1Ready = this.MAFb1UserInput.Count == 64 ? true : false;
-      //MAF2
-      this.MAFb2UserInput.Clear();
+
+      bool maf1Ready = mafB1UserInput.Count == 64 ? true : false;
+
+      // MAF2
+      mafB2UserInput.Clear();
       if (this.buffDVmaf2 != null)
       {
         for (int r = 0; r < this.buffDVmaf2.RowCount; ++r)
@@ -474,17 +534,19 @@
           string teststr = Convert.ToString(this.buffDVmaf2["Values", r].Value);
           if (teststr != string.Empty)
           {
-            this.MAFb2UserInput.Add(Convert.ToInt32(teststr));
+            mafB2UserInput.Add(Convert.ToInt32(teststr));
           }
           else
           {
-            this.MAFb2UserInput.Clear();
+            mafB2UserInput.Clear();
             break;
           }
         }
       }
-      bool maf2Ready = this.MAFb1UserInput.Count == 64 ? true : false;
-      //Send it!
+
+      bool maf2Ready = mafB1UserInput.Count == 64 ? true : false;
+
+      // Send it!
       try
       {
         this.mafWorker = new BackgroundWorker();
@@ -501,7 +563,7 @@
         Console.WriteLine(" ERROR! ");
       }
     }
-    
+
     private void SetFileReadWidgetsVisible(bool visible)
     {
       this.ProgressBar.Visible = visible;
@@ -536,7 +598,7 @@
         this.buffDVmaf2.Visible = status;
       }
     }
-    
+
     private void buffDVmaf_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
     {
       e.Control.KeyPress -= new KeyPressEventHandler(this.Column1_KeyPress);
@@ -549,7 +611,7 @@
         }
       }
     }
-    
+
     private void Column1_KeyPress(object sender, KeyPressEventArgs e)
     {
       if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -568,6 +630,7 @@
           c.SortMode = DataGridViewColumnSortMode.NotSortable;
           c.Selected = false;
         }
+
         this.buffDVmaf1.ClearSelection();
         for (int r = 0; r < this.buffDVmaf1.RowCount; r++)
         {
@@ -582,6 +645,7 @@
           c.SortMode = DataGridViewColumnSortMode.NotSortable;
           c.Selected = false;
         }
+
         this.buffDVmaf2.ClearSelection();
         for (int r = 0; r < this.buffDVmaf2.RowCount; r++)
         {
@@ -664,7 +728,7 @@
           }
         }
       }
-      else if(this.DV_Target.Focused)
+      else if (this.DV_Target.Focused)
       {
         if (this.DV_Target.GetCellCount(DataGridViewElementStates.Selected) > 0)
         {
@@ -686,6 +750,7 @@
                 hexValues.Add("0000");
               }
             }
+
             var newvalues = hexValues.Aggregate((a, b) => a + " \r\n" + b);
             newvalues += " \r\n";
             System.Windows.Forms.Clipboard.SetText(newvalues);
@@ -734,8 +799,11 @@
           clnLines.Add(hex);
         }
         else
+        {
           clnLines.Add(Convert.ToInt32(str));
+        }
       }
+
       if (this.buffDVmaf1.Focused && !this.buffDVmaf2.Focused)
       {
         row = this.buffDVmaf1.CurrentCell.RowIndex;
@@ -748,7 +816,10 @@
             ++row;
           }
           else
+          {
             break;
+
+          }
         }
       }
       else if (!this.buffDVmaf1.Focused && this.buffDVmaf2.Focused)
@@ -763,7 +834,10 @@
             ++row;
           }
           else
+          {
             break;
+
+          }
         }
       }
     }

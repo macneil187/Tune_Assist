@@ -73,6 +73,8 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="ParserFuelComp.cs" />
+    <Compile Include="IndexFinder.cs" />
     <Compile Include="OptionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,7 +87,7 @@
     <Compile Include="HelpForm.Designer.cs">
       <DependentUpon>HelpForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Parser.cs" />
+    <Compile Include="ParserMAF.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="BuffDV.cs">
       <SubType>Component</SubType>

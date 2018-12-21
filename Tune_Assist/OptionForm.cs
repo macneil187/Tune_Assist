@@ -1,25 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace AutoTune
+﻿namespace AutoTune
 {
+  using System;
+  using System.Threading;
+  using System.Windows.Forms;
+
   public partial class OptionForm : Form
   {
+    private bool ClosedLoop;
+    private bool OpenLoop;
+    private bool FilterAirTemp;
+    private bool FilterAccel;
+    private bool MinimalChanges;
+
     public OptionForm()
     {
       this.InitializeComponent();
+      this.ClosedLoop = this.checkBoxClosedLoop.Checked;
+      this.OpenLoop = this.checkBoxOpenLoop.Checked;
+      this.FilterAirTemp = this.checkBoxAirTemp.Checked;
+      this.FilterAccel = this.checkBoxAccelChange.Checked;
+      this.MinimalChanges = this.Minimal_MAF_checkbox.Checked;
     }
 
     private void buttonCancel_Click(object sender, EventArgs e)
     {
-      Properties.Settings.Default.Reset();
+      this.checkBoxClosedLoop.Checked = this.ClosedLoop;
+      this.checkBoxOpenLoop.Checked = this.OpenLoop;
+      this.checkBoxAirTemp.Checked = this.FilterAirTemp;
+      this.checkBoxAccelChange.Checked = this.FilterAccel;
+      this.Minimal_MAF_checkbox.Checked = this.MinimalChanges;
+      Thread.Sleep(50);
       this.Dispose();
     }
 
@@ -33,8 +43,8 @@ namespace AutoTune
     {
       if (this.checkBoxClosedLoop.Checked)
       {
-        this.checkBoxAccelChange.Checked = true; // Properties.Settings.Default.MAF_IAT = true;
-        this.checkBoxAirTemp.Checked = true; //Properties.Settings.Default.MAF_ACCEL = true;
+        this.checkBoxAccelChange.Checked = true;
+        this.checkBoxAirTemp.Checked = true;
         this.checkBoxClosedLoop.Checked = true;
       }
       else

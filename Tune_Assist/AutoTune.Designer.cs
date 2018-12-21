@@ -843,7 +843,7 @@ namespace AutoTune
     private System.Windows.Forms.TabPage tabPage2;
     public BuffDV buffDV1;
     private BuffDT buffDT;
-    private Loader loader;
+    //private Loader loader = new Loader();
     public HelpForm helpForm;
     public About about;
     private System.Windows.Forms.Button btnCancelParse;
