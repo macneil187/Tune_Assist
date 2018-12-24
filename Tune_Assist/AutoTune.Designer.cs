@@ -37,8 +37,8 @@ namespace AutoTune
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.openFileToolStripMenuItem_Open = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,25 +55,18 @@ namespace AutoTune
       this.StatusBox = new System.Windows.Forms.ToolStripStatusLabel();
       this.tabControl1 = new System.Windows.Forms.TabControl();
       this.tabPage1 = new System.Windows.Forms.TabPage();
-      this.buffDV1 = new BuffDV();
+      //this.buffDV1 = new AutoTune.BuffDV();
+      //this.buffDV1 = new BuffDV();
       this.tabPage2 = new System.Windows.Forms.TabPage();
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-      this.buffDVmaf1 = new BuffDV();
-      this.buffDVmaf2 = new BuffDV();
+      //this.buffDVmaf1 = new AutoTune.BuffDV();
+      //this.buffDVmaf2 = new AutoTune.BuffDV();
       this.tabPage3 = new System.Windows.Forms.TabPage();
       this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
       this.DV_FuelComp_RPM = new System.Windows.Forms.DataGridView();
       this.RPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.DV_FuelComp_XdataByte = new System.Windows.Forms.DataGridView();
       this.DV_FuelComp = new System.Windows.Forms.DataGridView();
-      this.tabPage4 = new System.Windows.Forms.TabPage();
-      this.DV_Target = new System.Windows.Forms.DataGridView();
-      this.comboBox_Stage = new System.Windows.Forms.ComboBox();
-      this.comboBox_NAorFI = new System.Windows.Forms.ComboBox();
-      this.textBox_MAF1 = new System.Windows.Forms.TextBox();
-      this.textBox_MAF2 = new System.Windows.Forms.TextBox();
-      this.btnCancelParse = new System.Windows.Forms.Button();
-      this.buffDT = new BuffDT();
       this.databyte0 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.databyte1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.databyte2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -90,6 +83,14 @@ namespace AutoTune
       this.databyte13 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.databyte14 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.databyte15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.tabPage4 = new System.Windows.Forms.TabPage();
+      this.DV_Target = new System.Windows.Forms.DataGridView();
+      this.comboBox_Stage = new System.Windows.Forms.ComboBox();
+      this.comboBox_NAorFI = new System.Windows.Forms.ComboBox();
+      this.textBox_MAF1 = new System.Windows.Forms.TextBox();
+      this.textBox_MAF2 = new System.Windows.Forms.TextBox();
+      this.btnCancelParse = new System.Windows.Forms.Button();
+      //this.buffDT = new AutoTune.BuffDT();
       this.menuStrip1.SuspendLayout();
       this.statusStrip1.SuspendLayout();
       this.tabControl1.SuspendLayout();
@@ -514,130 +515,6 @@ namespace AutoTune
       this.DV_FuelComp.Size = new System.Drawing.Size(750, 351);
       this.DV_FuelComp.TabIndex = 2;
       // 
-      // tabPage4
-      // 
-      this.tabPage4.Controls.Add(this.DV_Target);
-      this.tabPage4.Controls.Add(this.comboBox_Stage);
-      this.tabPage4.Controls.Add(this.comboBox_NAorFI);
-      this.tabPage4.Location = new System.Drawing.Point(4, 22);
-      this.tabPage4.Name = "tabPage4";
-      this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage4.Size = new System.Drawing.Size(796, 383);
-      this.tabPage4.TabIndex = 3;
-      this.tabPage4.Text = "Fuel Target";
-      this.tabPage4.UseVisualStyleBackColor = true;
-      this.tabPage4.Click += new System.EventHandler(this.tabPage4_Click);
-      // 
-      // DV_Target
-      // 
-      this.DV_Target.AllowUserToAddRows = false;
-      this.DV_Target.AllowUserToDeleteRows = false;
-      this.DV_Target.AllowUserToResizeColumns = false;
-      this.DV_Target.AllowUserToResizeRows = false;
-      this.DV_Target.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.DV_Target.ColumnHeadersVisible = false;
-      this.DV_Target.Location = new System.Drawing.Point(4, 6);
-      this.DV_Target.Name = "DV_Target";
-      this.DV_Target.ReadOnly = true;
-      this.DV_Target.RowHeadersVisible = false;
-      this.DV_Target.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-      dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-      dataGridViewCellStyle8.Format = "N2";
-      dataGridViewCellStyle8.NullValue = null;
-      this.DV_Target.RowsDefaultCellStyle = dataGridViewCellStyle8;
-      this.DV_Target.ScrollBars = System.Windows.Forms.ScrollBars.None;
-      this.DV_Target.ShowCellErrors = false;
-      this.DV_Target.ShowCellToolTips = false;
-      this.DV_Target.ShowEditingIcon = false;
-      this.DV_Target.ShowRowErrors = false;
-      this.DV_Target.Size = new System.Drawing.Size(405, 179);
-      this.DV_Target.TabIndex = 2;
-      this.DV_Target.KeyDown += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyDown);
-      this.DV_Target.Leave += new System.EventHandler(this.DV_Leave);
-      // 
-      // comboBox_Stage
-      // 
-      this.comboBox_Stage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.comboBox_Stage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboBox_Stage.FlatStyle = System.Windows.Forms.FlatStyle.System;
-      this.comboBox_Stage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.comboBox_Stage.FormattingEnabled = true;
-      this.comboBox_Stage.ItemHeight = 15;
-      this.comboBox_Stage.Items.AddRange(new object[] {
-            "Aggressive",
-            "Mild"});
-      this.comboBox_Stage.Location = new System.Drawing.Point(654, 35);
-      this.comboBox_Stage.MaxDropDownItems = 4;
-      this.comboBox_Stage.MaxLength = 30;
-      this.comboBox_Stage.Name = "comboBox_Stage";
-      this.comboBox_Stage.Size = new System.Drawing.Size(138, 23);
-      this.comboBox_Stage.TabIndex = 1;
-      this.comboBox_Stage.SelectedIndexChanged += new System.EventHandler(this.comboBox_Stage_SelectedIndexChanged);
-      // 
-      // comboBox_NAorFI
-      // 
-      this.comboBox_NAorFI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.comboBox_NAorFI.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboBox_NAorFI.FlatStyle = System.Windows.Forms.FlatStyle.System;
-      this.comboBox_NAorFI.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.comboBox_NAorFI.FormattingEnabled = true;
-      this.comboBox_NAorFI.ItemHeight = 15;
-      this.comboBox_NAorFI.Items.AddRange(new object[] {
-            "Naturally Aspirated",
-            "Supercharged",
-            "Turbo"});
-      this.comboBox_NAorFI.Location = new System.Drawing.Point(654, 6);
-      this.comboBox_NAorFI.MaxDropDownItems = 4;
-      this.comboBox_NAorFI.MaxLength = 30;
-      this.comboBox_NAorFI.Name = "comboBox_NAorFI";
-      this.comboBox_NAorFI.Size = new System.Drawing.Size(138, 23);
-      this.comboBox_NAorFI.TabIndex = 0;
-      this.comboBox_NAorFI.SelectedIndexChanged += new System.EventHandler(this.comboBox_NAorFI_SelectedIndexChanged);
-      // 
-      // textBox_MAF1
-      // 
-      this.textBox_MAF1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.textBox_MAF1.BackColor = System.Drawing.SystemColors.AppWorkspace;
-      this.textBox_MAF1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.textBox_MAF1.Cursor = System.Windows.Forms.Cursors.Default;
-      this.textBox_MAF1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.textBox_MAF1.Location = new System.Drawing.Point(4, 432);
-      this.textBox_MAF1.MaxLength = 12;
-      this.textBox_MAF1.Name = "textBox_MAF1";
-      this.textBox_MAF1.Size = new System.Drawing.Size(256, 20);
-      this.textBox_MAF1.TabIndex = 2;
-      this.textBox_MAF1.Text = "MAF Bank 1";
-      this.textBox_MAF1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-      this.textBox_MAF1.Visible = false;
-      // 
-      // textBox_MAF2
-      // 
-      this.textBox_MAF2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.textBox_MAF2.BackColor = System.Drawing.SystemColors.AppWorkspace;
-      this.textBox_MAF2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.textBox_MAF2.Cursor = System.Windows.Forms.Cursors.Default;
-      this.textBox_MAF2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.textBox_MAF2.Location = new System.Drawing.Point(261, 432);
-      this.textBox_MAF2.MaxLength = 12;
-      this.textBox_MAF2.Name = "textBox_MAF2";
-      this.textBox_MAF2.Size = new System.Drawing.Size(252, 20);
-      this.textBox_MAF2.TabIndex = 3;
-      this.textBox_MAF2.Text = "MAF Bank 2";
-      this.textBox_MAF2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-      this.textBox_MAF2.Visible = false;
-      // 
-      // btnCancelParse
-      // 
-      this.btnCancelParse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnCancelParse.Location = new System.Drawing.Point(685, 432);
-      this.btnCancelParse.Name = "btnCancelParse";
-      this.btnCancelParse.Size = new System.Drawing.Size(107, 23);
-      this.btnCancelParse.TabIndex = 1;
-      this.btnCancelParse.Text = "Cancel Load";
-      this.btnCancelParse.UseVisualStyleBackColor = true;
-      this.btnCancelParse.Visible = false;
-      this.btnCancelParse.Click += new System.EventHandler(this.btnCancel_Click);
-      // 
       // databyte0
       // 
       dataGridViewCellStyle6.Format = "N2";
@@ -787,6 +664,130 @@ namespace AutoTune
       this.databyte15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       this.databyte15.Width = 47;
       // 
+      // tabPage4
+      // 
+      this.tabPage4.Controls.Add(this.DV_Target);
+      this.tabPage4.Controls.Add(this.comboBox_Stage);
+      this.tabPage4.Controls.Add(this.comboBox_NAorFI);
+      this.tabPage4.Location = new System.Drawing.Point(4, 22);
+      this.tabPage4.Name = "tabPage4";
+      this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+      this.tabPage4.Size = new System.Drawing.Size(796, 383);
+      this.tabPage4.TabIndex = 3;
+      this.tabPage4.Text = "Fuel Target";
+      this.tabPage4.UseVisualStyleBackColor = true;
+      this.tabPage4.Click += new System.EventHandler(this.tabPage4_Click);
+      // 
+      // DV_Target
+      // 
+      this.DV_Target.AllowUserToAddRows = false;
+      this.DV_Target.AllowUserToDeleteRows = false;
+      this.DV_Target.AllowUserToResizeColumns = false;
+      this.DV_Target.AllowUserToResizeRows = false;
+      this.DV_Target.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.DV_Target.ColumnHeadersVisible = false;
+      this.DV_Target.Location = new System.Drawing.Point(4, 6);
+      this.DV_Target.Name = "DV_Target";
+      this.DV_Target.ReadOnly = true;
+      this.DV_Target.RowHeadersVisible = false;
+      this.DV_Target.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+      dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+      dataGridViewCellStyle8.Format = "N2";
+      dataGridViewCellStyle8.NullValue = null;
+      this.DV_Target.RowsDefaultCellStyle = dataGridViewCellStyle8;
+      this.DV_Target.ScrollBars = System.Windows.Forms.ScrollBars.None;
+      this.DV_Target.ShowCellErrors = false;
+      this.DV_Target.ShowCellToolTips = false;
+      this.DV_Target.ShowEditingIcon = false;
+      this.DV_Target.ShowRowErrors = false;
+      this.DV_Target.Size = new System.Drawing.Size(405, 179);
+      this.DV_Target.TabIndex = 2;
+      this.DV_Target.KeyDown += new System.Windows.Forms.KeyEventHandler(this.buffDVmaf_KeyDown);
+      this.DV_Target.Leave += new System.EventHandler(this.DV_Leave);
+      // 
+      // comboBox_Stage
+      // 
+      this.comboBox_Stage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.comboBox_Stage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboBox_Stage.FlatStyle = System.Windows.Forms.FlatStyle.System;
+      this.comboBox_Stage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.comboBox_Stage.FormattingEnabled = true;
+      this.comboBox_Stage.ItemHeight = 15;
+      this.comboBox_Stage.Items.AddRange(new object[] {
+            "Aggressive",
+            "Mild"});
+      this.comboBox_Stage.Location = new System.Drawing.Point(654, 35);
+      this.comboBox_Stage.MaxDropDownItems = 4;
+      this.comboBox_Stage.MaxLength = 30;
+      this.comboBox_Stage.Name = "comboBox_Stage";
+      this.comboBox_Stage.Size = new System.Drawing.Size(138, 23);
+      this.comboBox_Stage.TabIndex = 1;
+      this.comboBox_Stage.SelectedIndexChanged += new System.EventHandler(this.comboBox_Stage_SelectedIndexChanged);
+      // 
+      // comboBox_NAorFI
+      // 
+      this.comboBox_NAorFI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.comboBox_NAorFI.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboBox_NAorFI.FlatStyle = System.Windows.Forms.FlatStyle.System;
+      this.comboBox_NAorFI.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.comboBox_NAorFI.FormattingEnabled = true;
+      this.comboBox_NAorFI.ItemHeight = 15;
+      this.comboBox_NAorFI.Items.AddRange(new object[] {
+            "Naturally Aspirated",
+            "Supercharged",
+            "Turbo"});
+      this.comboBox_NAorFI.Location = new System.Drawing.Point(654, 6);
+      this.comboBox_NAorFI.MaxDropDownItems = 4;
+      this.comboBox_NAorFI.MaxLength = 30;
+      this.comboBox_NAorFI.Name = "comboBox_NAorFI";
+      this.comboBox_NAorFI.Size = new System.Drawing.Size(138, 23);
+      this.comboBox_NAorFI.TabIndex = 0;
+      this.comboBox_NAorFI.SelectedIndexChanged += new System.EventHandler(this.comboBox_NAorFI_SelectedIndexChanged);
+      // 
+      // textBox_MAF1
+      // 
+      this.textBox_MAF1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.textBox_MAF1.BackColor = System.Drawing.SystemColors.AppWorkspace;
+      this.textBox_MAF1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.textBox_MAF1.Cursor = System.Windows.Forms.Cursors.Default;
+      this.textBox_MAF1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.textBox_MAF1.Location = new System.Drawing.Point(4, 432);
+      this.textBox_MAF1.MaxLength = 12;
+      this.textBox_MAF1.Name = "textBox_MAF1";
+      this.textBox_MAF1.Size = new System.Drawing.Size(256, 20);
+      this.textBox_MAF1.TabIndex = 2;
+      this.textBox_MAF1.Text = "MAF Bank 1";
+      this.textBox_MAF1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+      this.textBox_MAF1.Visible = false;
+      // 
+      // textBox_MAF2
+      // 
+      this.textBox_MAF2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.textBox_MAF2.BackColor = System.Drawing.SystemColors.AppWorkspace;
+      this.textBox_MAF2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.textBox_MAF2.Cursor = System.Windows.Forms.Cursors.Default;
+      this.textBox_MAF2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.textBox_MAF2.Location = new System.Drawing.Point(261, 432);
+      this.textBox_MAF2.MaxLength = 12;
+      this.textBox_MAF2.Name = "textBox_MAF2";
+      this.textBox_MAF2.Size = new System.Drawing.Size(252, 20);
+      this.textBox_MAF2.TabIndex = 3;
+      this.textBox_MAF2.Text = "MAF Bank 2";
+      this.textBox_MAF2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+      this.textBox_MAF2.Visible = false;
+      // 
+      // btnCancelParse
+      // 
+      this.btnCancelParse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnCancelParse.Location = new System.Drawing.Point(685, 432);
+      this.btnCancelParse.Name = "btnCancelParse";
+      this.btnCancelParse.Size = new System.Drawing.Size(107, 23);
+      this.btnCancelParse.TabIndex = 1;
+      this.btnCancelParse.Text = "Cancel Load";
+      this.btnCancelParse.UseVisualStyleBackColor = true;
+      this.btnCancelParse.Visible = false;
+      this.btnCancelParse.Click += new System.EventHandler(this.btnCancel_Click);
+      // 
       // AutoTune
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -798,6 +799,7 @@ namespace AutoTune
       this.Controls.Add(this.tabControl1);
       this.Controls.Add(this.statusStrip1);
       this.Controls.Add(this.menuStrip1);
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.MainMenuStrip = this.menuStrip1;
       this.Name = "AutoTune";
       this.Text = "Tune Assist";
@@ -841,18 +843,21 @@ namespace AutoTune
     private System.Windows.Forms.TabControl tabControl1;
     private System.Windows.Forms.TabPage tabPage1;
     private System.Windows.Forms.TabPage tabPage2;
-    public BuffDV buffDV1;
-    private BuffDT buffDT;
+    //public BuffDV buffDV1;
+    private BuffDT buffDT = new BuffDT() ;
+    private BuffDV buffDV1 = new BuffDV();
+    private BuffDV buffDVmaf1 = new BuffDV();
+    private BuffDV buffDVmaf2 = new BuffDV();
     //private Loader loader = new Loader();
     public HelpForm helpForm;
     public About about;
     private System.Windows.Forms.Button btnCancelParse;
     private System.Windows.Forms.ToolStripStatusLabel StatusBox;
-    private BuffDV buffDVmaf1;
+    //private BuffDV buffDVmaf1;
     private System.Windows.Forms.TextBox textBox_MAF1;
     private System.Windows.Forms.SplitContainer splitContainer1;
     private System.Windows.Forms.TextBox textBox_MAF2;
-    private BuffDV buffDVmaf2;
+    //private BuffDV buffDVmaf2;
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
     private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem viewHelpToolStripMenuItem;

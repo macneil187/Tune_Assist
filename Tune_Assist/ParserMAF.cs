@@ -492,7 +492,7 @@
               }
               else if (final1 > 100 && final2 > 100)
               {
-                Console.WriteLine("final1 & final2 are both OVER 100.");
+                //Console.WriteLine("final1 & final2 are both OVER 100.");
                 if (final1 < final2)
                 {
                  // Console.WriteLine("final1: {0}  was found to be LESS than final2: {1} && both OVER 100 >> attempting to balance final1 <<", final1, final2);

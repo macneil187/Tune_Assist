@@ -13,6 +13,7 @@
     private enum AppStates { Idle, ParsingLog };
 
     public static AutoTune autotune;
+    private BuffDV_FuelComp buffFC = new BuffDV_FuelComp();
     private static List<int> mafB1UserInput = new List<int>();
     private static List<int> mafB2UserInput = new List<int>();
     private static List<int> adjustMAFb1 = new List<int>();
@@ -28,7 +29,6 @@
     private ParserFuelComp parserFuelComp = new ParserFuelComp();
     private List<Tuple<double, int, int>> mafB1 = new List<Tuple<double, int, int>>();
     private List<Tuple<double, int, int>> mafB2 = new List<Tuple<double, int, int>>();
-    private string fileName;
     private bool dualTB;
     private bool mafOption_CL = Properties.Settings.Default.MAF_CL;
     private bool mafOption_OL = Properties.Settings.Default.MAF_OL;
@@ -36,10 +36,7 @@
     private bool mafOption_ACCEL = Properties.Settings.Default.MAF_ACCEL;
     private bool mafOption_MINIMAL = Properties.Settings.Default.Maf_MINIMAL;
 
-  /*  public static List<string> mafHeaders = new List<string>
-      { "Time", "A/F CORR-B1 (%)", "A/F CORR-B2 (%)",
-      "ACCEL PED POS 1 (V-Accel)", "MAS A/F -B1 (V)",
-      "MAS A/F -B2 (V)", "INTAKE AIR TMP", "TARGET AFR" }; */
+    public static string FileName { get; set; }
 
     public List<int> MafB1UserInput
     {
@@ -100,43 +97,62 @@
       this.BuildMAF_DT();
       this.SetAppState(AppStates.Idle, null);
       autotune = this;
+      if (FileName != null)
+      {
+        object o = new object();
+        EventArgs e = new EventArgs();
+        this.openFileToolStripMenuItem_Open_Click(o, e);
+      }
+    }
+
+    public AutoTune(string file)
+  : this()
+    {
+      FileName = file;
     }
 
     private void openFileToolStripMenuItem_Open_Click(object sender, EventArgs e)
     {
       OpenFileDialog openFileDialog = new OpenFileDialog();
-      openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
       openFileDialog.Filter = "csv Files (*.csv)|*.csv|All Files (*.*)|*.*";
-      if (openFileDialog.ShowDialog(this) == DialogResult.OK)
+      if (FileName == string.Empty || FileName == null)
       {
-        this.fileName = openFileDialog.FileName;
-        FileInfo fi = new FileInfo(openFileDialog.FileName);
-        this.SetAppState(AppStates.ParsingLog, fi.Name);
-        this.StatusBox.Text = "File Loaded: " + this.fileName;
-        if (this.fileName.Contains(".csv"))
+        if (openFileDialog.ShowDialog(this) == DialogResult.OK)
         {
-          this.StatusBox.Text = this.fileName;
-          try
-          {
-            if (Properties.Settings.Default.MAF_CL)
-            {
-              this.worker = new BackgroundWorker();
-              this.worker.DoWork += this.loadworker_Start;
-              this.worker.RunWorkerCompleted += this.loadworker_ParseLogCompleted;
-              this.worker.WorkerReportsProgress = true;
-              this.worker.WorkerSupportsCancellation = true;
-              this.worker.ProgressChanged += this.loadworker_ProgressChanged;
-              this.worker.RunWorkerAsync(openFileDialog.FileName);
-            }
-          }
-          catch
-          {
-            this.SetAppState(AppStates.Idle, null);
-            Console.WriteLine(" ERROR! ");
-          }
-
-          this.closeFileToolStripMenuItem.Enabled = true;
+          FileName = openFileDialog.FileName;
         }
+        else
+        {
+          return;
+        }
+      }
+
+      FileInfo fi = new FileInfo(FileName);
+      this.SetAppState(AppStates.ParsingLog, fi.Name);
+      this.StatusBox.Text = "File Loaded: " + FileName;
+      if (FileName.Contains(".csv"))
+      {
+        this.StatusBox.Text = FileName;
+        try
+        {
+          if (Properties.Settings.Default.MAF_CL)
+          {
+            this.worker = new BackgroundWorker();
+            this.worker.DoWork += this.loadworker_Start;
+            this.worker.RunWorkerCompleted += this.loadworker_ParseLogCompleted;
+            this.worker.WorkerReportsProgress = true;
+            this.worker.WorkerSupportsCancellation = true;
+            this.worker.ProgressChanged += this.loadworker_ProgressChanged;
+            this.worker.RunWorkerAsync(FileName);
+          }
+        }
+        catch
+        {
+          this.SetAppState(AppStates.Idle, null);
+          Console.WriteLine(" ERROR! ");
+        }
+
+        this.closeFileToolStripMenuItem.Enabled = true;
       }
     }
 
@@ -154,6 +170,7 @@
         return;
       }
 
+      FileName = string.Empty;
       this.DV_FuelComp.DataSource = null;
       this.DV_FuelComp.Refresh();
       this.buffDV1.DataSource = null;
@@ -165,6 +182,7 @@
       this.tab2Loader(false);
       this.SetAppState(AppStates.Idle, null);
       this.closeFileToolStripMenuItem.Enabled = false;
+
     }
 
     private void fileToolStripMenuItem_Exit_Click(object sender, EventArgs e)
@@ -193,7 +211,6 @@
 
     private void loadworker_Start(object sender, DoWorkEventArgs e)
     {
-      //Loader loader = new Loader();
       BackgroundWorker bw = sender as BackgroundWorker;
       string sFileToRead = (string)e.Argument;
       e.Result = loader.LoadLog(bw, sFileToRead);
@@ -296,18 +313,20 @@
           {
             for (int a = 0; a < 64; ++a)
             {
-              if (!dt.Rows[a][1].Equals(100))
-              {
-                // Multiplier Easer.  This is a test to make the multiplier less
-                double easer = ((double)dt.Rows[a][1] + 100) / 2;
-                this.buffDVmaf1["Multiplier", a].Value = easer / 100;
-              }
+              // if (!dt.Rows[a][1].Equals(100))  //mafOption_MINIMAL
+              // {
+              // Multiplier Easer.  This is a test to make the multiplier less
+              //double easer = ((double)dt.Rows[a][1] + 100) / 2;
+              //  this.buffDVmaf1["Multiplier", a].Value = easer / 100;
+              //}
+              this.buffDVmaf1["Multiplier", a].Value = ((double)dt.Rows[a][1]) / 100;
 
-              if (!dt.Rows[a][2].Equals(100))
-              {
-                double easer = ((double)dt.Rows[a][2] + 100) / 2;
-                this.buffDVmaf2["Multiplier", a].Value = easer / 100;
-              }
+              this.buffDVmaf2["Multiplier", a].Value = ((double)dt.Rows[a][2]) / 100;
+              //  if (!dt.Rows[a][2].Equals(100))
+              //   {
+              // double easer = ((double)dt.Rows[a][2] + 100) / 2;
+              // this.buffDVmaf2["Multiplier", a].Value = easer / 100;
+              //   }
 
               this.buffDVmaf1["Hits", a].Value = (int)dt.Rows[a][3];
               this.buffDVmaf2["Hits", a].Value = (int)dt.Rows[a][4];
@@ -467,7 +486,8 @@
     private void buildFC_DT()
     {
       int index = 0;
-      foreach (int i in BuffDV_FuelComp.FC_RPM)
+      //foreach (int i in BuffDV_FuelComp.FcRPM)
+      foreach (int i in this.buffFC.FcRPM)
       {
         this.DV_FuelComp_RPM.Rows.Add();
         this.DV_FuelComp_RPM.Rows[index].Height = 22;
@@ -476,7 +496,7 @@
       }
 
       index = 0;
-      foreach (int i in BuffDV_FuelComp.FC_XdataByte)
+      foreach (int i in BuffDV_FuelComp.fcThrottlePercent)
       {
         this.DV_FuelComp_XdataByte.Columns.Add(Convert.ToString(i), Convert.ToString(i));
         this.DV_FuelComp_XdataByte.Columns[index].Width = 47;

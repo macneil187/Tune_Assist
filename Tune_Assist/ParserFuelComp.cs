@@ -10,8 +10,9 @@
 
   public class ParserFuelComp
   {
-    private List<int> tmpRPMlist = BuffDV_FuelComp.FC_RPM;
-    private List<double> tmpXlist = BuffDV_FuelComp.FC_XdataByte;
+    private BuffDV_FuelComp buffFC = new BuffDV_FuelComp();
+    //private List<int> tmpRPMlist = BuffDV_FuelComp.FcRPM;
+    //private List<double> tmpXlist = BuffDV_FuelComp.fcThrottlePercent;
     private IndexFinder indexer = new IndexFinder();
     private DataTable DT_FC= new DataTable();
     private double accel;
@@ -51,7 +52,6 @@
       }
 
       this.intakeAirTempAVG = (double)iatFull.Average();
-      Console.WriteLine("The average Intake Air Temp is: " + Convert.ToString(this.intakeAirTempAVG));
     }
 
     // *********** Fuel Comp Adjustments below.
@@ -96,14 +96,16 @@
           this.FindIAT_average(tempgrid);
         }
 
-        foreach (int i in this.tmpXlist)
+        //foreach (int i in this.tmpXlist)
+        foreach (int i in this.buffFC.FcThrottlePercent)
         {
           dt_FC_hits.Columns.Add(Convert.ToString(i), typeof(int));
           dt_FC_totals.Columns.Add(Convert.ToString(i), typeof(double));
           this.DT_FC.Columns.Add(Convert.ToString(i), typeof(double));
         }
 
-        foreach (int i in this.tmpRPMlist)
+        //foreach (int i in this.tmpRPMlist)
+        foreach (int i in this.buffFC.FcRPM)
         {
           dt_FC_hits.Rows.Add();
           dt_FC_totals.Rows.Add();
@@ -139,10 +141,10 @@
           this.accelChange = Convert.ToDouble(((this.nextaccel - this.accel) / (this.nexttime - this.time)) * 1000);
 
           // Makes sure the given RPM value lands in the last index.
-          int lastRPMx = this.tmpRPMlist.Count - 1;
-          if (this.rpm > this.tmpRPMlist[lastRPMx])
+          int lastRPMx = this.buffFC.FcRPM.Count - 1;
+          if (this.rpm > this.buffFC.FcRPM[lastRPMx])
           {
-            this.rpm = this.tmpRPMlist[lastRPMx];
+            this.rpm = this.buffFC.FcRPM[lastRPMx];
           }
 
           if (this.target > 15 || this.rpm < 600)
@@ -170,13 +172,13 @@
             continue;
           }
 
-          this.indexFinderDB = this.tmpXlist.BinarySearch(this.fuelXtrace);
+          this.indexFinderDB = this.buffFC.FcThrottlePercent.BinarySearch(this.fuelXtrace);
           if (this.indexFinderDB < 0)
           {
             this.indexFinderDB = ~this.indexFinderDB;
           }
 
-          this.indexFinderRPM = this.tmpRPMlist.BinarySearch(this.rpm);
+          this.indexFinderRPM = this.buffFC.FcRPM.BinarySearch(this.rpm);
           if (this.indexFinderRPM < 0)
           {
             this.indexFinderRPM = ~this.indexFinderRPM;
