@@ -173,12 +173,6 @@
         {
           for (int r = 0; r < tempgrid.Rows.Count - 1; ++r)
           {
-            // dual MAF check
-            if (this.indexer.MafB2Dex != -1)
-            {
-              this.dualTB = true;
-            }
-
             try
             {
               this.target = Convert.ToDouble(tempgrid.Rows[r].Cells[this.indexer.TargetDex].Value);
@@ -231,15 +225,30 @@
               }
 
               // Closed loop
-              if (this.target == 14.7 && this.coolantTemp > 176)
+              if (this.target == 14.7 && this.coolantTemp > 174 && Properties.Settings.Default.MAF_CL)
               {
                 // Dual throttle bodies and have logged long term trim
                 if (this.indexer.LtB1Dex != -1 && this.indexer.LtB2Dex != -1 && this.dualTB)
                 {
                   this.longtrim1 = Convert.ToDouble(tempgrid.Rows[r].Cells[this.indexer.LtB1Dex].Value);
                   this.longtrim2 = Convert.ToDouble(tempgrid.Rows[r].Cells[this.indexer.LtB2Dex].Value);
-                  this.finaltrim1 = (this.shorttrim1 + Convert.ToInt32(this.longtrim1)) / 2;
-                  this.finaltrim2 = (this.shorttrim2 + Convert.ToInt32(this.longtrim2)) / 2;
+                  if (this.longtrim1 == 100)
+                  {
+                    this.finaltrim1 = this.shorttrim1;
+                  }
+                  else
+                  {
+                    this.finaltrim1 = (double)(this.shorttrim1 * .333) + (this.longtrim1 * .666);
+                  }
+
+                  if (this.longtrim2 == 100)
+                  {
+                    this.finaltrim2 = this.shorttrim2;
+                  }
+                  else
+                  {
+                    this.finaltrim2 = (double)(this.shorttrim2 * .333) + (this.longtrim2 * .666);
+                  }
                 }
 
                 // Dual throttle bodies and have NOT logged long term trim
@@ -250,13 +259,31 @@
                 }
 
                 // Single throttle body and have logged long term trim
-                else if (!this.dualTB && (this.indexer.LtB1Dex != -1 || this.indexer.LtB2Dex != -1 ))
+                else if (!this.dualTB && (this.indexer.LtB1Dex != -1 || this.indexer.LtB2Dex != -1))
                 {
                   this.longtrim1 = Convert.ToDouble(tempgrid.Rows[r].Cells[this.indexer.LtB1Dex].Value);
                   this.longtrim2 = Convert.ToDouble(tempgrid.Rows[r].Cells[this.indexer.LtB2Dex].Value);
-                  this.finaltrim1 = (double) (this.shorttrim1 + Convert.ToInt32(this.longtrim1)) / 2;
-                  this.finaltrim2 = (double) (this.shorttrim2 + Convert.ToInt32(this.longtrim2)) / 2;
-                  this.finaltrim1 = (double) (this.finaltrim1 + this.finaltrim2) / 2;
+
+                  if (this.longtrim1 == 100)
+                  {
+                    this.finaltrim1 = this.shorttrim1;
+                  }
+                  else
+                  {
+                    this.finaltrim1 = (double)(this.shorttrim1 * .333) + (this.longtrim1 * .666);
+
+                  }
+
+                  if (this.longtrim2 == 100)
+                  {
+                    this.finaltrim2 = (double)(this.shorttrim2 * .333) + (this.longtrim2 * .666);
+                  }
+                  else
+                  {
+                    this.finaltrim2 = this.shorttrim2;
+                  }
+
+                  this.finaltrim1 = (double)(this.finaltrim1 + this.finaltrim2) / 2;
                 }
                 else
                 {
@@ -349,6 +376,8 @@
                 }
 
                 Console.Write(this.accelChange + "\n");
+                this.dualTB = this.dualTB && this.indexFinder2 >= 0 && this.indexFinder2 <= mafVolts.Count ? true : false;
+
                 // Open Loop Starter
                 //  filter out intake air temp changes  &&  filter out quick accel pedal position changes
                 if (Properties.Settings.Default.MAF_IAT && this.indexer.IntakeAirTempDex != -1
@@ -380,22 +409,22 @@
             {
               StringBuilder sb = new StringBuilder();
               sb.Append("Could not find the following headers: \n");
-              if (this.indexer.TimeDex == -1) {sb.Append("Time\n"); }
-              if (this.indexer.StB1Dex == -1) {sb.Append("A/F CORR-B1 (%)\n"); }
-              if (this.indexer.StB2Dex == -1) {sb.Append("A/F CORR-B2 (%)\n"); }
-              if (this.indexer.AccelDex == -1) {sb.Append("ACCEL PED POS 1\n"); }
-              if (this.indexer.LtB1Dex == -1) {sb.Append("LT Fuel Trim B1 (%)\n"); }
-              if (this.indexer.LtB2Dex == -1) {sb.Append("LT Fuel Trim B2 (%)\n"); }
-              if (this.indexer.AfrB1Dex == -1) {sb.Append("AFR WB-B1\n"); }
-              if (this.indexer.AfrB2Dex == -1) {sb.Append("AFR WB-B2\n"); }
-              if (this.indexer.MafB1Dex == -1) {sb.Append("MAS A/F -B1 (V)\n"); }
-              if (this.indexer.MafB2Dex == -1) {sb.Append("MAS A/F -B2 (V)\n"); }
-              if (this.indexer.TargetDex == -1) {sb.Append("TARGET AFR\n"); }
-              if (this.indexer.IntakeAirTempDex == -1) {sb.Append("INTAKE AIR TMP\n"); }
-              if (this.indexer.CoolantTempDex == -1) {sb.Append("COOLANT TEMP\n"); }
+              if (this.indexer.TimeDex == -1) { sb.Append("Time\n"); }
+              if (this.indexer.StB1Dex == -1) { sb.Append("A/F CORR-B1 (%)\n"); }
+              if (this.indexer.StB2Dex == -1) { sb.Append("A/F CORR-B2 (%)\n"); }
+              if (this.indexer.AccelDex == -1) { sb.Append("ACCEL PED POS 1\n"); }
+              if (this.indexer.LtB1Dex == -1) { sb.Append("LT Fuel Trim B1 (%)\n"); }
+              if (this.indexer.LtB2Dex == -1) { sb.Append("LT Fuel Trim B2 (%)\n"); }
+              if (this.indexer.AfrB1Dex == -1) { sb.Append("AFR WB-B1\n"); }
+              if (this.indexer.AfrB2Dex == -1) { sb.Append("AFR WB-B2\n"); }
+              if (this.indexer.MafB1Dex == -1) { sb.Append("MAS A/F -B1 (V)\n"); }
+              if (this.indexer.MafB2Dex == -1) { sb.Append("MAS A/F -B2 (V)\n"); }
+              if (this.indexer.TargetDex == -1) { sb.Append("TARGET AFR\n"); }
+              if (this.indexer.IntakeAirTempDex == -1) { sb.Append("INTAKE AIR TMP\n"); }
+              if (this.indexer.CoolantTempDex == -1) { sb.Append("COOLANT TEMP\n"); }
 
               Console.WriteLine(sb.ToString());
-              MessageBox.Show("Error", "We could not find minimal parameters needed\nto calculate the MAF scaling adjustments.\n"
+              MessageBox.Show("Error", "We could not find minimal parameters needed \n to calculate the MAF scaling adjustments.\n"
                 + sb.ToString() + "\n Please add these parameters to the uprev logger and try again.");
             }
           }
@@ -424,21 +453,17 @@
             double diff = 0;
             double diff1 = 0;
             double diff2 = 0;
-            
+
             // Minimal changes to the maf
             if (Properties.Settings.Default.Maf_MINIMAL)
             {
-              // Console.WriteLine("CL1: {0}, CL2: {1}, OL1: {2}, OL2: {3}", CL1, CL2, OL1, OL2);
               if (CL1 == 100 && OL1 != 100)
               {
                 final1 = OL1;
-                //  Console.WriteLine(" Value found at OL1, but not at CL1. final1 is now {0}", final1);
               }
               else if (CL1 != 100 && OL1 != 100)
               {
-                //  Console.WriteLine(" Value found at OL1 & CL1. ");
-                final1 = (CL1 + OL1) / 2;
-                // Console.WriteLine("(CL1 + OL1) = final1 |  {1} + {2} = final1", CL1, OL1, final1);
+                final1 = (CL1 * .333) + (OL1 * .666);
               }
               else
               {
@@ -448,13 +473,10 @@
               if (CL2 == 100 && OL2 != 100)
               {
                 final2 = OL2;
-                //  Console.WriteLine(" Value found at OL2, but not at CL2. final2 is now {0}", final2);
               }
               else if (CL2 != 100 && OL2 != 100)
               {
-                // Console.WriteLine(" Value found at CL2 & OL2. ");
-                final2 = (CL2 + OL2) / 2;
-                 // Console.WriteLine("(CL2 + OL2) = final2 |  {1} + {2} = final2", CL2, OL2, final2);
+                final2 = (CL2 * .333) + (OL2 * .666);
               }
               else
               {
@@ -463,55 +485,40 @@
 
               // Finding difference between finals
               diff = final1 - final2;
-              //  Console.WriteLine("diff = final1 - final2", diff, final1, final2);
 
               if (diff < 0)
               {
                 diff = -diff;
-               // Console.WriteLine("diff was negitive, we have changed it to {0}", diff);
               }
-
 
               if (final1 < 100 && final2 < 100)
               {
-               // Console.WriteLine("final1 & final2 are both UNDER 100.");
                 if (final1 < final2)
                 {
-                 // Console.WriteLine("final1: {0}  was found to be LESS than final2: {1} && both UNDER 100 >> attempting to balance final1 <<", final1, final2);
                   final1 = final2 = 100;
                   final1 -= diff;
-                 // Console.WriteLine("final1 is now {0}  |  Final2 is now {1}", final1, final2);
                 }
                 else if (final1 > final2)
                 {
-                //  Console.WriteLine("final1: {0}  was found to be MORE than final2: {1} && both UNDER 100 >> attempting to balance final2 <<", final1, final2);
                   final1 = final2 = 100;
                   final2 -= diff;
-                 // Console.WriteLine("final1 is now {0}  |  Final2 is now {1}", final1, final2);
                 }
               }
               else if (final1 > 100 && final2 > 100)
               {
-                //Console.WriteLine("final1 & final2 are both OVER 100.");
                 if (final1 < final2)
                 {
-                 // Console.WriteLine("final1: {0}  was found to be LESS than final2: {1} && both OVER 100 >> attempting to balance final1 <<", final1, final2);
                   final1 = final2 = 100;
                   final2 += diff;
-                 // Console.WriteLine("final1 is now {0}  |  Final2 is now {1}", final1, final2);
                 }
                 else if (final1 > final2)
                 {
-                  //Console.WriteLine("final1: {0}  was found to be MORE than final2: {1} && both OVER 100 >> attempting to balance final1 <<", final1, final2);
                   final1 = final2 = 100;
                   final1 += diff;
-                 // Console.WriteLine("final1 is now {0}  |  Final2 is now {1}", final1, final2);
                 }
               }
               else
               {
-                //Console.WriteLine("final1 & final2 are NOT same direction.");
-
                 diff = final1 - final2;
                 diff1 = final1 - 100;
                 diff2 = final2 - 100;
@@ -536,7 +543,7 @@
                   final1 -= diff1;
                 }
                 else
-                { 
+                {
                   final1 = 100;
                 }
 
@@ -554,15 +561,21 @@
                 }
               }
             }
+
+            // If not using "Minimal Changes"
             else
             {
               if (CL1 == 100 && OL1 != 100)
               {
                 final1 = (double)OL1;
               }
+              else if (CL1 != 100 && OL1 == 100)
+              {
+                final1 = (double)CL1;
+              }
               else if (CL1 != 100 && OL1 != 100)
               {
-                final1 = (double)(CL1 + OL1) / 2;
+                final1 = (double)(CL1 * .333) + (OL1 * .666);
               }
               else
               {
@@ -573,9 +586,13 @@
               {
                 final2 = (double)OL2;
               }
+              else if (CL2 != 100 && OL2 == 100)
+              {
+                final2 = (double)CL2;
+              }
               else if (CL2 != 100 && OL2 != 100)
               {
-                final2 = (double)(CL2 + OL2) / 2;
+                final2 = (double)(CL2 * .333) + (OL2 * .666);
               }
               else
               {
@@ -609,7 +626,7 @@
           if (this.indexer.IntakeAirTempDex == -1) { sb.Append("INTAKE AIR TMP\n"); }
           if (this.indexer.CoolantTempDex == -1) { sb.Append("COOLANT TEMP\n"); }
           Console.WriteLine(sb.ToString());
-          MessageBox.Show("Error", "We could not find minimal parameters needed\nto calculate Closed Loop MAF scaling adjustments.\n" + sb.ToString());
+          MessageBox.Show("Error", "We could not find minimal parameters needed \n to calculate Closed Loop MAF scaling adjustments.\n" + sb.ToString());
         }
 
         return dt;
@@ -624,7 +641,7 @@
       if (this.dualTB)
       {
         // MAF1
-        for (int i = 0; ; )
+        for (int i = 0; ;)
         {
           // Find empty spot to insert value in DataTable
           if (i == this.clDT1.Rows.Count - 1 || this.clDT1.Rows.Count == 0)
@@ -658,7 +675,7 @@
         }
 
         // MAF 2
-        for (int i = 0; ; )
+        for (int i = 0; ;)
         {
           // Find empty spot to insert value in DataTable 2
           if (i == this.clDT2.Rows.Count - 1 || this.clDT2.Rows.Count == 0)
@@ -736,7 +753,7 @@
       if (this.dualTB)
       {
         // MAF1
-        for (int c = 0; c < this.clDT1.Columns.Count - 1; ++c) 
+        for (int c = 0; c < this.clDT1.Columns.Count - 1; ++c)
         {
           // Read values from DataTable
           List<double> tmpList = new List<double>();
@@ -1078,7 +1095,7 @@
       }
     }
 
-      private void FindIAT_average(DataGridView tempgrid)
+    private void FindIAT_average(DataGridView tempgrid)
     {
       List<double> iatFull = new List<double>();
 
