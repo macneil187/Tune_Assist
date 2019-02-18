@@ -40,8 +40,6 @@
       this.richTextBoxOptions = new System.Windows.Forms.RichTextBox();
       this.OptionTab2 = new System.Windows.Forms.TabPage();
       this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-      this.buttonSave = new System.Windows.Forms.Button();
-      this.buttonCancel = new System.Windows.Forms.Button();
       this.OptionTabControl.SuspendLayout();
       this.OptionTab1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -189,39 +187,12 @@
       this.statusStrip1.TabIndex = 1;
       this.statusStrip1.Text = "statusStrip1";
       // 
-      // buttonSave
-      // 
-      this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.buttonSave.Location = new System.Drawing.Point(281, 201);
-      this.buttonSave.Name = "buttonSave";
-      this.buttonSave.Size = new System.Drawing.Size(75, 23);
-      this.buttonSave.TabIndex = 2;
-      this.buttonSave.Text = "Save";
-      this.buttonSave.UseVisualStyleBackColor = true;
-      this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
-      // 
-      // buttonCancel
-      // 
-      this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.buttonCancel.Location = new System.Drawing.Point(374, 202);
-      this.buttonCancel.Name = "buttonCancel";
-      this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-      this.buttonCancel.TabIndex = 3;
-      this.buttonCancel.Text = "Cancel";
-      this.buttonCancel.UseVisualStyleBackColor = true;
-      this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-      // 
       // OptionForm
       // 
-      this.AcceptButton = this.buttonSave;
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.BackColor = System.Drawing.SystemColors.Control;
-      this.CancelButton = this.buttonCancel;
       this.ClientSize = new System.Drawing.Size(473, 224);
-      this.Controls.Add(this.buttonCancel);
-      this.Controls.Add(this.buttonSave);
       this.Controls.Add(this.statusStrip1);
       this.Controls.Add(this.OptionTabControl);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -247,8 +218,6 @@
     private System.Windows.Forms.TabPage OptionTab1;
     private System.Windows.Forms.TabPage OptionTab2;
     private System.Windows.Forms.StatusStrip statusStrip1;
-    private System.Windows.Forms.Button buttonSave;
-    private System.Windows.Forms.Button buttonCancel;
     private System.Windows.Forms.SplitContainer splitContainer1;
     private System.Windows.Forms.CheckBox checkBoxAirTemp;
     private System.Windows.Forms.CheckBox checkBoxAccelChange;

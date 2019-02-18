@@ -22,23 +22,6 @@
       this.MinimalChanges = this.Minimal_MAF_checkbox.Checked;
     }
 
-    private void buttonCancel_Click(object sender, EventArgs e)
-    {
-      this.checkBoxClosedLoop.Checked = this.ClosedLoop;
-      this.checkBoxOpenLoop.Checked = this.OpenLoop;
-      this.checkBoxAirTemp.Checked = this.FilterAirTemp;
-      this.checkBoxAccelChange.Checked = this.FilterAccel;
-      this.Minimal_MAF_checkbox.Checked = this.MinimalChanges;
-      Thread.Sleep(50);
-      this.Dispose();
-    }
-
-    private void buttonSave_Click(object sender, EventArgs e)
-    {
-      Properties.Settings.Default.Save();
-      this.Dispose();
-    }
-
     private void checkBoxClosedLoop_CheckedChanged(object sender, EventArgs e)
     {
       if (this.checkBoxClosedLoop.Checked)
