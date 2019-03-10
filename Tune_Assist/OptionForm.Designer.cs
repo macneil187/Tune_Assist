@@ -32,14 +32,14 @@
       this.OptionTabControl = new System.Windows.Forms.TabControl();
       this.OptionTab1 = new System.Windows.Forms.TabPage();
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+      this.richTextBoxOptions = new System.Windows.Forms.RichTextBox();
+      this.OptionTab2 = new System.Windows.Forms.TabPage();
+      this.statusStrip1 = new System.Windows.Forms.StatusStrip();
       this.Minimal_MAF_checkbox = new System.Windows.Forms.CheckBox();
       this.checkBoxAirTemp = new System.Windows.Forms.CheckBox();
       this.checkBoxAccelChange = new System.Windows.Forms.CheckBox();
       this.checkBoxOpenLoop = new System.Windows.Forms.CheckBox();
       this.checkBoxClosedLoop = new System.Windows.Forms.CheckBox();
-      this.richTextBoxOptions = new System.Windows.Forms.RichTextBox();
-      this.OptionTab2 = new System.Windows.Forms.TabPage();
-      this.statusStrip1 = new System.Windows.Forms.StatusStrip();
       this.OptionTabControl.SuspendLayout();
       this.OptionTab1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -91,72 +91,6 @@
       this.splitContainer1.SplitterDistance = 198;
       this.splitContainer1.TabIndex = 0;
       // 
-      // Minimal_MAF_checkbox
-      // 
-      this.Minimal_MAF_checkbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.Minimal_MAF_checkbox.AutoSize = true;
-      this.Minimal_MAF_checkbox.Checked = global::AutoTune.Properties.Settings.Default.Maf_MINIMAL;
-      this.Minimal_MAF_checkbox.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.Minimal_MAF_checkbox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AutoTune.Properties.Settings.Default, "Maf_MINIMAL", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-      this.Minimal_MAF_checkbox.Location = new System.Drawing.Point(3, 145);
-      this.Minimal_MAF_checkbox.Name = "Minimal_MAF_checkbox";
-      this.Minimal_MAF_checkbox.Size = new System.Drawing.Size(136, 17);
-      this.Minimal_MAF_checkbox.TabIndex = 4;
-      this.Minimal_MAF_checkbox.Text = "Minimize MAF Changes";
-      this.Minimal_MAF_checkbox.UseVisualStyleBackColor = true;
-      // 
-      // checkBoxAirTemp
-      // 
-      this.checkBoxAirTemp.AutoSize = true;
-      this.checkBoxAirTemp.Checked = global::AutoTune.Properties.Settings.Default.MAF_IAT;
-      this.checkBoxAirTemp.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkBoxAirTemp.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AutoTune.Properties.Settings.Default, "MAF_IAT", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-      this.checkBoxAirTemp.Location = new System.Drawing.Point(3, 85);
-      this.checkBoxAirTemp.Name = "checkBoxAirTemp";
-      this.checkBoxAirTemp.Size = new System.Drawing.Size(171, 17);
-      this.checkBoxAirTemp.TabIndex = 3;
-      this.checkBoxAirTemp.Text = "Filter Intake Air Temp Changes";
-      this.checkBoxAirTemp.UseVisualStyleBackColor = true;
-      // 
-      // checkBoxAccelChange
-      // 
-      this.checkBoxAccelChange.AutoSize = true;
-      this.checkBoxAccelChange.Checked = global::AutoTune.Properties.Settings.Default.MAF_ACCEL;
-      this.checkBoxAccelChange.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkBoxAccelChange.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AutoTune.Properties.Settings.Default, "MAF_ACCEL", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-      this.checkBoxAccelChange.Location = new System.Drawing.Point(3, 62);
-      this.checkBoxAccelChange.Name = "checkBoxAccelChange";
-      this.checkBoxAccelChange.Size = new System.Drawing.Size(154, 17);
-      this.checkBoxAccelChange.TabIndex = 2;
-      this.checkBoxAccelChange.Text = "Filter Quick Accel Changes";
-      this.checkBoxAccelChange.UseVisualStyleBackColor = true;
-      // 
-      // checkBoxOpenLoop
-      // 
-      this.checkBoxOpenLoop.AutoSize = true;
-      this.checkBoxOpenLoop.Checked = global::AutoTune.Properties.Settings.Default.MAF_OL;
-      this.checkBoxOpenLoop.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkBoxOpenLoop.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AutoTune.Properties.Settings.Default, "MAF_OL", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-      this.checkBoxOpenLoop.Location = new System.Drawing.Point(116, 3);
-      this.checkBoxOpenLoop.Name = "checkBoxOpenLoop";
-      this.checkBoxOpenLoop.Size = new System.Drawing.Size(79, 17);
-      this.checkBoxOpenLoop.TabIndex = 1;
-      this.checkBoxOpenLoop.Text = "Open Loop";
-      this.checkBoxOpenLoop.UseVisualStyleBackColor = true;
-      // 
-      // checkBoxClosedLoop
-      // 
-      this.checkBoxClosedLoop.AutoSize = true;
-      this.checkBoxClosedLoop.Checked = global::AutoTune.Properties.Settings.Default.MAF_CL;
-      this.checkBoxClosedLoop.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkBoxClosedLoop.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AutoTune.Properties.Settings.Default, "MAF_CL", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-      this.checkBoxClosedLoop.Location = new System.Drawing.Point(3, 3);
-      this.checkBoxClosedLoop.Name = "checkBoxClosedLoop";
-      this.checkBoxClosedLoop.Size = new System.Drawing.Size(85, 17);
-      this.checkBoxClosedLoop.TabIndex = 0;
-      this.checkBoxClosedLoop.Text = "Closed Loop";
-      this.checkBoxClosedLoop.UseVisualStyleBackColor = true;
-      // 
       // richTextBoxOptions
       // 
       this.richTextBoxOptions.BackColor = System.Drawing.SystemColors.Control;
@@ -185,6 +119,76 @@
       this.statusStrip1.Size = new System.Drawing.Size(473, 22);
       this.statusStrip1.TabIndex = 1;
       this.statusStrip1.Text = "statusStrip1";
+      // 
+      // Minimal_MAF_checkbox
+      // 
+      this.Minimal_MAF_checkbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.Minimal_MAF_checkbox.AutoSize = true;
+      this.Minimal_MAF_checkbox.Checked = global::AutoTune.Properties.Settings.Default.Maf_MINIMAL;
+      this.Minimal_MAF_checkbox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AutoTune.Properties.Settings.Default, "Maf_MINIMAL", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.Minimal_MAF_checkbox.Location = new System.Drawing.Point(3, 145);
+      this.Minimal_MAF_checkbox.Name = "Minimal_MAF_checkbox";
+      this.Minimal_MAF_checkbox.Size = new System.Drawing.Size(136, 17);
+      this.Minimal_MAF_checkbox.TabIndex = 4;
+      this.Minimal_MAF_checkbox.Text = "Minimize MAF Changes";
+      this.Minimal_MAF_checkbox.UseVisualStyleBackColor = true;
+      this.Minimal_MAF_checkbox.CheckedChanged += new System.EventHandler(this.Minimal_MAF_checkbox_CheckedChanged);
+      // 
+      // checkBoxAirTemp
+      // 
+      this.checkBoxAirTemp.AutoSize = true;
+      this.checkBoxAirTemp.Checked = global::AutoTune.Properties.Settings.Default.MAF_IAT;
+      this.checkBoxAirTemp.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkBoxAirTemp.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AutoTune.Properties.Settings.Default, "MAF_IAT", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.checkBoxAirTemp.Location = new System.Drawing.Point(3, 85);
+      this.checkBoxAirTemp.Name = "checkBoxAirTemp";
+      this.checkBoxAirTemp.Size = new System.Drawing.Size(171, 17);
+      this.checkBoxAirTemp.TabIndex = 3;
+      this.checkBoxAirTemp.Text = "Filter Intake Air Temp Changes";
+      this.checkBoxAirTemp.UseVisualStyleBackColor = true;
+      this.checkBoxAirTemp.CheckedChanged += new System.EventHandler(this.checkBoxAirTemp_CheckedChanged);
+      // 
+      // checkBoxAccelChange
+      // 
+      this.checkBoxAccelChange.AutoSize = true;
+      this.checkBoxAccelChange.Checked = global::AutoTune.Properties.Settings.Default.MAF_ACCEL;
+      this.checkBoxAccelChange.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkBoxAccelChange.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AutoTune.Properties.Settings.Default, "MAF_ACCEL", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.checkBoxAccelChange.Location = new System.Drawing.Point(3, 62);
+      this.checkBoxAccelChange.Name = "checkBoxAccelChange";
+      this.checkBoxAccelChange.Size = new System.Drawing.Size(154, 17);
+      this.checkBoxAccelChange.TabIndex = 2;
+      this.checkBoxAccelChange.Text = "Filter Quick Accel Changes";
+      this.checkBoxAccelChange.UseVisualStyleBackColor = true;
+      this.checkBoxAccelChange.CheckedChanged += new System.EventHandler(this.checkBoxAccelChange_CheckedChanged);
+      // 
+      // checkBoxOpenLoop
+      // 
+      this.checkBoxOpenLoop.AutoSize = true;
+      this.checkBoxOpenLoop.Checked = global::AutoTune.Properties.Settings.Default.MAF_OL;
+      this.checkBoxOpenLoop.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkBoxOpenLoop.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AutoTune.Properties.Settings.Default, "MAF_OL", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.checkBoxOpenLoop.Location = new System.Drawing.Point(116, 3);
+      this.checkBoxOpenLoop.Name = "checkBoxOpenLoop";
+      this.checkBoxOpenLoop.Size = new System.Drawing.Size(79, 17);
+      this.checkBoxOpenLoop.TabIndex = 1;
+      this.checkBoxOpenLoop.Text = "Open Loop";
+      this.checkBoxOpenLoop.UseVisualStyleBackColor = true;
+      this.checkBoxOpenLoop.CheckedChanged += new System.EventHandler(this.checkBoxOpenLoop_CheckedChanged);
+      // 
+      // checkBoxClosedLoop
+      // 
+      this.checkBoxClosedLoop.AutoSize = true;
+      this.checkBoxClosedLoop.Checked = global::AutoTune.Properties.Settings.Default.MAF_CL;
+      this.checkBoxClosedLoop.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkBoxClosedLoop.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AutoTune.Properties.Settings.Default, "MAF_CL", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+      this.checkBoxClosedLoop.Location = new System.Drawing.Point(3, 3);
+      this.checkBoxClosedLoop.Name = "checkBoxClosedLoop";
+      this.checkBoxClosedLoop.Size = new System.Drawing.Size(85, 17);
+      this.checkBoxClosedLoop.TabIndex = 0;
+      this.checkBoxClosedLoop.Text = "Closed Loop";
+      this.checkBoxClosedLoop.UseVisualStyleBackColor = true;
+      this.checkBoxClosedLoop.CheckedChanged += new System.EventHandler(this.checkBoxClosedLoop_CheckedChanged);
       // 
       // OptionForm
       // 

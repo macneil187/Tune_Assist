@@ -25,7 +25,7 @@ namespace AutoTune.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool MAF_CL {
             get {
                 return ((bool)(this["MAF_CL"]));
@@ -73,7 +73,7 @@ namespace AutoTune.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool Maf_MINIMAL {
             get {
                 return ((bool)(this["Maf_MINIMAL"]));
