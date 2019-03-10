@@ -58,7 +58,7 @@
       this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
       this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
       this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-      this.tableLayoutPanel.Size = new System.Drawing.Size(482, 209);
+      this.tableLayoutPanel.Size = new System.Drawing.Size(482, 212);
       this.tableLayoutPanel.TabIndex = 0;
       // 
       // logoPictureBox
@@ -68,7 +68,7 @@
       this.logoPictureBox.Location = new System.Drawing.Point(3, 3);
       this.logoPictureBox.Name = "logoPictureBox";
       this.tableLayoutPanel.SetRowSpan(this.logoPictureBox, 6);
-      this.logoPictureBox.Size = new System.Drawing.Size(153, 203);
+      this.logoPictureBox.Size = new System.Drawing.Size(153, 206);
       this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
       this.logoPictureBox.TabIndex = 12;
       this.logoPictureBox.TabStop = false;
@@ -89,7 +89,7 @@
       // labelVersion
       // 
       this.labelVersion.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.labelVersion.Location = new System.Drawing.Point(165, 20);
+      this.labelVersion.Location = new System.Drawing.Point(165, 21);
       this.labelVersion.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
       this.labelVersion.MaximumSize = new System.Drawing.Size(0, 17);
       this.labelVersion.Name = "labelVersion";
@@ -102,9 +102,9 @@
       // 
       this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.okButton.Location = new System.Drawing.Point(404, 187);
+      this.okButton.Location = new System.Drawing.Point(404, 193);
       this.okButton.Name = "okButton";
-      this.okButton.Size = new System.Drawing.Size(75, 19);
+      this.okButton.Size = new System.Drawing.Size(75, 16);
       this.okButton.TabIndex = 24;
       this.okButton.Text = "&OK";
       this.okButton.Click += new System.EventHandler(this.okButton_Click);
@@ -115,12 +115,12 @@
       this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       this.richTextBox1.Cursor = System.Windows.Forms.Cursors.Default;
       this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.richTextBox1.Location = new System.Drawing.Point(162, 83);
+      this.richTextBox1.Location = new System.Drawing.Point(162, 87);
       this.richTextBox1.MaxLength = 3647;
       this.richTextBox1.Name = "richTextBox1";
       this.richTextBox1.ReadOnly = true;
       this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-      this.richTextBox1.Size = new System.Drawing.Size(317, 98);
+      this.richTextBox1.Size = new System.Drawing.Size(317, 100);
       this.richTextBox1.TabIndex = 25;
       this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
       this.richTextBox1.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBox1_LinkClicked);
@@ -130,7 +130,7 @@
       this.AcceptButton = this.okButton;
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(500, 227);
+      this.ClientSize = new System.Drawing.Size(500, 230);
       this.Controls.Add(this.tableLayoutPanel);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
       this.MaximizeBox = false;

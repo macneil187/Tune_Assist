@@ -13,6 +13,7 @@
     private BuffDV_FuelComp buffFC = new BuffDV_FuelComp();
     //private List<int> tmpRPMlist = BuffDV_FuelComp.FcRPM;
     //private List<double> tmpXlist = BuffDV_FuelComp.fcThrottlePercent;
+
     private IndexFinder indexer = new IndexFinder();
     private DataTable DT_FC= new DataTable();
     private double accel;

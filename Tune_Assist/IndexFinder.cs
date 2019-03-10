@@ -35,8 +35,7 @@
     public int RpmDex { get; set; }
 
     public bool dualTB { get; set; }
-
-
+    
     public void FindHeader_Indexes(DataGridView tempgrid)
     {
 

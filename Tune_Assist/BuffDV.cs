@@ -68,7 +68,7 @@
   public class BuffDT : DataTable
   {
     public DataTable DT_NAmild()
-    {
+    { 
       DataTable dt = new DataTable("Naturally Aspirated Mild");
       for (int i = 0; i < 8; ++i)
       {

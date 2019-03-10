@@ -156,7 +156,6 @@
       this.checkBoxClosedLoop.TabIndex = 0;
       this.checkBoxClosedLoop.Text = "Closed Loop";
       this.checkBoxClosedLoop.UseVisualStyleBackColor = true;
-      this.checkBoxClosedLoop.CheckedChanged += new System.EventHandler(this.checkBoxClosedLoop_CheckedChanged);
       // 
       // richTextBoxOptions
       // 

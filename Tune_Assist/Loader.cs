@@ -23,6 +23,7 @@
           full = full.TrimEnd('\r');
         }
 
+
         string[] lines = full.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
         if (lines[0].EndsWith(","))
         {

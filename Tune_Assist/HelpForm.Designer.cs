@@ -44,7 +44,7 @@
       this.HelpTextBox.Name = "HelpTextBox";
       this.HelpTextBox.ReadOnly = true;
       this.HelpTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-      this.HelpTextBox.Size = new System.Drawing.Size(593, 239);
+      this.HelpTextBox.Size = new System.Drawing.Size(593, 243);
       this.HelpTextBox.TabIndex = 0;
       this.HelpTextBox.Text = resources.GetString("HelpTextBox.Text");
       // 
@@ -53,7 +53,7 @@
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.BackColor = System.Drawing.SystemColors.ControlLight;
-      this.ClientSize = new System.Drawing.Size(593, 239);
+      this.ClientSize = new System.Drawing.Size(593, 243);
       this.Controls.Add(this.HelpTextBox);
       this.ForeColor = System.Drawing.SystemColors.ControlText;
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
